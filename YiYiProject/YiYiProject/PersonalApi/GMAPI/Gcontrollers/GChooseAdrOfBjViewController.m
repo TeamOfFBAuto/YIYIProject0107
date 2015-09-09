@@ -57,7 +57,7 @@
 }
 
 -(void)creatTab{
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStyleGrouped];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStylePlain];
     _tab.delegate = self;
     _tab.dataSource = self;
     [self.view addSubview:_tab];
@@ -83,6 +83,7 @@
     NSDictionary *dic = children[indexPath.row];
     NSString *name = [dic stringValueForKey:@"name"];
     cell.textLabel.text = name;
+    [cell.textLabel setFont:[UIFont systemFontOfSize:14]];
     
     return cell;
     
@@ -101,7 +102,7 @@
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50;
+    return 40;
 }
 
 
@@ -114,6 +115,7 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
+    view.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:0.2];
     UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH-12, 40)];
     NSDictionary *dic = _p_c_list[section];
     NSString *name = [dic stringValueForKey:@"name"];
@@ -125,11 +127,27 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSArray *children = [_p_c_list[indexPath.section] arrayValueForKey:@"children"];
-    NSDictionary *dic = children[indexPath.row];
-    NSString *name = [dic stringValueForKey:@"name"];
-    NSString *theId = [dic stringValueForKey:@"id"];
-    NSLog(@"name:%@ id:%@",name,theId);
+    
+    //省份
+    NSDictionary *provinceDic = _p_c_list[indexPath.section];
+    NSString *provinceName = [provinceDic stringValueForKey:@"name"];
+    NSString *provinceId = [provinceDic stringValueForKey:@"id"];
+    NSArray *children = [provinceDic arrayValueForKey:@"children"];
+    
+    //城市
+    NSDictionary *cityDic = children[indexPath.row];
+    NSString *cityName = [cityDic stringValueForKey:@"name"];
+    NSString *cityId = [cityDic stringValueForKey:@"id"];
+    
+    NSDictionary *params = @{@"provinceId":provinceId,
+                             @"provinceName":provinceName,
+                             @"cityId":cityId,
+                             @"cityName":cityName};
+    if (self.updateParamsBlock) {
+        self.updateParamsBlock(params);
+    }
+    
+    [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.3];
 }
 
 

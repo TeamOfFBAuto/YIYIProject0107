@@ -7,6 +7,7 @@
 //
 
 #import "AddAddressController.h"
+#import "GChooseAdrOfBjViewController.h"
 
 @interface AddAddressController ()<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 {
@@ -87,8 +88,8 @@
                 NSString *pro_name = [GMAPI cityNameForId:[pro_id intValue]];
                 NSString *city_name = [GMAPI cityNameForId:[city_id intValue]];
                 
-                self.provinceId = [pro_id integerValue];
-                self.cityId = [city_id integerValue];
+//                self.provinceId = [pro_id integerValue];
+//                self.cityId = [city_id integerValue];
                 self.provinceName = pro_name;
                 self.cityName = city_name;
                 
@@ -167,7 +168,7 @@
     
     
     
-    [self createAreaPickView];
+//    [self createAreaPickView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -336,8 +337,36 @@
 - (void)clickToSelectArea:(UIButton *)sender
 {
     
-    [self clickToHidderKeyboard];//隐藏键盘
-    [self areaShow];
+//    [self clickToHidderKeyboard];//隐藏键盘
+//    [self areaShow];
+    
+    GChooseAdrOfBjViewController *chooseAddress = [[GChooseAdrOfBjViewController alloc]init];
+    
+    __weak typeof(self)weakSelf = self;
+    chooseAddress.updateParamsBlock = ^(NSDictionary *params){
+        
+        NSLog(@"params %@",params);
+
+        [weakSelf updateAreaInfo:params];
+        
+    };
+    
+    [self.navigationController pushViewController:chooseAddress animated:YES];
+    
+}
+
+- (void)updateAreaInfo:(NSDictionary *)params
+{
+    NSString *provinceName = [params stringValueForKey:@"provinceName"];
+    NSString *provinceId = [params stringValueForKey:@"provinceId"];
+    NSString *cityName = [params stringValueForKey:@"cityName"];
+    NSString *cityId = [params stringValueForKey:@"cityId"];
+    
+    //确定才修改select值
+    _selectProvinceId = [provinceId integerValue];
+    _selectCityId = [cityId integerValue];
+    
+    [self textFieldForTag:102].text = [NSString stringWithFormat:@"%@%@",provinceName,cityName];
 }
 
 /**
