@@ -97,6 +97,8 @@
 		135A59991BA137EA00D17AFF /* youhuiquan_yiguoqi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135A598F1BA137EA00D17AFF /* youhuiquan_yiguoqi@2x.png */; };
 		135A599A1BA137EA00D17AFF /* youhuiquan_yishiyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135A59901BA137EA00D17AFF /* youhuiquan_yishiyong@2x.png */; };
 		135A599D1BA13A6E00D17AFF /* CouponModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 135A599C1BA13A6E00D17AFF /* CouponModel.m */; };
+		135A59A01BA15C6F00D17AFF /* choujiang_b@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135A599E1BA15C6F00D17AFF /* choujiang_b@2x.png */; };
+		135A59A11BA15C6F00D17AFF /* youhuiquan_b@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135A599F1BA15C6F00D17AFF /* youhuiquan_b@2x.png */; };
 		135D8C9B1B96F70200A02A36 /* Ttai_guanbi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135D8C9A1B96F70200A02A36 /* Ttai_guanbi@2x.png */; };
 		1366A4D51AE9DEFC004F83FD /* PulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366A4D41AE9DEFC004F83FD /* PulsingHaloLayer.m */; };
 		1366A4D81AE9E197004F83FD /* AnchorPiontView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366A4D71AE9E197004F83FD /* AnchorPiontView.m */; };
@@ -838,6 +840,8 @@
 		135A59901BA137EA00D17AFF /* youhuiquan_yishiyong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "youhuiquan_yishiyong@2x.png"; sourceTree = "<group>"; };
 		135A599B1BA13A6E00D17AFF /* CouponModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouponModel.h; sourceTree = "<group>"; };
 		135A599C1BA13A6E00D17AFF /* CouponModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouponModel.m; sourceTree = "<group>"; };
+		135A599E1BA15C6F00D17AFF /* choujiang_b@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "choujiang_b@2x.png"; sourceTree = "<group>"; };
+		135A599F1BA15C6F00D17AFF /* youhuiquan_b@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "youhuiquan_b@2x.png"; sourceTree = "<group>"; };
 		135D8C9A1B96F70200A02A36 /* Ttai_guanbi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Ttai_guanbi@2x.png"; sourceTree = "<group>"; };
 		1366A4D31AE9DEFC004F83FD /* PulsingHaloLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulsingHaloLayer.h; sourceTree = "<group>"; };
 		1366A4D41AE9DEFC004F83FD /* PulsingHaloLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulsingHaloLayer.m; sourceTree = "<group>"; };
@@ -2097,6 +2101,8 @@
 		135A59861BA137EA00D17AFF /* 奖券 */ = {
 			isa = PBXGroup;
 			children = (
+				135A599E1BA15C6F00D17AFF /* choujiang_b@2x.png */,
+				135A599F1BA15C6F00D17AFF /* youhuiquan_b@2x.png */,
 				135A59871BA137EA00D17AFF /* choujiangquan_g@2x.png */,
 				135A59881BA137EA00D17AFF /* choujiangquan_r@2x.png */,
 				135A59891BA137EA00D17AFF /* choujiangquan_y@2x.png */,
@@ -4204,6 +4210,7 @@
 				13ADF8481AFC9B03001B0D29 /* TPlatCommentCell.xib in Resources */,
 				56D187E41A5C274A006A606D /* dapeishi_bg@2x.png in Resources */,
 				13BD6EFF1B7AF57D00F39E0A /* Ttaixq_dianzan2@2x.png in Resources */,
+				135A59A11BA15C6F00D17AFF /* youhuiquan_b@2x.png in Resources */,
 				19F7B43D1A67FFA600087BCB /* messages_tableview_background.png in Resources */,
 				13ABB0771B01ADCD002DC700 /* UMSLoginViewController.xib in Resources */,
 				E37F84391B1072D70086CBB7 /* my_message@2x.png in Resources */,
@@ -4398,6 +4405,7 @@
 				138125361B2819D8000310FF /* productDetail_phone@2x.png in Resources */,
 				13B6905F1A566A7F007FE152 /* rizhi_xiangji@2x.png in Resources */,
 				13A389B81A38974F00ABBACB /* bluedown1@2x.png in Resources */,
+				135A59A01BA15C6F00D17AFF /* choujiang_b@2x.png in Resources */,
 				56A8A8251A4571CD00E85F6B /* stars_unselected_image@2x.png in Resources */,
 				E37F84381B1072D70086CBB7 /* my_friends@2x.png in Resources */,
 				E37C330A1AA23F6900B646EC /* mapapi.bundle in Resources */,
