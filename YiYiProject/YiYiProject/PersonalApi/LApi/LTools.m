@@ -901,6 +901,52 @@
 
 #pragma - mark 小工具
 
+#pragma - mark 小工具
+
+/**
+ *  根据6的屏幕计算比例宽度
+ *
+ *  @param aWidth 6上的宽
+ *
+ *  @return 等比例的宽
+ */
++ (CGFloat)fitWidth:(CGFloat)aWidth
+{
+    return (aWidth * DEVICE_WIDTH) / 375;
+}
+
+/**
+ *  根据6的屏幕计算比例高度
+ *
+ *  @param aWidth 6上的高
+ *
+ *  @return 等比例的高
+ */
++ (CGFloat)fitHeight:(CGFloat)aHeight
+{
+    return (aHeight * DEVICE_HEIGHT) / 667;
+}
+
+/**
+ *  根据color id获取优惠劵背景图
+ *
+ *  @param color color 的id
+ *
+ *  @return image
+ */
++ (UIImage *)imageForCoupeColorId:(NSString *)color
+{
+    UIImage *aImage = [UIImage imageNamed:@"youhuiquan_r"];
+    if ([color intValue] == 1) {
+        aImage = [UIImage imageNamed:@"youhuiquan_r"];
+    }else if ([color intValue] == 2){
+        aImage = [UIImage imageNamed:@"youhuiquan_y"];
+    }else if ([color intValue] == 3){
+        aImage = [UIImage imageNamed:@"youhuiquan_b"];
+    }
+    return aImage;
+}
+
 /**
  *  返回距离 大于1000 为km,小于m
  *

@@ -35,6 +35,8 @@
 
 #import "LWaterFlow2.h"
 #import "ButtonProperty.h"//带属性button
+#import "CouponModel.h"//优惠劵
+#import "CoupeView.h"//领取优惠券view
 
 #define kTag_Tags 100 //单品标签
 #define kTag_Mall 1000 //所在商场
@@ -72,6 +74,8 @@
     
     CycleScrollView1 *_commentCycle;//评论轮滚
     UIView *_commentView;//评论背景view
+    
+    CoupeView *_coupeView;//领取优惠券view
 }
 
 @property (strong, nonatomic) UIImageView *bigImageView;
@@ -158,6 +162,19 @@
     [self.view addSubview:_collectionView];
     
     [_collectionView showRefreshHeader:YES];
+    
+    //登录通知
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLogin) name:NOTIFICATION_LOGIN object:nil];
+}
+
+/**
+ *  登录通知
+ */
+- (void)notificationForLogin
+{
+    _collectionView.pageNum = 1;
+    _collectionView.isReloadData = YES;
+    [self waterLoadNewDataForWaterView:_collectionView.quitView];
 }
 
 #pragma - mark UIAlertViewDelegate
@@ -281,6 +298,47 @@
 #pragma mark - 网络请求
 
 /**
+ *  领取优惠劵
+ *
+ *  @param aModel 优惠劵model
+ *  @param sender
+ */
+- (void)netWorkForCouponModel:(CouponModel *)aModel
+                       button:(UIButton *)sender
+{
+//    __weak typeof(self)weakSelf = self;
+    
+    if (![LTools isLogin:self]) {
+        
+        [_coupeView removeFromSuperview];
+        _coupeView = nil;
+        
+        return;
+    }
+    
+    NSString *authkey = [GMAPI getAuthkey];
+    
+    NSString *post = [NSString stringWithFormat:@"&coupon_id=%@&authcode=%@",aModel.coupon_id,authkey];
+    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    
+    LTools *tool = [[LTools alloc]initWithUrl:USER_GETCOUPON isPost:YES postData:postData];
+    
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        NSLog(@"result %@",result);
+        aModel.enable_receive = @"0";
+        sender.selected = YES;
+        
+        
+    } failBlock:^(NSDictionary *failDic, NSError *erro) {
+        
+        NSLog(@"failBlock == %@",failDic[RESULT_INFO]);
+        
+        
+    }];
+}
+
+/**
  *  获取单品详情
  */
 - (void)networkForDetail
@@ -290,8 +348,13 @@
     }
     
     __weak typeof(self)weakSelf = self;
-        
+    
+    //test
+    
     NSString *url = [NSString stringWithFormat:HOME_PRODUCT_DETAIL,self.product_id,[GMAPI getAuthkey]];
+    
+    url = [NSString stringWithFormat:HOME_PRODUCT_DETAIL,@"11",[GMAPI getAuthkey]];
+
     tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     
     [tool_detail requestCompletion:^(NSDictionary *result, NSError *erro) {
@@ -559,6 +622,30 @@
 }
 
 #pragma mark - 事件处理
+
+/**
+ *  点击去获取优惠劵
+ */
+- (void)clickToCoupe
+{
+    if (_coupeView) {
+        [_coupeView removeFromSuperview];
+        _coupeView = nil;
+    }
+    
+    _coupeView = [[CoupeView alloc]initWithCouponArray:_aModel.coupon_list];
+
+    __weak typeof(self)weakSelf = self;
+
+    _coupeView.coupeBlock = ^(NSDictionary *params){
+      
+        ButtonProperty *btn = params[@"button"];
+        CouponModel *aModel = params[@"model"];
+        
+        [weakSelf netWorkForCouponModel:aModel button:btn];
+    };
+    [_coupeView show];
+}
 
 /**
  *  更新赞状态
@@ -1412,6 +1499,45 @@
         
         top = line5.bottom;
     }
+    
+    
+#pragma - mark 优惠券
+    
+    //1=>红色    2=>黄色    3=>蓝色
+    NSArray *coupon_list = aProductModel.coupon_list;
+    if ([coupon_list isKindOfClass:[NSArray class]] && coupon_list.count > 0) {
+        
+        UILabel *labelCoupon = [[UILabel alloc]initWithFrame:CGRectMake(10, top, DEVICE_WIDTH, 40) title:@"优惠劵" font:14 align:NSTextAlignmentLeft textColor:[UIColor blackColor]];
+        [_headerView addSubview:labelCoupon];
+        
+        //优惠券
+        //最多显示两张
+        count = (int)coupon_list.count > 2 ? 2 : (int)coupon_list.count;
+        aWidth = [LTools fitWidth:85];
+        for (int i = 0; i < count; i ++) {
+            CouponModel *aModel = [[CouponModel alloc]initWithDictionary:coupon_list[i]];
+            UIImage *aImage = [LTools imageForCoupeColorId:aModel.color];
+            UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 10 - aWidth - (aWidth + 6) * i, 6 + labelCoupon.top, aWidth, 28) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:aImage selectedImage:nil target:self action:@selector(clickToCoupe)];
+            [_headerView addSubview:btn];
+            
+            NSString *title_minus = [NSString stringWithFormat:@"￥%@",aModel.minus_money];
+            NSString *title_full = [NSString stringWithFormat:@"满%@即可使用",aModel.full_money];
+
+            aHeight = btn.height / 2.f - 5;
+            UILabel *minusLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, btn.width - 10, aHeight) title:title_minus font:8 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
+            [btn addSubview:minusLabel];
+            UILabel *fullLabel = [[UILabel alloc]initWithFrame:CGRectMake(minusLabel.left, minusLabel.bottom, minusLabel.width, aHeight) title:title_full font:8 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
+            [btn addSubview:fullLabel];
+        }
+        
+        
+        UIView *line_Coupon = [[UIView alloc]initWithFrame:CGRectMake(0, labelCoupon.bottom, DEVICE_WIDTH, 0.5)];
+        line_Coupon.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
+        [_headerView addSubview:line_Coupon];
+        
+        top = line_Coupon.bottom;
+    }
+    
 #pragma - mark 相似单品及所在商场
     
     NSArray *shopArray = aProductModel.sameStyleArray;
@@ -1647,7 +1773,7 @@
     [self.view addSubview:bottom];
     
     //购物车和立即购买按钮宽度
-    CGFloat aWidth = [self fitWidth:100];
+    CGFloat aWidth = [LTools fitWidth:100];
 
     //电话、聊天、店铺按钮宽度
     CGFloat aWidth_other = (DEVICE_WIDTH - aWidth * 2) / 3.f;
@@ -1676,18 +1802,6 @@
     [buyBtn.titleLabel setFont:[UIFont systemFontOfSize:13]];
     buyBtn.backgroundColor = [UIColor colorWithHexString:@"ff7eaa"];
     [bottom addSubview:buyBtn];
-}
-
-/**
- *  根据6的屏幕计算比例宽度
- *
- *  @param aWidth 6上的宽
- *
- *  @return 等比例的宽
- */
-- (CGFloat)fitWidth:(CGFloat)aWidth
-{
-    return (aWidth * DEVICE_WIDTH) / 375;
 }
 
 /**
@@ -1744,5 +1858,7 @@
     
     self.navigationItem.rightBarButtonItem = comment_item;
 }
+
+
 
 @end

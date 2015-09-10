@@ -177,6 +177,35 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 + (void)alertText:(NSString *)text;
 
+#pragma - mark 小工具
+
+/**
+ *  根据6的屏幕计算比例宽度
+ *
+ *  @param aWidth 6上的宽
+ *
+ *  @return 等比例的宽
+ */
++ (CGFloat)fitWidth:(CGFloat)aWidth;
+
+/**
+ *  根据6的屏幕计算比例高度
+ *
+ *  @param aWidth 6上的高
+ *
+ *  @return 等比例的高
+ */
++ (CGFloat)fitHeight:(CGFloat)aHeight;
+
+/**
+ *  根据color id获取优惠劵背景图
+ *
+ *  @param color color 的id
+ *
+ *  @return image
+ */
++ (UIImage *)imageForCoupeColorId:(NSString *)color;
+
 #pragma mark - MD5
 
 /**
