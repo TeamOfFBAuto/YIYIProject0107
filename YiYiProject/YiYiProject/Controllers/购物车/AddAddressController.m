@@ -206,7 +206,7 @@
     NSDictionary *params;
     NSString *api;
     
-    NSLog(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,(long)self.cityId,self.cityName);
+    NSLog(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)_selectProvinceId,self.provinceName,(long)_selectCityId,self.cityName);
     
     //编辑
     if (self.isEditAddress) {

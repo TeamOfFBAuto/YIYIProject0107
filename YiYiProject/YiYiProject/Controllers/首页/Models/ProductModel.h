@@ -77,5 +77,6 @@
 @property(nonatomic,retain)NSString *weight;//重量单位 g
 @property(nonatomic,retain)NSString *cover_pic;//单品封面
 @property(nonatomic,retain)NSString *is_seckill;//是否秒杀
+@property(nonatomic,retain)NSArray *coupon_list;//优惠券列表
 
 @end

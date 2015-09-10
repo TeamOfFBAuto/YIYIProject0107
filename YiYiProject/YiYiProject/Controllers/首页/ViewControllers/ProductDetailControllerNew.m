@@ -149,7 +149,7 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     [self createNavigationbarTools];//导航条
-    
+        
     [self addProductVisit];//添加单品浏览数
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
@@ -1636,28 +1636,82 @@
  */
 - (void)createBottomView
 {
+    //购物车
+    
+    UIButton *carBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 45, DEVICE_HEIGHT - 64 - 50 - 5 - 45, 45, 45) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:[UIImage imageNamed:@"danpinxq_gouwuche"] selectedImage:nil target:self action:@selector(clickToShoppingCar)];
+    [self.view addSubview:carBtn];
     //导航按钮
     
-    UIView *bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 46, DEVICE_WIDTH, 46)];
-    bottom.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:0.5];
+    UIView *bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 50, DEVICE_WIDTH, 50)];
+    bottom.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"danpinxq_dibu"]];
     [self.view addSubview:bottom];
     
+    //购物车和立即购买按钮宽度
+    CGFloat aWidth = [self fitWidth:100];
+
+    //电话、聊天、店铺按钮宽度
+    CGFloat aWidth_other = (DEVICE_WIDTH - aWidth * 2) / 3.f;
+    
     //电话
-    UIButton *phoneBtn = [[UIButton alloc]initWithframe:CGRectMake(22, 5, 36, 36) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"danpinxq_dianhua2"] selectedImage:nil target:self action:@selector(clickToPhone:)];
+    UIButton *phoneBtn = [[UIButton alloc]initWithframe:CGRectMake(0, 0, aWidth_other, bottom.height) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"danpinxq_dianhua2"] selectedImage:nil target:self action:@selector(clickToPhone:)];
     [bottom addSubview:phoneBtn];
     
     //聊天
-    UIButton *chatBtn = [[UIButton alloc]initWithframe:CGRectMake(phoneBtn.right + 25, 5, 39, 36) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"danpinxq_lianximaijia2"] selectedImage:nil target:self action:@selector(clickToPrivateChat:)];
+    UIButton *chatBtn = [[UIButton alloc]initWithframe:CGRectMake(phoneBtn.right, 0, aWidth_other, bottom.height) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"danpinxq_lianximaijia2"] selectedImage:nil target:self action:@selector(clickToPrivateChat:)];
     [bottom addSubview:chatBtn];
     
-    //聊天
-    UIButton *shopBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 70 - 20, 8, 70, 30) buttonType:UIButtonTypeCustom normalTitle:@"进入店铺" selectedTitle:nil target:self action:@selector(clickToStore:)];
-    [shopBtn addCornerRadius:15];
-    [shopBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
-    [shopBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    shopBtn.backgroundColor = DEFAULT_TEXTCOLOR;
+    //店铺
+    UIButton *shopBtn = [[UIButton alloc]initWithframe:CGRectMake(chatBtn.right, 0,aWidth_other, bottom.height) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"danpinxq_jiarudianpu"] selectedImage:nil target:self action:@selector(clickToStore:)];
     [bottom addSubview:shopBtn];
+    
+    //加入购物车
+    
+    UIButton *shopCarBtn = [[UIButton alloc]initWithframe:CGRectMake(shopBtn.right, 0, aWidth, bottom.height) buttonType:UIButtonTypeCustom normalTitle:@"加入购物车" selectedTitle:nil target:self action:@selector(clickToAddToShoppingCar)];
+    [shopCarBtn.titleLabel setFont:[UIFont systemFontOfSize:13]];
+    shopCarBtn.backgroundColor = [UIColor colorWithHexString:@"ffc480"];
+    [bottom addSubview:shopCarBtn];
+    
+    //立即购买
+    UIButton *buyBtn = [[UIButton alloc]initWithframe:CGRectMake(shopCarBtn.right, 0, aWidth, bottom.height) buttonType:UIButtonTypeCustom normalTitle:@"立即购买" selectedTitle:nil target:self action:@selector(clickToBuy)];
+    [buyBtn.titleLabel setFont:[UIFont systemFontOfSize:13]];
+    buyBtn.backgroundColor = [UIColor colorWithHexString:@"ff7eaa"];
+    [bottom addSubview:buyBtn];
+}
 
+/**
+ *  根据6的屏幕计算比例宽度
+ *
+ *  @param aWidth 6上的宽
+ *
+ *  @return 等比例的宽
+ */
+- (CGFloat)fitWidth:(CGFloat)aWidth
+{
+    return (aWidth * DEVICE_WIDTH) / 375;
+}
+
+/**
+ *  加入购物车
+ */
+- (void)clickToAddToShoppingCar
+{
+    
+}
+
+/**
+ *  立即购买
+ */
+- (void)clickToBuy
+{
+    
+}
+
+/**
+ *  跳转购物车
+ */
+- (void)clickToShoppingCar
+{
+    
 }
 
 - (void)createNavigationbarTools
