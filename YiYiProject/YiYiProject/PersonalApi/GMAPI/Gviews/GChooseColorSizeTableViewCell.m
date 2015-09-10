@@ -23,7 +23,7 @@
 }
 
 
--(void)loadCustomViewWithIndexPath:(NSIndexPath*)theIndexPath{
+-(void)loadCustomViewWithIndexPath:(NSIndexPath*)theIndexPath netDatamodel:(NSDictionary *)dic productModel:(ProductModel*)thePmodel{
     //选择button
     GBtn *chooseBtn = [GBtn buttonWithType:UIButtonTypeCustom];
     [chooseBtn setFrame:CGRectMake(0, 8, 35, 44)];

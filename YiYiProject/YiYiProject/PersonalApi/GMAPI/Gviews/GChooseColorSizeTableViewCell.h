@@ -13,7 +13,7 @@
 @interface GChooseColorSizeTableViewCell : UITableViewCell
 
 
--(void)loadCustomViewWithIndexPath:(NSIndexPath*)theIndexPath;
+-(void)loadCustomViewWithIndexPath:(NSIndexPath*)theIndexPath netDatamodel:(NSDictionary *)dic productModel:(ProductModel*)thePmodel;
 
 
 @end

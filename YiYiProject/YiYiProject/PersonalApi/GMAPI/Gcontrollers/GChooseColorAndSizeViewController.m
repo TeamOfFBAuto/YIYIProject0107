@@ -12,6 +12,7 @@
 @interface GChooseColorAndSizeViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *_tab;
+    NSArray *_dataArray;
 }
 @end
 
@@ -46,6 +47,30 @@
     [self.view addSubview:_tab];
 }
 
+-(void)prepareNetData{
+    if (self.productModelArray.count>0) {
+        NSMutableArray *idsArray = [NSMutableArray arrayWithCapacity:1];
+        for (ProductModel *model in self.productModelArray) {
+            [idsArray addObject:model.product_id];
+        }
+        NSString *theIds =[idsArray componentsJoinedByString:@","];
+        
+        NSString *url = [NSString stringWithFormat:@"%@&product_ids=%@",CHOOSE_COLORANDSIZE,theIds];
+        
+        LTools *cc = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+        [cc requestCompletion:^(NSDictionary *result, NSError *erro) {
+            _dataArray = [result arrayValueForKey:@"attr"];
+            [_tab reloadData];
+        } failBlock:^(NSDictionary *result, NSError *erro) {
+            
+        }];
+        
+        
+    }else{
+        
+    }
+}
+
 
 
 #pragma mark - UITableViewDelegate && UITableViewDataSource
@@ -61,8 +86,9 @@
         [view removeFromSuperview];
     }
     
-    
-    [cell loadCustomViewWithIndexPath:indexPath];
+    NSDictionary *dic = _dataArray[indexPath.row];
+    ProductModel *model = self.productModelArray[indexPath.row];
+    [cell loadCustomViewWithIndexPath:indexPath netDatamodel:dic productModel:model];
     
     
     

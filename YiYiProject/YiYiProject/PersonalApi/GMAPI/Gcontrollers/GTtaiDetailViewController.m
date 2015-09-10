@@ -169,6 +169,10 @@
     
     [self creatPubuLiu];
     
+    [self creatDownView];
+    
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -178,6 +182,28 @@
 
 
 #pragma mark - MyMethod
+
+
+-(void)creatDownView{
+    UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50 - 64, DEVICE_WIDTH, 50)];
+    downView.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:downView];
+    
+    UIButton *phoneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [phoneBtn setFrame:CGRectMake(0,0 , downView.frame.size.width*0.5/3, downView.frame.size.height)];
+    phoneBtn.backgroundColor = [UIColor orangeColor];
+    [downView addSubview:phoneBtn];
+    
+    UIButton *lianximaijia = [UIButton buttonWithType:UIButtonTypeCustom];
+    [lianximaijia setFrame:CGRectMake(CGRectGetMaxX(phoneBtn.frame), 0, phoneBtn.frame.size.width, phoneBtn.frame.size.height)];
+    lianximaijia.backgroundColor = [UIColor redColor];
+    [downView addSubview:lianximaijia];
+    
+    
+    
+    
+}
+
 
 #pragma mark - 请求网络数据
 //请求T台详情数据
@@ -306,6 +332,7 @@
         }
         
         _relationStoreArray = temp;
+        
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
@@ -1402,6 +1429,7 @@
         }
         
         [cell.contentView addSubview:chooseBtn];
+        
         
         
         NSDictionary *product_cover_pic = [dic dictionaryValueForKey:@"product_cover_pic"];

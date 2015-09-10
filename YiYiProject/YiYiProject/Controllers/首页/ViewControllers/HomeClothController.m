@@ -176,11 +176,11 @@
 //    NSString *storeName = [dic stringValueForKey:@"mall_name"];
 //    [self pushToNearbyStoreVCWithIdStr:storeId theStoreName:storeName theType:mallType];
     
-//    GChooseColorAndSizeViewController *aa = [[GChooseColorAndSizeViewController alloc]init];
-//    aa.hidesBottomBarWhenPushed = YES;
-    
-    GChooseAdrOfBjViewController *aa = [[GChooseAdrOfBjViewController alloc]init];
+    GChooseColorAndSizeViewController *aa = [[GChooseColorAndSizeViewController alloc]init];
     aa.hidesBottomBarWhenPushed = YES;
+    
+//    GChooseAdrOfBjViewController *aa = [[GChooseAdrOfBjViewController alloc]init];
+//    aa.hidesBottomBarWhenPushed = YES;
     
     [self.rootViewController.navigationController pushViewController: aa animated:YES];
     
