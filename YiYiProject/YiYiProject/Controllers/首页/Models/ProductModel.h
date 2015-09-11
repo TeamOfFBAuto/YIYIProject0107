@@ -79,4 +79,24 @@
 @property(nonatomic,retain)NSString *is_seckill;//是否秒杀
 @property(nonatomic,retain)NSArray *coupon_list;//优惠券列表
 
+
+//颜色
+@property(nonatomic,strong)NSDictionary *color;//color_id color_name
+//尺寸
+@property(nonatomic,strong)NSDictionary *size;//size_id size_name
+//数量
+@property(nonatomic,assign)NSInteger tnum;
+//是否选择过颜色
+@property(nonatomic,assign)BOOL ischooseColor;
+//是否选择过尺寸
+@property(nonatomic,assign)BOOL ischooseSize;
+//是否勾选该单品
+@property(nonatomic,assign)BOOL isChoose;
+
+//跳转颜色尺码选择需要添加的productmodel属性
+@property(nonatomic,strong)NSDictionary *product_cover_pic;//封面图dic 字段src
+@property(nonatomic,strong)NSString *product_type_name;//单品类型
+
+
+
 @end

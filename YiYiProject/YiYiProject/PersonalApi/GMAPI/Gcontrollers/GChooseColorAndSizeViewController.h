@@ -19,8 +19,12 @@ typedef enum{
 
 @interface GChooseColorAndSizeViewController : MyViewController
 
-@property(nonatomic,assign)CHOOSETYPE theType;
-@property(nonatomic,strong)NSArray *productModelArray;//产品model数组
 
+//必传属性
+@property(nonatomic,assign)CHOOSETYPE theType;
+@property(nonatomic,strong)NSArray *productModelArray;//产品model数组 需要添加的字段参看productModel
+
+
+-(void)jisuanPrice;
 
 @end

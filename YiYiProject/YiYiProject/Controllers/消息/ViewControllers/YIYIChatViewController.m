@@ -106,6 +106,9 @@
 
 //发送产品图文链接
 -(void)sendProductDetailMessage{
+    if (!self.theModel) {
+        return;
+    }
     RCRichContentMessage *message = [[RCRichContentMessage alloc] init];
     message.title = self.theModel.product_name;
     NSString *zhekou = [NSString stringWithFormat:@"%.1f折",self.theModel.discount_num * 10];

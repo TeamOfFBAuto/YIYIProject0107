@@ -165,7 +165,7 @@
 //打电话
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
-    NSString *phoneNum = _aModel.mall_info[@"mobile"];
+    NSString *phoneNum = _aModel.mall_info[@"shop_phone"];
     
     //0取消    1确定
     if (buttonIndex == 1) {
@@ -925,7 +925,7 @@
  */
 - (void)clickToPhone:(UIButton *)sender
 {
-    NSString *phoneNum = _aModel.mall_info[@"mobile"];
+    NSString *phoneNum = _aModel.mall_info[@"shop_phone"];
     
     if (phoneNum.length > 0) {
         
@@ -954,7 +954,7 @@
             
             NSString *useriId;
             NSString *userName;
-            NSString *mall_type;
+            NSString *shop_type;
             NSString *brand_name;
             NSString *mall_name;
             YIYIChatViewController *contact = [[YIYIChatViewController alloc]init];
@@ -964,8 +964,8 @@
                 
                 useriId = _aModel.mall_info[@"uid"];
                 userName = _aModel.mall_info[@"mall_name"];
-                mall_type = _aModel.mall_info[@"mall_type"];
-                if ([mall_type intValue] == 1) {//商场店
+                shop_type = _aModel.shop_type;
+                if ([shop_type intValue] == 3) {//商场店
                     brand_name = _aModel.brand_info[@"brand_name"];//品牌名
                     mall_name = _aModel.mall_info[@"mall_name"];//商城名
                     NSString *aaa = [NSString stringWithFormat:@"%@.%@",brand_name,mall_name];

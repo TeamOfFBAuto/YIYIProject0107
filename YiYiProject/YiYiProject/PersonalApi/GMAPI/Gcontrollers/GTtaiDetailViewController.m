@@ -38,6 +38,8 @@
 #import "ButtonProperty.h"//带属性的button
 #import "GmyTtaiViewController.h"//点击标签跳转
 
+#import "GChooseColorAndSizeViewController.h"//选择颜色尺寸
+
 @interface GTtaiDetailViewController ()<UIScrollViewDelegate,PSWaterFlowDelegate,PSCollectionViewDataSource,GgetllocationDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     
@@ -96,6 +98,11 @@
     
     NSMutableArray *_tmpArray;
     
+    
+    
+    NSDictionary *_shopInfo;//店铺信息
+    
+    NSMutableArray *_allProductArray;//所有关联商场的单品
     
     
 }
@@ -184,25 +191,260 @@
 #pragma mark - MyMethod
 
 
--(void)creatDownView{
-    UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50 - 64, DEVICE_WIDTH, 50)];
-    downView.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:downView];
+
+
+/**
+ *  根据6的屏幕计算比例宽度
+ *
+ *  @param aWidth 6上的宽
+ *
+ *  @return 等比例的宽
+ */
+- (CGFloat)fitWidth:(CGFloat)aWidth
+{
+    return (aWidth * DEVICE_WIDTH) / 375;
+}
+
+
+/**
+ *  底部工具栏
+ */
+- (void)creatDownView
+{
+    //购物车
     
-    UIButton *phoneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [phoneBtn setFrame:CGRectMake(0,0 , downView.frame.size.width*0.5/3, downView.frame.size.height)];
-    phoneBtn.backgroundColor = [UIColor orangeColor];
-    [downView addSubview:phoneBtn];
+    UIButton *carBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 45, DEVICE_HEIGHT - 64 - 50 - 5 - 45, 45, 45) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:[UIImage imageNamed:@"danpinxq_gouwuche"] selectedImage:nil target:self action:@selector(clickToShoppingCar)];
+    [self.view addSubview:carBtn];
+    //导航按钮
     
-    UIButton *lianximaijia = [UIButton buttonWithType:UIButtonTypeCustom];
-    [lianximaijia setFrame:CGRectMake(CGRectGetMaxX(phoneBtn.frame), 0, phoneBtn.frame.size.width, phoneBtn.frame.size.height)];
-    lianximaijia.backgroundColor = [UIColor redColor];
-    [downView addSubview:lianximaijia];
+    UIView *bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 50, DEVICE_WIDTH, 50)];
+    bottom.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"danpinxq_dibu"]];
+    [self.view addSubview:bottom];
+    
+    //购物车和立即购买按钮宽度
+    CGFloat aWidth = [self fitWidth:100];
+    
+    //电话、聊天、店铺按钮宽度
+    CGFloat aWidth_other = (DEVICE_WIDTH - aWidth * 2) / 3.f;
+    
+    //电话
+    UIButton *phoneBtn = [[UIButton alloc]initWithframe:CGRectMake(0, 0, aWidth_other, bottom.height) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"danpinxq_dianhua2"] selectedImage:nil target:self action:@selector(clickToPhone:)];
+    [bottom addSubview:phoneBtn];
+    
+    //聊天
+    UIButton *chatBtn = [[UIButton alloc]initWithframe:CGRectMake(phoneBtn.right, 0, aWidth_other, bottom.height) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"danpinxq_lianximaijia2"] selectedImage:nil target:self action:@selector(clickToPrivateChat:)];
+    [bottom addSubview:chatBtn];
+    
+    //店铺
+    UIButton *shopBtn = [[UIButton alloc]initWithframe:CGRectMake(chatBtn.right, 0,aWidth_other, bottom.height) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"danpinxq_jiarudianpu"] selectedImage:nil target:self action:@selector(clickToStore:)];
+    [bottom addSubview:shopBtn];
+    
+    //加入购物车
+    
+    UIButton *shopCarBtn = [[UIButton alloc]initWithframe:CGRectMake(shopBtn.right, 0, aWidth, bottom.height) buttonType:UIButtonTypeCustom normalTitle:@"加入购物车" selectedTitle:nil target:self action:@selector(clickToAddToShoppingCar)];
+    [shopCarBtn.titleLabel setFont:[UIFont systemFontOfSize:13]];
+    shopCarBtn.backgroundColor = [UIColor colorWithHexString:@"ffc480"];
+    [bottom addSubview:shopCarBtn];
+    
+    //立即购买
+    UIButton *buyBtn = [[UIButton alloc]initWithframe:CGRectMake(shopCarBtn.right, 0, aWidth, bottom.height) buttonType:UIButtonTypeCustom normalTitle:@"立即购买" selectedTitle:nil target:self action:@selector(clickToBuy)];
+    [buyBtn.titleLabel setFont:[UIFont systemFontOfSize:13]];
+    buyBtn.backgroundColor = [UIColor colorWithHexString:@"ff7eaa"];
+    [bottom addSubview:buyBtn];
+}
+
+
+/**
+ *  加入购物车
+ */
+- (void)clickToAddToShoppingCar
+{
     
     
+    _allProductArray = [NSMutableArray arrayWithCapacity:1];
     
+    for (GTtaiRelationStoreModel *model  in _relationStoreArray) {
+        for (int i = 0; i<model.isChoose.count; i++) {
+            NSString *isc = model.isChoose[i];
+            if ([isc isEqualToString:@"1"]) {
+                NSArray *img_detail = [model.image arrayValueForKey:@"img_detail"];
+                NSDictionary *dd = img_detail[i];
+                ProductModel *modl = [[ProductModel alloc]initWithDictionary:dd];
+                [_allProductArray addObject:modl];
+            }
+        }
+    }
+    
+    if (_allProductArray.count == 0) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请勾选需要的商品" addToView:self.view];
+        return;
+    }
+    
+    GChooseColorAndSizeViewController *cc = [[GChooseColorAndSizeViewController alloc]init];
+    cc.theType = CHOOSETYPE_GOUWUCHE;
+    cc.productModelArray = _allProductArray;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
+/**
+ *  立即购买
+ */
+- (void)clickToBuy
+{
+    _allProductArray = [NSMutableArray arrayWithCapacity:1];
+    
+    for (GTtaiRelationStoreModel *model  in _relationStoreArray) {
+        for (int i = 0; i<model.isChoose.count; i++) {
+            NSString *isc = model.isChoose[i];
+            if ([isc isEqualToString:@"1"]) {
+                NSArray *img_detail = [model.image arrayValueForKey:@"img_detail"];
+                NSDictionary *dd = img_detail[i];
+                ProductModel *modl = [[ProductModel alloc]initWithDictionary:dd];
+                [_allProductArray addObject:modl];
+            }
+        }
+    }
+    
+    if (_allProductArray.count == 0) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请勾选需要的商品" addToView:self.view];
+        return;
+    }
+    
+    GChooseColorAndSizeViewController *cc = [[GChooseColorAndSizeViewController alloc]init];
+    cc.theType = CHOOSETYPE_LIJIGOUMAI;
+    cc.productModelArray = _allProductArray;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
+/**
+ *  跳转购物车
+ */
+- (void)clickToShoppingCar
+{
     
 }
+
+//进入店铺
+- (void)clickToStore:(id)sender {
+    
+    
+    
+    
+    int shop_type = [[_shopInfo stringValueForKey:@"shop_type"] intValue];
+    NSString *storeId;
+    NSString *storeName;
+    
+    if (shop_type == ShopType_pinpaiDian) {
+        
+        storeId = [_shopInfo stringValueForKey:@"shop_id"];
+        storeName = [_shopInfo stringValueForKey:[_shopInfo stringValueForKey:@"mall_name"]];
+        NSString *brandName = [_shopInfo stringValueForKey:[_shopInfo stringValueForKey:@"brand_name"]];//品牌店需要brandName
+        
+        [MiddleTools pushToStoreDetailVcWithId:storeId shopType:shop_type storeName:storeName brandName:brandName fromViewController:self lastNavigationHidden:NO hiddenBottom:NO isTPlatPush:NO];
+        
+    }else if (shop_type == ShopType_jingpinDian || shop_type == ShopType_mall){
+        
+        storeId = [_shopInfo stringValueForKey:@"mall_id"];
+        storeName = [_shopInfo stringValueForKey:@"shop_name"];
+        
+        [MiddleTools pushToStoreDetailVcWithId:storeId shopType:shop_type storeName:storeName brandName:@" " fromViewController:self lastNavigationHidden:NO hiddenBottom:NO isTPlatPush:NO];
+    }
+}
+
+
+
+
+/**
+ *  电话
+ *
+ *  @param sender
+ */
+- (void)clickToPhone:(UIButton *)sender
+{
+    NSString *phoneNum = _shopInfo[@"shop_phone"];
+    
+    if (phoneNum.length > 0) {
+        
+        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"拨号" message:phoneNum delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [al show];
+    }else
+    {
+        [LTools showMBProgressWithText:@"抱歉!该商家暂未填写有效联系方式" addToView:self.view];
+    }
+}
+
+/**
+ *  联系卖家
+ *
+ *  @param sender
+ */
+- (void)clickToPrivateChat:(UIButton *)sender
+{
+    BOOL rong_login = [LTools cacheBoolForKey:LOGIN_RONGCLOUD_STATE];
+    
+    //服务器登陆成功
+    if ([LTools isLogin:self]) {
+        
+        //融云登陆成功
+        if (rong_login) {
+            
+            NSString *useriId;
+            NSString *userName;
+            NSString *shop_type;
+            NSString *brand_name;
+            NSString *mall_name;
+            YIYIChatViewController *contact = [[YIYIChatViewController alloc]init];
+            
+            
+            if ([_shopInfo isKindOfClass:[NSDictionary class]]) {
+                
+                useriId = _shopInfo[@"uid"];
+                userName = _shopInfo[@"mall_name"];
+                shop_type = _shopInfo[@"shop_type"];
+                if ([shop_type intValue] == 3) {//商场店
+                    brand_name = _shopInfo[@"brand_name"];//品牌名
+                    mall_name = _shopInfo[@"mall_name"];//商城名
+                    NSString *aaa = [NSString stringWithFormat:@"%@.%@",brand_name,mall_name];
+                    NSMutableAttributedString *title = [[NSMutableAttributedString alloc] initWithString:aaa];
+                    NSInteger pinpaiNameLength = brand_name.length;
+                    NSInteger storeNameLength = mall_name.length;
+                    [title addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0,pinpaiNameLength+1)];
+                    [title addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:17*GscreenRatio_320] range:NSMakeRange(0,pinpaiNameLength)];
+                    [title addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(240, 173, 184) range:NSMakeRange(pinpaiNameLength+1, storeNameLength)];
+                    [title addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13*GscreenRatio_320] range:NSMakeRange(pinpaiNameLength+1, storeNameLength)];
+                    contact.GTitleLabel.textAlignment = NSTextAlignmentCenter;
+                    contact.GTitleLabel.attributedText = title;
+                }else{
+                    userName = userName;
+                    contact.GTitleLabel.text = userName;
+                    contact.GTitleLabel.textColor = RGBCOLOR(251, 108, 157);
+                }
+                
+            }
+            
+            contact.currentTarget = useriId;
+            contact.portraitStyle = RCUserAvatarCycle;
+            contact.enableSettings = NO;
+            contact.conversationType = ConversationType_PRIVATE;
+            
+            contact.theModel = nil;
+            contact.isProductDetailVcPush = YES;
+            
+            
+            [self.navigationController pushViewController:contact animated:YES];
+        }else
+        {
+            NSLog(@"服务器登陆成功了,融云未登陆");
+            
+            
+            AppDelegate * appdelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [appdelegate loginToRongCloud];
+            
+        }
+        
+    }
+}
+
 
 
 #pragma mark - 请求网络数据
@@ -225,6 +467,17 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
         if ([result isKindOfClass:[NSDictionary class]]) {
+            
+            _shopInfo = @{
+                          @"shop_type":[result stringValueForKey:@"shop_type"],
+                          @"shop_phone":[result stringValueForKey:@"shop_phone"],
+                          @"mall_name":[result stringValueForKey:@"mall_name"],
+                          @"brand_name":[result stringValueForKey:@"brand_name"],
+                          @"uid":[result stringValueForKey:@"uid"],
+                          @"shop_name":[result stringValueForKey:@"shop_name"],
+                          @"mall_id":[result stringValueForKey:@"mall_id"],
+                          @"shop_id":[result stringValueForKey:@"shop_id"]
+                          };
             
             NSArray *same_tts = [result arrayValueForKey:@"same_tts"];
             _tmpArray = [NSMutableArray arrayWithCapacity:1];
@@ -313,13 +566,22 @@
         NSArray *list = result[@"list"];
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:list.count];
         
-        for (NSDictionary *dic in list) {
+        
+        
+        for (int i = 0;i<list.count;i++) {
+            NSDictionary *dic = list[i];
             GTtaiRelationStoreModel *amodel = [[GTtaiRelationStoreModel alloc]initWithDictionary:dic];
             amodel.isChoose = [NSMutableArray arrayWithCapacity:1];
             NSDictionary *image = amodel.image;
             if ([[image stringValueForKey:@"have_detail"]intValue] == 1) {
-                for (int i = 0; i<[image arrayValueForKey:@"img_detail"].count; i++) {
-                    [amodel.isChoose addObject:@"1"];
+                for (int j = 0; j<[image arrayValueForKey:@"img_detail"].count; j++) {
+                    if (i == 0) {
+                        [amodel.isChoose addObject:@"1"];
+                    }else{
+                        [amodel.isChoose addObject:@"0"];
+                    }
+                    
+                    
                 }
             }
             [temp addObject:amodel];
@@ -332,6 +594,7 @@
         }
         
         _relationStoreArray = temp;
+        
         
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
@@ -839,7 +1102,7 @@
 
 //创建瀑布流
 -(void)creatPubuLiu{
-    _collectionView = [[LWaterFlow2 alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) waterDelegate:self waterDataSource:self noHeadeRefresh:NO noFooterRefresh:NO];
+    _collectionView = [[LWaterFlow2 alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) waterDelegate:self waterDataSource:self noHeadeRefresh:NO noFooterRefresh:NO];
     [self.view addSubview:_collectionView];
     //    _collectionView.backgroundColor = [UIColor clearColor];
     //    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

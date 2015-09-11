@@ -12,7 +12,10 @@
 @interface GChooseColorAndSizeViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *_tab;
-    NSArray *_dataArray;
+    NSDictionary *_attrDic;
+    
+    UILabel *_t_priceLabel;
+    UILabel *_o_priceLabel;
 }
 @end
 
@@ -26,8 +29,20 @@
     
     self.myTitle = @"颜色尺码选择";
     
+    
+    for (ProductModel *model in self.productModelArray) {
+        model.isChoose = YES;
+        model.ischooseColor = NO;
+        model.ischooseSize = NO;
+        model.tnum = 1;
+    }
+    
+    
     [self creatTab];
     
+    [self creatDownView];
+    
+    [self prepareNetData];
     
     
 }
@@ -38,12 +53,65 @@
 }
 
 
+-(void)creatDownView{
+    UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT-64 - 50, DEVICE_WIDTH, 50)];
+    downView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:downView];
+    
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0.5)];
+    line.backgroundColor = [UIColor grayColor];
+    [downView addSubview:line];
+    
+    UIButton *quedingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [quedingBtn setFrame:CGRectMake(DEVICE_WIDTH - 80, (50-30)*0.5, 70, 30)];
+    [quedingBtn setTitle:@"确定" forState:UIControlStateNormal];
+    quedingBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [quedingBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [quedingBtn setBackgroundColor:RGBCOLOR(244, 76, 138)];
+    quedingBtn.layer.cornerRadius = 15;
+    [downView addSubview:quedingBtn];
+    
+    [quedingBtn addTarget:self action:@selector(quedingBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    //总价
+    _t_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, quedingBtn.frame.origin.x - 10, downView.frame.size.height*0.5)];
+    _t_priceLabel.font = [UIFont systemFontOfSize:12];
+    [downView addSubview:_t_priceLabel];
+    
+    //原价
+    _o_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_t_priceLabel.frame), _t_priceLabel.frame.size.width, downView.frame.size.height * 0.5)];
+    _o_priceLabel.font = [UIFont systemFontOfSize:12];
+    [downView addSubview:_o_priceLabel];
+    
+    
+    [self jisuanPrice];
+    
+    
+}
+
+
 #pragma mark - MyMethod
 
+
+-(void)quedingBtnClicked{
+    NSLog(@"%s",__FUNCTION__);
+    
+    if (self.theType == CHOOSETYPE_GOUWUCHE) {//购物车
+        [self.navigationController popViewControllerAnimated:YES];
+    }else if (self.theType == CHOOSETYPE_LIJIGOUMAI){//立即购买
+        
+    }
+    
+    
+}
+
+
 -(void)creatTab{
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT) style:UITableViewStylePlain];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64-50) style:UITableViewStylePlain];
     _tab.delegate = self;
     _tab.dataSource = self;
+    _tab.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tab];
 }
 
@@ -59,7 +127,7 @@
         
         LTools *cc = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
         [cc requestCompletion:^(NSDictionary *result, NSError *erro) {
-            _dataArray = [result arrayValueForKey:@"attr"];
+            _attrDic = [result dictionaryValueForKey:@"attr"];
             [_tab reloadData];
         } failBlock:^(NSDictionary *result, NSError *erro) {
             
@@ -82,13 +150,15 @@
         cell = [[GChooseColorSizeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     for (UIView *view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
     
-    NSDictionary *dic = _dataArray[indexPath.row];
-    ProductModel *model = self.productModelArray[indexPath.row];
-    [cell loadCustomViewWithIndexPath:indexPath netDatamodel:dic productModel:model];
+    cell.delegate = self;
+    
+    [cell loadCustomViewWithIndexPath:indexPath netDatamodel:_attrDic];
     
     
     
@@ -97,17 +167,40 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+    return self.productModelArray.count;
 }
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 250;
+    return 291;
 }
 
 
 
-
+-(void)jisuanPrice{
+    CGFloat t_price = 0;
+    CGFloat o_price = 0;
+    
+    for (ProductModel *model in self.productModelArray) {
+        
+        if (model.isChoose) {
+            CGFloat p = [model.product_price floatValue];
+            t_price += p;
+            
+            CGFloat o_p = [model.original_price floatValue];
+            o_price += o_p;
+        }
+        
+    }
+    
+    _t_priceLabel.text = [NSString stringWithFormat:@"总计：￥%.1f",t_price];
+    NSString *o_price_str = [NSString stringWithFormat:@"￥%.1f",o_price];
+    
+    NSMutableAttributedString  *yyy = [[NSMutableAttributedString alloc]initWithString:o_price_str];
+    [yyy addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(1, o_price_str.length-1)];
+    _o_priceLabel.textColor = RGBCOLOR(81, 82, 83);
+    _o_priceLabel.attributedText = yyy;
+}
 
 
 

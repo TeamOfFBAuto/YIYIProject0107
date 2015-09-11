@@ -610,20 +610,7 @@
 }
 
 
-////打电话
-//-(void)takeThePhone{
-//    UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"拨号" message:self.phoneNumber delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-//    [al show];
-//}
-//
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-//    
-//    //0取消    1确定
-//    if (buttonIndex == 1) {
-//        NSString *strPhone = [NSString stringWithFormat:@"tel://%@",self.phoneNumber];
-//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:strPhone]];
-//    }
-//}
+
 
 
 
