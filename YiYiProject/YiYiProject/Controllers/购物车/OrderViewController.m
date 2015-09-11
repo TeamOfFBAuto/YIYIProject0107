@@ -280,7 +280,7 @@
     NSArray *productArr = temp;
     ConfirmOrderController *confirm = [[ConfirmOrderController alloc]init];
     confirm.productArray = productArr;
-    confirm.sumPrice = [order.total_fee floatValue];
+//    confirm.sumPrice = [order.total_fee floatValue];
     [self.navigationController pushViewController:confirm animated:YES];
     
 }

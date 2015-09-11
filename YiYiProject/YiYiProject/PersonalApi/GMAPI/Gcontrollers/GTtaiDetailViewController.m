@@ -276,7 +276,7 @@
     }
     
     if (_allProductArray.count == 0) {
-        [GMAPI showAutoHiddenMBProgressWithText:@"请勾选需要的商品" addToView:self.view];
+        [GMAPI showAutoHiddenMBProgressWithText:@"请勾选您需要的商品" addToView:self.view];
         return;
     }
     
@@ -306,7 +306,7 @@
     }
     
     if (_allProductArray.count == 0) {
-        [GMAPI showAutoHiddenMBProgressWithText:@"请勾选需要的商品" addToView:self.view];
+        [GMAPI showAutoHiddenMBProgressWithText:@"请勾选您需要的商品" addToView:self.view];
         return;
     }
     

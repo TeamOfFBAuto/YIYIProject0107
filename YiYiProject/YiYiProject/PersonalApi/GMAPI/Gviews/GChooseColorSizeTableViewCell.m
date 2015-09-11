@@ -149,8 +149,8 @@
         colorScrollViewContentWidth += (colorLabel.frame.size.width +10);
         
         if (_theModel.ischooseColor) {
-            NSLog(@"colorName:%@ model.color:%@",colorName,[_theModel.color stringValueForKey:@"color_name"]);
-            if ([colorName isEqualToString:[_theModel.color stringValueForKey:@"color_name"]]) {
+            NSLog(@"colorName:%@ model.color:%@",colorName,[_theModel.colorDic stringValueForKey:@"color_name"]);
+            if ([colorName isEqualToString:[_theModel.colorDic stringValueForKey:@"color_name"]]) {
                 colorLabel.backgroundColor = RGBCOLOR(244, 76, 139);
                 colorLabel.textColor = [UIColor whiteColor];
                 colorLabel.layer.borderWidth = 0;
@@ -163,7 +163,7 @@
                 NSString *aa = coloridArray[i];
                 NSString *bb = colorNameArray[i];
                 ProductModel *model = self.delegate.productModelArray[theIndexPath.row];
-                model.color = @{
+                model.colorDic = @{
                                 @"color_id":aa,
                                 @"color_name":bb
                                 };
@@ -238,7 +238,7 @@
         
         
         if (_theModel.ischooseSize) {
-            if ([sizeName isEqualToString:[_theModel.size stringValueForKey:@"size_name"]]) {
+            if ([sizeName isEqualToString:[_theModel.sizeDic stringValueForKey:@"size_name"]]) {
                 sizeLabel.backgroundColor = RGBCOLOR(244, 76, 139);
                 sizeLabel.textColor = [UIColor whiteColor];
                 sizeLabel.layer.borderWidth = 0;
@@ -251,7 +251,7 @@
                 NSString *aa = sizeidArray[i];
                 NSString *bb = sizeNameArray[i];
                 ProductModel *model = self.delegate.productModelArray[theIndexPath.row];
-                model.size = @{
+                model.sizeDic = @{
                                @"size_id":aa,
                                @"size_name":bb
                                };
@@ -372,7 +372,7 @@
     NSString *color_name = [colorDic stringValueForKey:@"color_name"];
     ProductModel *model = self.delegate.productModelArray[_theIndexPath.row];
     model.ischooseColor = YES;
-    model.color = @{
+    model.colorDic = @{
                     @"color_id":color_id,
                     @"color_name":color_name
                     };
@@ -401,7 +401,7 @@
     NSString *size_name = [sizeDic stringValueForKey:@"size_name"];
     ProductModel *model = self.delegate.productModelArray[_theIndexPath.row];
     model.ischooseSize = YES;
-    model.size = @{
+    model.sizeDic = @{
                    @"size_id":size_id,
                    @"size_name":size_name
                    };

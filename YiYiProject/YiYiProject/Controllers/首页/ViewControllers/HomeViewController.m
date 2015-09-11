@@ -59,7 +59,6 @@
     
 //    [self getChouJiangState];
     
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getChouJiangState) name:NOTIFICATION_GETCHOUJIANGSTATE object:nil];
 }
 
 #pragma - mark 网络请求

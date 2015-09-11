@@ -856,6 +856,12 @@ typedef enum{
 //颜色尺码选择
 #define CHOOSE_COLORANDSIZE @"http://www119.alayy.com/index.php?d=api&c=products&m=get_product_attr"
 
+//领取优惠劵
+#define USER_GETCOUPON @"http://www119.alayy.com/index.php?d=api&c=order&m=receive_coupon"
+
+//62、支付时弹出可以使用的优惠券列表
+#define USER_GETCOUPON_LIST @"http://www119.alayy.com/index.php?d=api&c=order&m=use_coupon_list"
+
 #endif
 
 

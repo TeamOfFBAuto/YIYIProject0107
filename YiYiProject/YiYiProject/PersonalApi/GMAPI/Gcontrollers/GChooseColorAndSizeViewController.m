@@ -41,8 +41,10 @@
     [self creatTab];
     
     [self creatDownView];
-    
+
     [self prepareNetData];
+    
+    
     
     
 }
@@ -97,8 +99,33 @@
 -(void)quedingBtnClicked{
     NSLog(@"%s",__FUNCTION__);
     
+    
+    NSMutableArray *resultProducts = [NSMutableArray arrayWithCapacity:1];
+    for (ProductModel *model in self.productModelArray) {
+        
+        NSLog(@"model.ischoose %d",model.isChoose);
+        if (model.isChoose) {
+            NSLog(@"pid %@",model.product_id);
+            NSLog(@"pname %@",model.product_name);
+            NSLog(@"colorName %@  colorId %@",model.colorDic[@"color_name"],model.colorDic[@"color_id"]);
+            NSLog(@"sizeName %@  sizeid %@",model.sizeDic[@"size_name"],model.sizeDic[@"size_id"]);
+            NSLog(@"num %ld",model.tnum);
+            [resultProducts addObject:model];
+        }
+        
+    }
+    
+    NSLog(@"resultProducts.count------------%ld",resultProducts.count);
+    if (resultProducts.count == 0) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请勾选您需要的商品" addToView:self.view];
+    }
+    
+    
+    
     if (self.theType == CHOOSETYPE_GOUWUCHE) {//购物车
-        [self.navigationController popViewControllerAnimated:YES];
+        
+//        [self.navigationController popViewControllerAnimated:YES];
+        
     }else if (self.theType == CHOOSETYPE_LIJIGOUMAI){//立即购买
         
     }
@@ -116,6 +143,7 @@
 }
 
 -(void)prepareNetData{
+    
     if (self.productModelArray.count>0) {
         NSMutableArray *idsArray = [NSMutableArray arrayWithCapacity:1];
         for (ProductModel *model in self.productModelArray) {
@@ -125,12 +153,45 @@
         
         NSString *url = [NSString stringWithFormat:@"%@&product_ids=%@",CHOOSE_COLORANDSIZE,theIds];
         
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
         LTools *cc = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
         [cc requestCompletion:^(NSDictionary *result, NSError *erro) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
             _attrDic = [result dictionaryValueForKey:@"attr"];
+            
+            for (ProductModel *model in self.productModelArray) {
+                NSDictionary *ccc = [_attrDic dictionaryValueForKey:model.product_id];
+                NSArray *colorArray = [ccc arrayValueForKey:@"color"];
+                NSArray *sizeArray = [ccc arrayValueForKey:@"size"];
+                if (colorArray.count>0) {
+                    model.colorDic = colorArray[0];
+                }else{
+                    model.colorDic = @{
+                                       @"color_id":@"0",
+                                       @"color_name":@"0"
+                                       };
+                }
+                
+                if (sizeArray.count>0) {
+                    model.sizeDic = sizeArray[0];
+                    
+                }else{
+                    model.sizeDic = @{
+                                       @"size_id":@"0",
+                                       @"size_name":@"0"
+                                       };
+                }
+            }
+            
+            
+            
             [_tab reloadData];
         } failBlock:^(NSDictionary *result, NSError *erro) {
-            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         }];
         
         

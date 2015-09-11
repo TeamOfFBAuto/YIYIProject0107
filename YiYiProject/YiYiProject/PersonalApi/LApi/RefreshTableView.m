@@ -56,7 +56,8 @@
 
 - (void)dealloc
 {
-    self.dataArrayObeserverBlock = nil;
+    NSLog(@"%s dealloc",__FUNCTION__);
+//    self.dataArrayObeserverBlock = nil;
     self.dataArray = nil;
     self.loadingIndicator = nil;
     self.normalLabel = nil;
@@ -64,7 +65,6 @@
     self.delegate = nil;
     _refreshHeaderView.delegate = nil;
     _refreshHeaderView = nil;
-    NSLog(@"%s dealloc",__FUNCTION__);
 }
 
 -(id)initWithFrame:(CGRect)frame superView:(UIView *)superView
@@ -177,7 +177,10 @@
 
 -(void)removeObserver
 {
-    [self removeObserver:self forKeyPath:@"_dataArrayCount"];
+    if (_dataArrayObeserverBlock) {
+        
+        [self removeObserver:self forKeyPath:@"_dataArrayCount"];
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

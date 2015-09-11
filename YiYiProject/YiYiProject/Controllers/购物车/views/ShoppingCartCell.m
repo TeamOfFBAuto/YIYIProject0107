@@ -26,12 +26,9 @@
 
 - (void)setCellWithModel:(ProductModel *)aModel
 {
-//    _aModel = aModel;
-//    
-//    [self.addButton addTarget:self action:@selector(clickToAdd:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.reduceButton addTarget:self action:@selector(clickToReduce:) forControlEvents:UIControlEventTouchUpInside];
+    NSString *small_cover_pic = [aModel.small_cover_pic stringValueForKey:@"src"];
     
-    [self.productImageView sd_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+    [self.productImageView sd_setImageWithURL:[NSURL URLWithString:small_cover_pic] placeholderImage:DEFAULT_YIJIAYI];
     NSString *name = aModel.product_name;
     self.nameLabel.width = [LTools widthForText:name font:13];
     _nameLabel.numberOfLines = 2;
@@ -39,21 +36,12 @@
     _nameLabel.height = [LTools heightForText:name width:_nameLabel.width font:13];
     _nameLabel.text = aModel.product_name;
     
-    self.priceLabel.text = [NSString stringWithFormat:@"￥%@",aModel.product_price];
+    self.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",[aModel.product_price floatValue]];
     self.numLabel.text = aModel.product_num;
     
     self.reduceButton.selected = [aModel.product_num intValue] == 1 ? NO : YES;
     self.reduceButton.userInteractionEnabled = [aModel.product_num intValue] == 1 ? NO : YES;
 }
 
-//- (void)clickToAdd:(UIButton *)sender
-//{
-//    
-//}
-//
-//- (void)clickToReduce:(UIButton *)sender
-//{
-//    
-//}
 
 @end
