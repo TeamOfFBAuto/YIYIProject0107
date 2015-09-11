@@ -623,6 +623,31 @@
 
 #pragma mark - 事件处理
 
+
+/**
+ *  加入购物车
+ */
+- (void)clickToAddToShoppingCar
+{
+    
+}
+
+/**
+ *  立即购买
+ */
+- (void)clickToBuy
+{
+    
+}
+
+/**
+ *  跳转购物车
+ */
+- (void)clickToShoppingCar
+{
+    
+}
+
 /**
  *  点击去获取优惠劵
  */
@@ -1531,7 +1556,7 @@
         }
         
         
-        UIView *line_Coupon = [[UIView alloc]initWithFrame:CGRectMake(0, labelCoupon.bottom, DEVICE_WIDTH, 0.5)];
+        UIView *line_Coupon = [[UIView alloc]initWithFrame:CGRectMake(0, labelCoupon.bottom + 5, DEVICE_WIDTH, 0.5)];
         line_Coupon.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
         [_headerView addSubview:line_Coupon];
         
@@ -1804,40 +1829,11 @@
     [bottom addSubview:buyBtn];
 }
 
-/**
- *  加入购物车
- */
-- (void)clickToAddToShoppingCar
-{
-    
-}
-
-/**
- *  立即购买
- */
-- (void)clickToBuy
-{
-    
-}
-
-/**
- *  跳转购物车
- */
-- (void)clickToShoppingCar
-{
-    
-}
-
 - (void)createNavigationbarTools
 {
     
     UIButton *rightView=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 190, 44)];
     rightView.backgroundColor=[UIColor clearColor];
-    
-//    //是否赞
-//    heartButton = [[UIButton alloc]initWithframe:CGRectMake(0, 0, 44, 44) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"productDetail_zan_normal"] selectedImage:[UIImage imageNamed:@"productDetail_zan_selected"] target:self action:@selector(clickToLike:)];
-//    [heartButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-    
     
     //收藏的
     
