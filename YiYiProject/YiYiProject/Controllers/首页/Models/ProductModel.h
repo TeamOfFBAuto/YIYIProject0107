@@ -28,41 +28,29 @@
 @property(nonatomic,retain)NSString *product_fav_num;//收藏数量
 @property(nonatomic,retain)NSString *product_brand_id;
 @property(nonatomic,retain)NSString *product_brand_name;//品牌名
-
 @property(nonatomic,retain)NSString *product_share_num;
-
 @property(nonatomic,retain)NSString *product_sku;//货号
 @property(nonatomic,retain)NSString *product_hostsale;
-
 @property(nonatomic,retain)NSString *product_add_time;
 @property(nonatomic,retain)NSArray *imagelist;//图片数组
-
 @property(nonatomic,retain)NSString *product_mall_id;
 @property(nonatomic,retain)NSString *product_shop_id;
 @property(nonatomic,retain)NSString *product_tag;
 @property(nonatomic,retain)NSString *product_status;
 @property(nonatomic,retain)NSString *product_hotsale;
 @property(nonatomic,assign)NSInteger is_favor;
-
 @property(nonatomic,assign)NSInteger is_like;
-
 @property(nonatomic,retain)NSDictionary *brand_info;
 @property(nonatomic,retain)NSDictionary *mall_info;
-
 @property(nonatomic,retain)NSArray *images;//图片数组(单品详情)
 @property(nonatomic,strong)NSString *product_new;
-
-
 @property(nonatomic,retain)NSString *favor_id;
 @property(nonatomic,retain)NSString *product_state;
 @property(nonatomic,retain)NSString *fav_time;//收藏时间
 @property(nonatomic,retain)NSString *uid;//收藏的人
 @property(nonatomic,retain)NSString *product_view_num;//浏览数
-
 @property(nonatomic,strong)NSString *shop_type;//店铺类型
-
 @property(nonatomic,strong)NSString *auto_down_time;//自动下架时间
-
 @property(nonatomic,strong)NSString *product_type;//分类
 
 //新版本0812添加
@@ -78,5 +66,16 @@
 @property(nonatomic,retain)NSString *cover_pic;//单品封面
 @property(nonatomic,retain)NSString *is_seckill;//是否秒杀
 @property(nonatomic,retain)NSArray *coupon_list;//优惠券列表
+
+//购物车
+@property(nonatomic,retain)NSString *cart_pro_id;//购物车id
+@property(nonatomic,retain)NSString *color_id;//颜色id
+@property(nonatomic,retain)NSString *size_id;//尺寸id
+@property(nonatomic,retain)NSString *add_time;
+@property(nonatomic,retain)NSDictionary *small_cover_pic;//小封面图
+@property(nonatomic,retain)NSString *size;//尺寸name
+@property(nonatomic,retain)NSString *color;//颜色name
+@property(nonatomic,assign)BOOL isSelected;//购物车中判断是否选择
+
 
 @end

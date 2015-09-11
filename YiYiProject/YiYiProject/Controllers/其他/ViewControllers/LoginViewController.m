@@ -310,6 +310,9 @@
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_LOGIN object:nil];
         
+        //通知获取抽奖状态
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_GETCHOUJIANGSTATE object:nil];
+        
         [weakSelf performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.2];
         
         [weakSelf loginResultIsSuccess:YES];

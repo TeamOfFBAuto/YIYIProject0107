@@ -49,8 +49,7 @@
 
 - (void)dealloc
 {
-    [_table removeObserver:self forKeyPath:@"_dataArrayCount"];
-
+    [_table removeObserver];
     _table.dataSource = nil;
     _table.refreshDelegate = nil;
     _table = nil;
@@ -65,26 +64,34 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
-    [self.my_right_button setTitle:@"编辑" forState:UIControlStateNormal];
-    [self.my_right_button setTitle:@"完成" forState:UIControlStateSelected];
-    
+//    [self.my_right_button setTitle:@"编辑" forState:UIControlStateNormal];
+//    [self.my_right_button setTitle:@"完成" forState:UIControlStateSelected];
+    [self.my_right_button setImage:[UIImage imageNamed:@"myaddress_shanchu"] forState:UIControlStateNormal];
     self.my_right_button.hidden = YES;
 
-    
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH,DEVICE_HEIGHT - 64) showLoadMore:NO];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_table];
     
+    __weak typeof(self)weakSelf = self;
+    _table.dataArrayObeserverBlock = ^(NSString *keyPath,NSDictionary *change)
+    {
+        if ([keyPath isEqualToString:@"selected"]) {
+            [weakSelf updateSumPrice];
+            
+        }else if ([keyPath isEqualToString:@"_dataArrayCount"]){
+            
+            [weakSelf checkCartIsEmpty];
+        }
+    };
+    
+    [_table showRefreshHeader:YES];
+    
     _isUpdateCart = YES;
     
-    //监测数据源
-    [_table addObserver:self forKeyPath:@"_dataArrayCount" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-    
-    [_table loadFail];//test
-    
-    //初始化 记录是否选择
+    //初始化 记录是否选择 默认全选择
     _selectDic = [NSMutableDictionary dictionary];
     
     //监测购物车是否更新
@@ -98,7 +105,6 @@
 {
     [super viewWillAppear:animated];
     
-    self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBarHidden = NO;
     
     //判断是否需要同步到服务器 1、数据库有 2、登录了
@@ -172,7 +178,7 @@
  */
 - (void)creatBottomTools
 {
-    _bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 49 - 50, DEVICE_WIDTH, 50)];
+    _bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 50, DEVICE_WIDTH, 50)];
     [self.view addSubview:_bottom];
     _bottom.backgroundColor = [UIColor whiteColor];
     
@@ -180,27 +186,28 @@
     line.backgroundColor = [UIColor colorWithHexString:@"e4e4e4"];
     [_bottom addSubview:line];
     
-    _selectAllBtn = [[UIButton alloc]initWithframe:CGRectMake(0, 0, 40, _bottom.height) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"shopping cart_normal"] selectedImage:[UIImage imageNamed:@"shopping cart_selected"] target:self action:@selector(clickToSelectAll:)];
+    _selectAllBtn = [[UIButton alloc]initWithframe:CGRectMake(0, 0, 40, _bottom.height) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"shoppingcart_bottom_normal"] selectedImage:[UIImage imageNamed:@"shoppingcart_bottom_selected"] target:self action:@selector(clickToSelectAll:)];
     [_bottom addSubview:_selectAllBtn];
+    
     _selectAllBtn.selected = YES;
     
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(_selectAllBtn.right, 0, 30, _bottom.height) title:@"全选" font:15 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"494949"]];
     [_bottom addSubview:label];
     
-    UILabel *label_heJi = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 10, 12, 30, 14) title:@"合计" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"494949"]];
+    UILabel *label_heJi = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 10, 12, 30, 14) title:@"合计" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"494949"]];
     [_bottom addSubview:label_heJi];
     
-    UILabel *label_fei = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 10 - 2, label_heJi.bottom + 5, 35, 8) title:@"不含运费" font:8 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"494949"]];
+    UILabel *label_fei = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 10, label_heJi.bottom + 5, 30, 8) title:@"免运费" font:8 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"494949"]];
     [_bottom addSubview:label_fei];
     
-    _sumLabel = [[UILabel alloc]initWithFrame:CGRectMake(label_heJi.right + 10, 0, 100, _bottom.height) title:@"￥0.00" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"f88600"]];
+    _sumLabel = [[UILabel alloc]initWithFrame:CGRectMake(label_heJi.right + 10, 0, 100, _bottom.height) title:@"￥0.00" font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR];
     [_bottom addSubview:_sumLabel];
     
     [self updateSumPrice];//更新数据
     
     UIButton *payButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 110, 0, 110, _bottom.height) buttonType:UIButtonTypeCustom normalTitle:@"去结算" selectedTitle:nil target:self action:@selector(clickToPay:)];
     [payButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    payButton.backgroundColor = [UIColor colorWithHexString:@"f98700"];
+    payButton.backgroundColor = DEFAULT_TEXTCOLOR;
     [_bottom addSubview:payButton];
     
 }
@@ -226,6 +233,84 @@
 {
     OrderModel *order = [notification.userInfo objectForKey:@"result"];
     _buyAgainOrder = order;
+}
+
+#pragma mark - 选中单品相关处理
+
+/**
+ *  是否全部选中
+ *
+ *  @return
+ */
+- (BOOL)isAllSelected
+{
+    for (int i = 0; i < _table.dataArray.count; i ++) {
+        
+        ProductModel *aModel = [_table.dataArray objectAtIndex:i];
+        if ([_selectDic[aModel.product_id] isEqualToString:@"no"]) {
+            
+            return NO;
+        }
+    }
+    return YES;
+}
+
+/**
+ *  选中个数
+ *
+ *  @return
+ */
+- (int)sumSelected
+{
+    int sum = 0;
+    for (int i = 0; i < _table.dataArray.count; i ++) {
+        
+        ProductModel *aModel = [_table.dataArray objectAtIndex:i];
+        if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
+            
+            sum ++;
+        }
+    }
+    return sum;
+}
+
+/**
+ *  所有选中id ,拼接字符串
+ *
+ *  @return
+ */
+- (NSString *)stringForSelected
+{
+    NSMutableArray *arr_id = [NSMutableArray array];
+    for (int i = 0; i < _table.dataArray.count; i ++) {
+        
+        ProductModel *aModel = [_table.dataArray objectAtIndex:i];
+        if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
+            [arr_id addObject:aModel.cart_pro_id];
+        }
+    }
+    return [arr_id componentsJoinedByString:@","];
+}
+
+/**
+ *  计算总价
+ *
+ *  @return
+ */
+- (float)sumPrice
+{
+    float sum = 0.f;
+    for (int i = 0; i < _table.dataArray.count; i ++) {
+        
+        ProductModel *aModel = [_table.dataArray objectAtIndex:i];
+        
+        if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
+            
+            sum += ([aModel.product_num floatValue] * [aModel.product_price floatValue]);
+        }
+    }
+    
+    return sum;
 }
 
 #pragma mark - 事件处理
@@ -289,45 +374,6 @@
     }
     
     [self updateSumPrice];
-}
-
-/**
- *  是否全部选中
- *
- *  @return
- */
-- (BOOL)isAllSelected
-{
-    for (int i = 0; i < _table.dataArray.count; i ++) {
-        
-        ProductModel *aModel = [_table.dataArray objectAtIndex:i];
-        if ([_selectDic[aModel.product_id] isEqualToString:@"no"]) {
-            
-            return NO;
-        }
-    }
-    return YES;
-}
-
-/**
- *  计算总价
- *
- *  @return
- */
-- (float)sumPrice
-{
-    float sum = 0.f;
-    for (int i = 0; i < _table.dataArray.count; i ++) {
-        
-        ProductModel *aModel = [_table.dataArray objectAtIndex:i];
-        
-        if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
-            
-            sum += ([aModel.product_num floatValue] * [aModel.product_price floatValue]);
-        }
-    }
-    
-    return sum;
 }
 
 /**
@@ -415,7 +461,23 @@
     sender.selected = !sender.selected;
     
     _selectAllBtn.selected = [self isAllSelected];
+    
+    [self updateSumPrice];
 
+}
+
+/**
+ *  全部设置为选择状态
+ *
+ */
+- (void)setAllSelected
+{
+    for (int i = 0; i < _table.dataArray.count; i ++) {
+        
+        ProductModel *aModel = [_table.dataArray objectAtIndex:i];
+        [_selectDic setObject:@"yes" forKey:aModel.product_id];
+        
+    }
 }
 
 - (void)clickToSelectAll:(UIButton *)sender
@@ -465,117 +527,58 @@
 
 }
 
-/**
- *  删除购物车某个产品
- *
- *  @param sender
- */
-- (void)clickToDelete:(UIButton *)sender
-{
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"确认要删除这个宝贝吗?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
-    alert.tag = sender.tag + kPadding_alert;
-    [alert show];
-}
-
 //右边按钮点击
 
 -(void)rightButtonTap:(UIButton *)sender
 {
-    sender.selected = !sender.selected;
+    int sum = [self sumSelected];
+    if (sum == 0) {
+        
+        [LTools alertText:@"您还没有选择宝贝!"];
+        return;
+    }
     
-    _isEditing = sender.selected;
-    
-    [_table reloadData];
+    NSString *title = [NSString stringWithFormat:@"确认要删除选中%d种宝贝吗?",sum];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:title delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
+    alert.tag = sender.tag + kPadding_alert;
+    [alert show];
 }
 
 #pragma mark - 网络请求
 
-///**
-// *  同步购物车信息
-// */
-//- (void)syncCartInfo
-//{
-////    authcode \商品id 多个中间用英文逗号隔开\商品个数 多个中间用英文逗号隔开
-//    
-//    NSArray *cartInfo = [[DBManager shareInstance]QueryData];
-//    
-//    NSMutableArray *product_ids = [NSMutableArray arrayWithCapacity:cartInfo.count];
-//    NSMutableArray *product_nums = [NSMutableArray arrayWithCapacity:cartInfo.count];
-//    for (ProductModel *aModel in cartInfo) {
-//        
-//        [product_ids addObject:aModel.product_id];
-//        [product_nums addObject:aModel.product_num];
-//    }
-//    
-//    NSString *ids = [product_ids componentsJoinedByString:@","];
-//    NSString *nums = [product_nums componentsJoinedByString:@","];
-//    
-//    NSString *authkey = [GMAPI getAuthkey];
-//
-//    NSDictionary *params = @{@"authcode":authkey,
-//                             @"product_ids":ids,
-//                             @"product_nums":nums};
-//    
-//    __weak typeof(_table)weakTable = _table;
-////    __weak typeof(self)weakSelf = self;
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:ORDER_SYNC_CART_INFO parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        
-//        NSLog(@"同步数据 %@",result[RESULT_INFO]);
-//        //同步成功清空本地
-//        [[DBManager shareInstance]deleteAll];
-//        //刷新数据
-//        [weakTable showRefreshHeader:YES];
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"同步数据失败 %@",result[RESULT_INFO]);
-//        
-//    }];
-//}
-
 /**
  *  删除购物车某条记录
  *
- *  @param aModel <#aModel description#>
+ *  @param aModel
  */
-- (void)deleteProduct:(ProductModel *)aModel index:(int)index
+- (void)deleteProducts:(NSString *)products
 {
 //    authcode
-//    cart_pro_id 购物车商品id
+//    cart_pro_id 购物车商品ids
     
     NSString *authkey = [GMAPI getAuthkey];
     
-    //未登录
-    if (authkey.length == 0) {
-        
-//        [[DBManager shareInstance]deleteProductId:aModel.product_id];
-        
-        [_table.dataArray removeObjectAtIndex:index];
-        
-        [_table reloadData];
-        
-        [_table setValue:[NSNumber numberWithInteger:_table.dataArray.count] forKey:@"_dataArrayCount"];
-        
-        return;
-    }
-    
-    
-//    NSDictionary *params = @{@"authcode":authkey,
-//                             @"cart_pro_id":aModel.cart_pro_id};
+    NSDictionary *params = @{@"authcode":authkey,
+                             @"cart_pro_id":products};
     
     __weak typeof(_table)weakTable = _table;
     __weak typeof(self)weakSelf = self;
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        
-//        [weakTable.dataArray removeObjectAtIndex:index];
-//        [weakTable reloadData];
-//        [weakTable setValue:[NSNumber numberWithInteger:weakTable.dataArray.count] forKey:@"_dataArrayCount"];
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"failBlock:%@",result);
-//        
-//    }];
+    
+    NSString *post = [LTools url:nil withParams:params];
+    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    
+    LTools *tool = [[LTools alloc]initWithUrl:ORDER_DEL_CART_PRODUCT isPost:YES postData:postData];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        weakTable.pageNum = 1;
+        weakTable.isReloadData = YES;
+        [weakSelf getCartList];
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [weakTable loadFail];
+    }];
 }
 
 /**
@@ -591,34 +594,31 @@
 {
     NSString *authkey = [GMAPI getAuthkey];
     
-    if (authkey.length == 0) {
-        
-//        [[DBManager shareInstance]increasProductId:aModel.product_id ByNum:num];
-        aModel.product_num = [NSString stringWithFormat:@"%d",[aModel.product_num intValue] + num];
-        [_table reloadData];
-        [self updateSumPrice];
-        
-        return;
-    }
+    NSDictionary *params = @{@"authcode":authkey,
+                             @"cart_pro_id":aModel.cart_pro_id,
+                             @"product_num":[NSNumber numberWithInt:num]};
     
-//    NSDictionary *params = @{@"authcode":authkey,
-//                             @"cart_pro_id":aModel.cart_pro_id,
-//                             @"product_num":[NSNumber numberWithInt:num]};
-//    
-//    __weak typeof(_table)weakTable = _table;
-//    __weak typeof(self)weakSelf = self;
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:ORDER_EDIT_CART_PRODUCT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        
-//        aModel.product_num = [NSString stringWithFormat:@"%d",[aModel.product_num intValue] + num];
-//        [weakTable reloadData];
-//        [weakSelf updateSumPrice];
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"failBlock:%@",result);
-//        [weakTable loadFail];
-//        
-//    }];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    __weak typeof(self)weakSelf = self;
+    __weak typeof(_table)weakTable = _table;
+
+    NSString *post = [LTools url:nil withParams:params];
+    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    
+    LTools *tool = [[LTools alloc]initWithUrl:ORDER_EDIT_CART_PRODUCT isPost:YES postData:postData];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        aModel.product_num = [NSString stringWithFormat:@"%d",[aModel.product_num intValue] + num];
+        [weakTable reloadData];
+        [weakSelf updateSumPrice];
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [weakTable loadFail];
+    }];
 
 }
 /**
@@ -628,63 +628,43 @@
 {
     NSString *authkey = [GMAPI getAuthkey];
     
-//    if (authkey.length == 0) {
-//        
-//        //获取本地数据
-//        NSArray *array = [[DBManager shareInstance]QueryData];
-//        
-//        NSArray *allkeys = [_selectDic allKeys];
-//        for (ProductModel *aModel in array) {
-//            
-//            NSString *productId = [NSString stringWithFormat:@"%@",aModel.product_id];
-//            
-//            //不包含时 设为yes
-//            if (![allkeys containsObject:productId]) {
-//                
-//                [_selectDic setObject:@"yes" forKey:aModel.product_id];
-//
-//            }else
-//            {
-//                NSLog(@"baohan %@",productId);
-//            }
-//        }
-//        
-//        [_table reloadData:array isHaveMore:NO];
-//        
-//        return;
-//    }
-    
     NSDictionary *params = @{@"authcode":authkey,
                              @"page":[NSNumber numberWithInt:_table.pageNum],
-                             @"perpage":[NSNumber numberWithInt:50]};
+                             @"perpage":[NSNumber numberWithInt:L_PAGE_SIZE]};
     
     __weak typeof(_table)weakTable = _table;
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_GET_CART_PRODCUTS parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        
-//        NSLog(@"completion:%@",result);
-//        NSArray *list = result[@"list"];
-//        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:list.count];
-//        for (NSDictionary *aDic in list) {
-//            
-//            ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
-//            [temp addObject:aModel];
-//            
-//            //默认 yes
-//            NSString *state = _selectDic[aModel.product_id];
-//            if (!state) {
-//                [_selectDic setObject:@"yes" forKey:aModel.product_id];
-//            }
-//        }
-//        [weakTable reloadData:temp pageSize:20];
-//        
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"failBlock:%@",result);
-//        
-//        [weakTable loadFail];
-//        
-//    }];
+    __weak typeof(self)weakSelf = self;
+
+    NSString *url = [LTools url:nil withParams:params];
+
+    url = [NSString stringWithFormat:@"%@&%@",ORDER_GET_CART_PRODCUTS,url];
+    
+    LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+
+        NSArray *list = [result arrayValueForKey:@"list"];
+        if (list) {
+            
+            NSMutableArray *temp = [NSMutableArray array];
+            for (NSDictionary *aDic in list) {
+                ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
+                [temp addObject:aModel];
+                
+                [_selectDic setObject:@"yes" forKey:aModel.product_id];
+            }
+            [weakTable reloadData:temp pageSize:L_PAGE_SIZE noDataView:[weakSelf footerViewForNoProduct]];
+        }
+        
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+
+        [weakTable reloadData:nil pageSize:L_PAGE_SIZE noDataView:[weakSelf footerViewForNoProduct]];
+    }];
+    
 }
 
 #pragma mark - 代理
@@ -695,12 +675,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 1) {
-        
-        //确认删除
-        NSInteger index = alertView.tag - kPadding_delete - kPadding_alert;
-        ProductModel *aModel = _table.dataArray[index];
-        
-        [self deleteProduct:aModel index:(int)index];
+        [self deleteProducts:[self stringForSelected]];
         
     }
 }
@@ -714,15 +689,6 @@
 - (void)loadMoreData
 {
     [self getCartList];
-}
-
-- (void)loadNewDataForTableView:(UITableView *)tableView
-{
-    
-}
-- (void)loadMoreDataForTableView:(UITableView *)tableView
-{
-    
 }
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -746,12 +712,10 @@
 {
     static NSString *identify = @"ShoppingCartCell";
     ShoppingCartCell *cell = (ShoppingCartCell *)[LTools cellForIdentify:identify cellName:identify forTable:tableView];
-    
-    ProductModel *aModel = [_table.dataArray objectAtIndex:indexPath.row];
-    
-    [cell setCellWithModel:aModel];
-    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    ProductModel *aModel = [_table.dataArray objectAtIndex:indexPath.row];
+    [cell setCellWithModel:aModel];
     
     [cell.selectedButton addTarget:self action:@selector(clickToSelect:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -767,10 +731,10 @@
     [cell.addButton addTarget:self action:@selector(clickToAdd:) forControlEvents:UIControlEventTouchUpInside];
 
     [cell.reduceButton addTarget:self action:@selector(clickToReduce:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.deleteBtn addTarget:self action:@selector(clickToDelete:) forControlEvents:UIControlEventTouchUpInside];
+//    [cell.deleteBtn addTarget:self action:@selector(clickToDelete:) forControlEvents:UIControlEventTouchUpInside];
     
     //监控选中按钮状态以及数量
-    [cell.selectedButton addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+//    [cell.selectedButton addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
 //    [cell.numLabel addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
     cell.bgView.left = _isEditing ? -40 : 0;
@@ -781,17 +745,17 @@
 
 #pragma - mark 通知处理
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    
-    if ([keyPath isEqualToString:@"selected"]) {
-        [self updateSumPrice];
-
-    }else if ([keyPath isEqualToString:@"_dataArrayCount"]){
-        
-        [self checkCartIsEmpty];
-    }
-    
-}
+//-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+//{
+//    
+//    if ([keyPath isEqualToString:@"selected"]) {
+//        [self updateSumPrice];
+//
+//    }else if ([keyPath isEqualToString:@"_dataArrayCount"]){
+//        
+//        [self checkCartIsEmpty];
+//    }
+//    
+//}
 
 @end

@@ -298,6 +298,39 @@
 #pragma mark - 网络请求
 
 /**
+ *  加入到购物车
+ */
+- (void)netWorkForAddProductToShoppingCarProductId:(NSString *)productId
+                                           colorId:(NSString *)colorId
+                                            sizeId:(NSString *)sizeId
+{
+    NSDictionary *params = @{@"authcode":[GMAPI getAuthkey],
+                             @"product_id":productId,
+                             @"color_id":colorId,
+                             @"size_id":sizeId,
+                             @"product_num":@"1"};;
+    NSString *api = ORDER_ADD_TO_CART;
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    __weak typeof(self)weakSelf = self;
+    NSString *post = [LTools url:nil withParams:params];
+    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    
+    LTools *tool = [[LTools alloc]initWithUrl:api isPost:YES postData:postData];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+    }];
+}
+
+
+/**
  *  领取优惠劵
  *
  *  @param aModel 优惠劵model
@@ -629,7 +662,7 @@
  */
 - (void)clickToAddToShoppingCar
 {
-    
+    [self netWorkForAddProductToShoppingCarProductId:@"214" colorId:@"2" sizeId:@"3"];
 }
 
 /**
@@ -637,7 +670,8 @@
  */
 - (void)clickToBuy
 {
-    
+    [self netWorkForAddProductToShoppingCarProductId:@"215" colorId:@"7" sizeId:@"6"];
+
 }
 
 /**
