@@ -1579,14 +1579,33 @@
             UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 10 - aWidth - (aWidth + 6) * i, 6 + labelCoupon.top, aWidth, 28) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:aImage selectedImage:nil target:self action:@selector(clickToCoupe)];
             [_headerView addSubview:btn];
             
-            NSString *title_minus = [NSString stringWithFormat:@"￥%@",aModel.minus_money];
-            NSString *title_full = [NSString stringWithFormat:@"满%@即可使用",aModel.full_money];
+            int type = [aModel.type intValue];
+            
+            NSString *title_minus;
+            NSString *title_full;
+            //满减
+            if (type == 1) {
+                
+                title_minus = [NSString stringWithFormat:@"￥%@",aModel.minus_money];
+                title_full = [NSString stringWithFormat:@"满%@即可使用",aModel.full_money];
+            }
+            //折扣
+            else if (type == 2){
+                
+                NSString *discount = [NSString stringWithFormat:@"%.1f",[aModel.discount_num floatValue] * 10];
+                discount = [NSString stringWithFormat:@"%@",[discount stringByRemoveTrailZero]];
+                title_minus = @"优惠券";
+                title_full = [NSString stringWithFormat:@"本店享%@折优惠",discount];
 
+            }
+            
             aHeight = btn.height / 2.f - 5;
             UILabel *minusLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, btn.width - 10, aHeight) title:title_minus font:8 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
             [btn addSubview:minusLabel];
+            minusLabel.font = [UIFont boldSystemFontOfSize:8];
             UILabel *fullLabel = [[UILabel alloc]initWithFrame:CGRectMake(minusLabel.left, minusLabel.bottom, minusLabel.width, aHeight) title:title_full font:8 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
             [btn addSubview:fullLabel];
+            
         }
         
         

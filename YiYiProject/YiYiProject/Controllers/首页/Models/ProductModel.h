@@ -34,7 +34,7 @@
 @property(nonatomic,retain)NSString *product_add_time;
 @property(nonatomic,retain)NSArray *imagelist;//图片数组
 @property(nonatomic,retain)NSString *product_mall_id;
-@property(nonatomic,retain)NSString *product_shop_id;
+@property(nonatomic,retain)NSString *product_shop_id;//单品所在店铺
 @property(nonatomic,retain)NSString *product_tag;
 @property(nonatomic,retain)NSString *product_status;
 @property(nonatomic,retain)NSString *product_hotsale;

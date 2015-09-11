@@ -73,8 +73,28 @@
     UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake([LTools fitWidth:10], [LTools fitHeight:8] , [LTools fitWidth:88], [LTools fitHeight:35]) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:aImage selectedImage:nil target:self action:nil];
     [view addSubview:btn];
     
-    NSString *title_minus = [NSString stringWithFormat:@"￥%@",aModel.minus_money];
-    NSString *title_full = [NSString stringWithFormat:@"满%@即可使用",aModel.full_money];
+    
+    int type = [aModel.type intValue];
+    
+    NSString *title_minus;
+    NSString *title_full;
+    NSString *title;
+    //满减
+    if (type == 1) {
+        
+        title_minus = [NSString stringWithFormat:@"￥%@",aModel.minus_money];
+        title_full = [NSString stringWithFormat:@"满%@即可使用",aModel.full_money];
+        title = [NSString stringWithFormat:@"满%@减%@",aModel.full_money,aModel.minus_money];
+    }
+    //折扣
+    else if (type == 2){
+        
+        NSString *discount = [NSString stringWithFormat:@"%.1f",[aModel.discount_num floatValue] * 10];
+        discount = [NSString stringWithFormat:@"%@",[discount stringByRemoveTrailZero]];
+        title_minus = @"优惠券";
+        title_full = [NSString stringWithFormat:@"本店享%@折优惠",discount];
+        title = [NSString stringWithFormat:@"%@折",discount];
+    }
     
     CGFloat aHeight = btn.height / 2.f - 5;
     UILabel *minusLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, btn.width - 10, aHeight) title:title_minus font:8 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
@@ -82,9 +102,11 @@
     UILabel *fullLabel = [[UILabel alloc]initWithFrame:CGRectMake(minusLabel.left, minusLabel.bottom, minusLabel.width, aHeight) title:title_full font:8 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
     [btn addSubview:fullLabel];
     
-    NSString *title1 = [NSString stringWithFormat:@"满%@减%@",aModel.full_money,aModel.minus_money];
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(btn.right + 5, btn.top, [LTools fitWidth:140], btn.height / 2.f) title:title1 font:8 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"5c5c5c"]];
+    //优惠标题
+    
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(btn.right + 5, btn.top, [LTools fitWidth:140], btn.height / 2.f) title:title font:8 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"5c5c5c"]];
     [view addSubview:label];
+    label.font = [UIFont boldSystemFontOfSize:8];
     
     NSString *title2 = [NSString stringWithFormat:@"有效期:%@-%@",[LTools timeString:aModel.use_start_time withFormat:@"yyyy.MM.dd"],[LTools timeString:aModel.use_end_time withFormat:@"yyyy.MM.dd"]];
     UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(btn.right + 5, label.bottom, [LTools fitWidth:140], btn.height / 2.f) title:title2 font:8 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"ababab"]];

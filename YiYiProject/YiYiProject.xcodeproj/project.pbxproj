@@ -103,6 +103,7 @@
 		135A59AE1BA2C60A00D17AFF /* shoppingcart_bottom_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135A59AA1BA2C60A00D17AFF /* shoppingcart_bottom_selected@2x.png */; };
 		135A59AF1BA2C60A00D17AFF /* shoppingcart_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135A59AB1BA2C60A00D17AFF /* shoppingcart_normal@2x.png */; };
 		135A59B01BA2C60A00D17AFF /* shoppingcart_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135A59AC1BA2C60A00D17AFF /* shoppingcart_selected@2x.png */; };
+		135A59B31BA2FDF300D17AFF /* ShopModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 135A59B21BA2FDF300D17AFF /* ShopModel.m */; };
 		135D8C9B1B96F70200A02A36 /* Ttai_guanbi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 135D8C9A1B96F70200A02A36 /* Ttai_guanbi@2x.png */; };
 		1366A4D51AE9DEFC004F83FD /* PulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366A4D41AE9DEFC004F83FD /* PulsingHaloLayer.m */; };
 		1366A4D81AE9E197004F83FD /* AnchorPiontView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366A4D71AE9E197004F83FD /* AnchorPiontView.m */; };
@@ -851,6 +852,8 @@
 		135A59AA1BA2C60A00D17AFF /* shoppingcart_bottom_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_bottom_selected@2x.png"; sourceTree = "<group>"; };
 		135A59AB1BA2C60A00D17AFF /* shoppingcart_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_normal@2x.png"; sourceTree = "<group>"; };
 		135A59AC1BA2C60A00D17AFF /* shoppingcart_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_selected@2x.png"; sourceTree = "<group>"; };
+		135A59B11BA2FDF300D17AFF /* ShopModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopModel.h; sourceTree = "<group>"; };
+		135A59B21BA2FDF300D17AFF /* ShopModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopModel.m; sourceTree = "<group>"; };
 		135D8C9A1B96F70200A02A36 /* Ttai_guanbi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Ttai_guanbi@2x.png"; sourceTree = "<group>"; };
 		1366A4D31AE9DEFC004F83FD /* PulsingHaloLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulsingHaloLayer.h; sourceTree = "<group>"; };
 		1366A4D41AE9DEFC004F83FD /* PulsingHaloLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulsingHaloLayer.m; sourceTree = "<group>"; };
@@ -3578,6 +3581,8 @@
 				565321511A59896600E43F80 /* TopicModel.m */,
 				135A599B1BA13A6E00D17AFF /* CouponModel.h */,
 				135A599C1BA13A6E00D17AFF /* CouponModel.m */,
+				135A59B11BA2FDF300D17AFF /* ShopModel.h */,
+				135A59B21BA2FDF300D17AFF /* ShopModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4717,6 +4722,7 @@
 				136875B81A598EE40048CB4D /* BrandModel.m in Sources */,
 				139DC34F1B00560000C94073 /* AMPActivityIndicator.m in Sources */,
 				19F7B44D1A67FFA600087BCB /* UMFeedbackViewController.m in Sources */,
+				135A59B31BA2FDF300D17AFF /* ShopModel.m in Sources */,
 				13775A971B818D1F006A1EDB /* MallCell.m in Sources */,
 				E3996EBF1A5E1DBA00673147 /* GpinpaiDetailViewController.m in Sources */,
 				13CD364E1A3C6BD90068C12A /* TMPhotoQuiltViewCell.m in Sources */,

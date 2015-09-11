@@ -15,6 +15,7 @@
 #import "ProductModel.h"
 #import "FBActionSheet.h"
 #import "PayActionViewController.h"//支付页面
+#import "ShopModel.h"
 
 #define ALIPAY @"支付宝支付"
 #define WXPAY  @"微信支付"
@@ -42,6 +43,7 @@
     MBProgressHUD *_loading;//加载
     
     UILabel *_addressHintLabel;//收货地址提示
+    NSMutableDictionary *_productsDic;//按照shopId分组的字典
 }
 
 @end
@@ -83,6 +85,8 @@
     
     [self getAddressAndFee];//获取收货地址和邮费
     
+//    [self prepareProductData];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -90,7 +94,88 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)prepareProductData
+{
+    _productsDic = [NSMutableDictionary dictionary];
+    for (ProductModel *aModel in self.productArray) {
+        ShopModel *tempModel = _productsDic[aModel.product_shop_id];//店铺id作为key,key对一个shopModel
+        
+        if (!tempModel) {
+            tempModel = [[ShopModel alloc]init];
+        }
+        
+        NSArray *products_arr = tempModel.productsArray;
+        if (products_arr.count) {
+            NSMutableArray *temp = [NSMutableArray arrayWithArray:products_arr];
+            [temp addObject:aModel];
+        }
+    }
+}
+
+/**
+ *  获取所有shopId数组 价格
+ *
+ *  @return shopId数组
+ */
+- (NSArray *)shopIdsArray
+{
+    NSMutableDictionary *temp = [NSMutableDictionary dictionary];
+
+    for (ProductModel *aModel in self.productArray) {
+        [temp setObject:@"shopId" forKey:aModel.product_shop_id];
+    }
+    return [temp allKeys];
+}
+
+- (void)getUserCouponList
+{
+    NSMutableDictionary *temp_shopId = [NSMutableDictionary dictionary];
+    NSMutableDictionary *temp_price = [NSMutableDictionary dictionary];
+    for (ProductModel *aModel in self.productArray) {
+        //id
+        [temp_shopId setObject:@"shopId" forKey:aModel.product_shop_id];
+        //价格
+        CGFloat price = [aModel.product_price floatValue] * [aModel.product_num intValue];
+        CGFloat lastPrice = [[temp_price objectForKey:aModel.product_shop_id] floatValue];
+        CGFloat sum = lastPrice + price;
+        [temp_price setObject:[NSNumber numberWithFloat:sum] forKey:aModel.product_shop_id];
+    }
+}
+
 #pragma mark - 网络请求
+
+/**
+ *  获取可用优惠券
+ *
+ *  @param shopIds     shopId字符串
+ *  @param priceString 总价格字符串
+ */
+- (void)networkForCouponListWithShopIdArray:(NSArray *)shopIdArray
+                        totalPricesString:(NSString *)priceString{
+    
+    NSString *shopIds = [shopIdArray componentsJoinedByString:@","];
+    NSLog(@"shopIds %@",shopIds);
+    NSDictionary *params = @{@"authcode":[GMAPI getAuthkey],
+                             @"total_price":shopIds,
+                             @"shop_id":priceString};
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    __weak typeof(self)weakSelf = self;
+    NSString *post = [LTools url:nil withParams:params];
+    NSString *api = [NSString stringWithFormat:@"%@&%@",USER_GETCOUPON_LIST,post];
+    
+    LTools *tool = [[LTools alloc]initWithUrl:api isPost:NO postData:nil];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+    }];
+}
 
 /**
  *  切换购物地址时 更新邮费
@@ -232,8 +317,8 @@
 - (void)updateExpressFeeAndSumPrice:(CGFloat)express
 {
     //产品加邮费
-    NSString *price = [NSString stringWithFormat:@"￥%.2f",self.sumPrice + _expressFee];
-    _priceLabel.text = price;
+//    NSString *price = [NSString stringWithFormat:@"￥%.2f",self.sumPrice + _expressFee];
+//    _priceLabel.text = price;
 }
 
 /**
@@ -264,7 +349,7 @@
     PayActionViewController *pay = [[PayActionViewController alloc]init];
     pay.orderId = orderId;
     pay.orderNum = orderNum;
-    pay.sumPrice = self.sumPrice + _expressFee;
+//    pay.sumPrice = self.sumPrice + _expressFee;
     pay.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:pay animated:YES];
     
@@ -362,9 +447,9 @@
     [bottom addSubview:label];
     
     //产品加邮费
-    NSString *price = [NSString stringWithFormat:@"￥%.2f",self.sumPrice + _expressFee];
+//    NSString *price = [NSString stringWithFormat:@"￥%.2f",self.sumPrice + _expressFee];
     
-    _priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 10, 0, 100, 50) title:price font:12 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"f98700"]];
+    _priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 10, 0, 100, 50) title:@"test" font:12 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"f98700"]];
     [bottom addSubview:_priceLabel];
     
     UIButton *sureButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 100, 10, 100, 30) buttonType:UIButtonTypeRoundedRect normalTitle:@"提交订单" selectedTitle:nil target:self action:@selector(clickToConfirmOrder:)];
@@ -588,7 +673,7 @@
         if (indexPath.row == 0) {
             
             cell.nameLabel.text = @"商品总价";
-            cell.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",self.sumPrice];
+//            cell.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",self.sumPrice];
             
         }else if (indexPath.row == 1){
             cell.nameLabel.text = @"运费";

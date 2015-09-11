@@ -12,7 +12,7 @@
 
 @interface CouponModel : BaseModel
 @property(nonatomic,retain)NSString *coupon_id;
-@property(nonatomic,retain)NSString *type;//1满减 2打折
+@property(nonatomic,retain)NSString *type;//1满减 2打折 3：新人优惠
 @property(nonatomic,retain)NSString *full_money;//满多少钱
 @property(nonatomic,retain)NSString *minus_money;//减多少钱
 @property(nonatomic,retain)NSNumber *discount_num;//折扣

@@ -382,6 +382,9 @@
 - (void)updateSumPrice
 {
     _sumLabel.text = [NSString stringWithFormat:@"￥%.2f",[self sumPrice]];
+    
+    _selectAllBtn.selected = [self isAllSelected];
+
 }
 
 /**
@@ -434,7 +437,6 @@
     
     ConfirmOrderController *confirm = [[ConfirmOrderController alloc]init];
     confirm.productArray = arr;
-    confirm.sumPrice = [self sumPrice];
     confirm.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:confirm animated:YES];
     
@@ -459,8 +461,6 @@
     
     //注意顺序,一定要先设置 yes or no再做如下操作
     sender.selected = !sender.selected;
-    
-    _selectAllBtn.selected = [self isAllSelected];
     
     [self updateSumPrice];
 

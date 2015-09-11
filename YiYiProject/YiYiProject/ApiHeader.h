@@ -859,6 +859,9 @@ typedef enum{
 //领取优惠劵
 #define USER_GETCOUPON @"http://www119.alayy.com/index.php?d=api&c=order&m=receive_coupon"
 
+//62、支付时弹出可以使用的优惠券列表
+#define USER_GETCOUPON_LIST @"http://www119.alayy.com/index.php?d=api&c=order&m=use_coupon_list"
+
 #endif
 
 
