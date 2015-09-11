@@ -18,7 +18,6 @@
     NSMutableArray *_colorLabelArray;
     NSMutableArray *_sizeLabelArray;
     NSIndexPath *_theIndexPath;
-    ProductModel *_theModel;
     
 }
 
@@ -38,7 +37,7 @@
     
     
     _theIndexPath = theIndexPath;
-    _theModel = self.delegate.productModelArray[theIndexPath.row];
+    ProductModel *amodel = self.delegate.productModelArray[theIndexPath.row];
     self.netDataDic = dic;
     
     //选择button
@@ -49,7 +48,7 @@
     chooseBtn.theIndex = theIndexPath;
     [chooseBtn addTarget:self action:@selector(GchooseBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    if (_theModel.isChoose) {
+    if (amodel.isChoose) {
         chooseBtn.selected = YES;
     }else{
         chooseBtn.selected = NO;
@@ -59,8 +58,11 @@
     
     
     
-    NSDictionary *product_cover_pic = [_theModel.product_cover_pic dictionaryValueForKey:@"product_cover_pic"];
-    NSString *imvUrl = [product_cover_pic stringValueForKey:@"src"];
+    
+    NSString *imvUrl = amodel.product_cover_pic[@"src"];
+    
+    NSLog(@"李白 imvurl %@ ",imvUrl);
+    
     
     UIImageView *picImv = [[UIImageView alloc]initWithFrame:CGRectMake(35, 8, 44, 44)];
     [picImv l_setImageWithURL:[NSURL URLWithString:imvUrl] placeholderImage:DEFAULT_YIJIAYI];
@@ -68,21 +70,21 @@
     
     UILabel *productNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(picImv.frame)+10, picImv.frame.origin.y, DEVICE_WIDTH - CGRectGetMaxX(picImv.frame)-10, picImv.frame.size.height*0.5)];
     productNameLabel.font = [UIFont systemFontOfSize:12];
-    if ([LTools isEmpty:_theModel.product_type_name]) {
+    if ([LTools isEmpty:amodel.product_type_name]) {
         
-        _theModel.product_type_name = @" ";
+        amodel.product_type_name = @" ";
     }
-    if ([LTools isEmpty:_theModel.product_name]) {
+    if ([LTools isEmpty:amodel.product_name]) {
         
-        _theModel.product_name = @" ";
+        amodel.product_name = @" ";
     }
-    productNameLabel.text = [NSString stringWithFormat:@"%@:%@",_theModel.product_type_name,_theModel.product_name];
+    productNameLabel.text = [NSString stringWithFormat:@"%@:%@",amodel.product_type_name,amodel.product_name];
     [self.contentView addSubview:productNameLabel];
     
     UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(productNameLabel.frame.origin.x, CGRectGetMaxY(productNameLabel.frame), productNameLabel.frame.size.width, productNameLabel.frame.size.height)];
     priceLabel.font = [UIFont systemFontOfSize:12];
     priceLabel.textColor = RGBCOLOR(249, 165, 196);
-    priceLabel.text = [NSString stringWithFormat:@"￥%@",_theModel.product_price];
+    priceLabel.text = [NSString stringWithFormat:@"￥%@",amodel.product_price];
     [self.contentView addSubview:priceLabel];
     
     
@@ -106,7 +108,7 @@
     
     
     
-    NSDictionary *colorDic= [dic dictionaryValueForKey:_theModel.product_id];
+    NSDictionary *colorDic= [dic dictionaryValueForKey:amodel.product_id];
     NSArray *colorArray = [colorDic arrayValueForKey:@"color"];
     NSMutableArray *colorNameArray = [NSMutableArray arrayWithCapacity:1];
 //    NSArray *colorNameArray = colorArray
@@ -148,9 +150,9 @@
         [_colorLabelArray addObject:colorLabel];
         colorScrollViewContentWidth += (colorLabel.frame.size.width +10);
         
-        if (_theModel.ischooseColor) {
-            NSLog(@"colorName:%@ model.color:%@",colorName,[_theModel.colorDic stringValueForKey:@"color_name"]);
-            if ([colorName isEqualToString:[_theModel.colorDic stringValueForKey:@"color_name"]]) {
+        if (amodel.ischooseColor) {
+            NSLog(@"colorName:%@ model.color:%@",colorName,[amodel.colorDic stringValueForKey:@"color_name"]);
+            if ([colorName isEqualToString:[amodel.colorDic stringValueForKey:@"color_name"]]) {
                 colorLabel.backgroundColor = RGBCOLOR(244, 76, 139);
                 colorLabel.textColor = [UIColor whiteColor];
                 colorLabel.layer.borderWidth = 0;
@@ -197,7 +199,7 @@
     [sizeChooseView addSubview:sizeScrollView];
     
     
-    NSDictionary *sizeDic = [dic dictionaryValueForKey:_theModel.product_id];
+    NSDictionary *sizeDic = [dic dictionaryValueForKey:amodel.product_id];
     NSArray *sizeArray = [sizeDic arrayValueForKey:@"size"];
     NSMutableArray *sizeNameArray = [NSMutableArray arrayWithCapacity:1];
     for (NSDictionary *dic in sizeArray) {
@@ -237,8 +239,8 @@
         sizeScrollViewContentWidth += (sizeLabel.frame.size.width +10);
         
         
-        if (_theModel.ischooseSize) {
-            if ([sizeName isEqualToString:[_theModel.sizeDic stringValueForKey:@"size_name"]]) {
+        if (amodel.ischooseSize) {
+            if ([sizeName isEqualToString:[amodel.sizeDic stringValueForKey:@"size_name"]]) {
                 sizeLabel.backgroundColor = RGBCOLOR(244, 76, 139);
                 sizeLabel.textColor = [UIColor whiteColor];
                 sizeLabel.layer.borderWidth = 0;
@@ -300,7 +302,7 @@
     _numLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jianBtn.frame), 0, numBackView.frame.size.width*0.5, 35)];
     _numLabel.textAlignment = NSTextAlignmentCenter;
     _numLabel.textColor = RGBCOLOR(80, 81, 82);
-    _numLabel.text = [NSString stringWithFormat:@"%ld",_theModel.tnum];
+    _numLabel.text = [NSString stringWithFormat:@"%ld",amodel.tnum];
     [numBackView addSubview:_numLabel];
     
     
@@ -351,7 +353,7 @@
 
 -(void)colorLabelClicked:(UITapGestureRecognizer *)sender{
     
-    
+    ProductModel *amodel = self.delegate.productModelArray[_theIndexPath.row];
     
     for (UILabel *label in _colorLabelArray) {
         label.backgroundColor = [UIColor whiteColor];
@@ -364,15 +366,15 @@
     ll.layer.borderWidth = 0;
     
     NSInteger index = sender.view.tag-100;
-    NSDictionary *dic = [self.netDataDic dictionaryValueForKey:_theModel.product_id];
+    NSDictionary *dic = [self.netDataDic dictionaryValueForKey:amodel.product_id];
     NSArray *colorArray = [dic arrayValueForKey:@"color"];
     NSDictionary *colorDic = colorArray[index];
     
     NSString *color_id = [colorDic stringValueForKey:@"color_id"];
     NSString *color_name = [colorDic stringValueForKey:@"color_name"];
-    ProductModel *model = self.delegate.productModelArray[_theIndexPath.row];
-    model.ischooseColor = YES;
-    model.colorDic = @{
+    
+    amodel.ischooseColor = YES;
+    amodel.colorDic = @{
                     @"color_id":color_id,
                     @"color_name":color_name
                     };
@@ -380,6 +382,8 @@
 }
 
 -(void)sizeLabelClicked:(UITapGestureRecognizer *)sender{
+    
+    ProductModel *amodel = self.delegate.productModelArray[_theIndexPath.row];
     
     for (UILabel *label in _sizeLabelArray) {
         label.backgroundColor = [UIColor whiteColor];
@@ -393,15 +397,15 @@
     ll.layer.borderWidth = 0;
     
     NSInteger index = sender.view.tag-1000;
-    NSDictionary *dic = [self.netDataDic dictionaryValueForKey:_theModel.product_id];
+    NSDictionary *dic = [self.netDataDic dictionaryValueForKey:amodel.product_id];
     NSArray *sizeArray = [dic arrayValueForKey:@"size"];
     NSDictionary *sizeDic = sizeArray[index];
     
     NSString *size_id = [sizeDic stringValueForKey:@"size_id"];
     NSString *size_name = [sizeDic stringValueForKey:@"size_name"];
-    ProductModel *model = self.delegate.productModelArray[_theIndexPath.row];
-    model.ischooseSize = YES;
-    model.sizeDic = @{
+    
+    amodel.ischooseSize = YES;
+    amodel.sizeDic = @{
                    @"size_id":size_id,
                    @"size_name":size_name
                    };
