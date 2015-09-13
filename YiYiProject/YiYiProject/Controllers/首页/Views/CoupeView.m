@@ -43,7 +43,7 @@
         NSInteger count = coupeList.count;
         for (int i = 0; i < count; i ++) {
             CouponModel *aModel = [[CouponModel alloc]initWithDictionary:coupeList[i]];
-            UIView *aView = [self coupeViewWithCoupeModel:aModel frame:CGRectMake(0, top + [LTools fitHeight:50] * i, listView.width, [LTools fitHeight:50])];
+            UIView *aView = [self coupeViewWithCoupeModel:aModel frame:CGRectMake(0, top + [LTools fitHeight:50] * i, listView.width, [LTools fitHeight:50]) tag:100 + i];
             [listView addSubview:aView];
             bottom = aView.bottom;
         }
@@ -62,8 +62,89 @@
     return self;
 }
 
+//使用优惠劵
+
+-(instancetype)initWithCouponArray:(NSArray *)couponArray
+                         userStyle:(USESTYLE)userStyle
+{
+    self = [super initWithFrame:[UIScreen mainScreen].bounds];
+    if (self) {
+        
+        self.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:0.5];
+        
+        CGFloat left = [LTools fitWidth:25];
+        CGFloat aWidth = DEVICE_WIDTH - left * 2;
+        
+        NSArray *coupeList = couponArray;
+        
+        _coupeArray = couponArray;
+        _userStyle = userStyle;
+        
+        UIView *listView = [[UIView alloc]initWithFrame:CGRectMake(left, 0, aWidth, 0)];
+        [self addSubview:listView];
+        listView.backgroundColor = [UIColor whiteColor];
+        [listView addCornerRadius:5.f];
+        
+        NSString *title;
+        NSString *title_close;
+        UIColor *color_close;
+        
+        if (userStyle == USESTYLE_Get) {
+            title = @"领取优惠劵";
+            title_close = @"暂不领取";
+            color_close = [UIColor colorWithHexString:@"999999"];
+
+        }else if (userStyle == USESTYLE_Use){
+            title = @"优惠劵";
+            title_close = @"确认使用";
+            color_close = DEFAULT_TEXTCOLOR;
+        }
+        
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, listView.width, [LTools fitHeight:40]) title:title font:15 align:NSTextAlignmentCenter textColor:[UIColor blackColor]];
+        [listView addSubview:titleLabel];
+        
+        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.bottom, listView.width, 0.5)];
+        line.backgroundColor = DEFAULT_LINE_COLOR;
+        [listView addSubview:line];
+        
+        CGFloat bottom = line.bottom;
+        CGFloat top = line.bottom;
+        NSInteger count = coupeList.count;
+        for (int i = 0; i < count; i ++) {
+            
+            CouponModel *aModel;
+
+            if (userStyle == USESTYLE_Get) {
+                
+                aModel = [[CouponModel alloc]initWithDictionary:coupeList[i]];
+
+            }else
+            {
+                aModel = coupeList[i];
+            }
+            
+            UIView *aView = [self coupeViewWithCoupeModel:aModel frame:CGRectMake(0, top + [LTools fitHeight:50] * i, listView.width, [LTools fitHeight:50]) tag:100 + i];
+            [listView addSubview:aView];
+            bottom = aView.bottom;
+        }
+        
+        UIButton *closeBtn = [[UIButton alloc]initWithframe:CGRectMake(0,bottom + [LTools fitHeight:15], [LTools fitWidth:173], [LTools fitHeight:25]) buttonType:UIButtonTypeCustom normalTitle:title_close selectedTitle:nil target:self action:@selector(clickToCloseCoupeView)];
+        [listView addSubview:closeBtn];
+        closeBtn.backgroundColor = color_close;
+        [closeBtn addCornerRadius:5.f];
+        [closeBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        closeBtn.centerX = listView.width / 2.f;
+        
+        listView.height = closeBtn.bottom + [LTools fitHeight:15];
+        listView.centerY = DEVICE_HEIGHT / 2.f;
+        
+    }
+    return self;
+}
+
 - (UIView *)coupeViewWithCoupeModel:(CouponModel *)aModel
                               frame:(CGRect)frame
+                                tag:(int)tag
 {
     UIView *view = [[UIView alloc]initWithFrame:frame];
     
@@ -112,19 +193,41 @@
     UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(btn.right + 5, label.bottom, [LTools fitWidth:140], btn.height / 2.f) title:title2 font:8 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"ababab"]];
     [view addSubview:label2];
     
+    
+    UIImage *image_normal;
+    UIImage *image_selected;
+    if (_userStyle == USESTYLE_Get) {
+        
+        image_normal = [UIImage imageNamed:@"youhui_lingqu"];
+        image_selected = [UIImage imageNamed:@"youhui_yilingqu"];
+        
+    }else if (_userStyle == USESTYLE_Use){
+        
+        image_normal = [UIImage imageNamed:@"myaddress_normal"];
+        image_selected = [UIImage imageNamed:@"myaddress_selected"];
+    }
+    
     //点击获取优惠劵
     CGFloat aWidth = [LTools fitWidth:55];
     
     ButtonProperty *btn_get = [ButtonProperty buttonWithType:UIButtonTypeCustom];
-    btn_get.frame = CGRectMake(view.width - [LTools fitWidth:10] - aWidth, [LTools fitHeight:16], aWidth, [LTools fitHeight:20]);
-    [btn_get setImage:[UIImage imageNamed:@"youhui_lingqu"] forState:UIControlStateNormal];
-    [btn_get setImage:[UIImage imageNamed:@"youhui_yilingqu"] forState:UIControlStateSelected];
+    btn_get.frame = CGRectMake(view.width - [LTools fitWidth:10] - aWidth, [LTools fitHeight:16], aWidth, [LTools fitHeight:30]);
+//    btn_get.backgroundColor = [UIColor orangeColor];
+    [btn_get setImage:image_normal forState:UIControlStateNormal];
+    [btn_get setImage:image_selected forState:UIControlStateSelected];
     [btn_get addTarget:self action:@selector(clickToGetCoupe:) forControlEvents:UIControlEventTouchUpInside];
+    btn_get.tag = tag;
     [view addSubview:btn_get];
+    btn_get.centerY = btn.centerY;
     btn_get.object = aModel;
     
-    int isGet = [aModel.enable_receive intValue];
-    btn_get.selected = !isGet;
+    if (_userStyle == USESTYLE_Get) {
+        
+        int isGet = [aModel.enable_receive intValue];
+        btn_get.selected = !isGet;
+    }else if (_userStyle == USESTYLE_Use){
+        btn_get.selected = aModel.isUsed;
+    }
     
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, btn.bottom + btn.top, view.width, 0.5)];
     line.backgroundColor = DEFAULT_LINE_COLOR;
@@ -145,7 +248,35 @@
  */
 - (void)clickToGetCoupe:(ButtonProperty *)sender
 {
+    int count = (int)_coupeArray.count;
+    for (int i = 0; i < count; i ++) {
+        
+        ButtonProperty *btn = (ButtonProperty *)[self viewWithTag:100 + i];
+        CouponModel *aModel = btn.object;
+
+        if (btn == sender) {
+            
+            btn.selected = !btn.selected;
+        }else
+        {
+            btn.selected = NO;
+        }
+        aModel.isUsed = btn.selected;
+    }
+    
     CouponModel *aModel = sender.object;
+    
+    if (_userStyle == USESTYLE_Use) {
+        
+        if (sender.selected == NO) {
+            
+            if (self.coupeBlock) {
+                self.coupeBlock(nil);
+            }
+            return;
+        }
+    }
+    
     if (aModel && [aModel isKindOfClass:[CouponModel class]]) {
         
         if (self.coupeBlock) {

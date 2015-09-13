@@ -7,7 +7,6 @@
 //
 
 #import "OrderInfoViewController.h"
-#import "SelectCell.h"
 #import "ProductBuyCell.h"
 #import "ConfirmInfoCell.h"
 #import "ShoppingAddressController.h"//收货地址
@@ -16,6 +15,7 @@
 #import "FBActionSheet.h"
 #import "PayActionViewController.h"//支付页面
 #import "ConfirmOrderController.h"//确认订单
+#import "SelectCell.h"
 
 #import "OrderModel.h"
 

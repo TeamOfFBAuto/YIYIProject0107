@@ -13,6 +13,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *productNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *priceLabel;
 @property (strong, nonatomic) IBOutlet UILabel *numLabel;
+@property (strong, nonatomic) IBOutlet UILabel *paramLabel;
 
 - (void)setCellWithModel:(id)model;
 

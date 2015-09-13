@@ -11,6 +11,7 @@
 #import "BaseModel.h"
 
 @interface CouponModel : BaseModel
+
 @property(nonatomic,retain)NSString *coupon_id;
 @property(nonatomic,retain)NSString *type;//1满减 2打折 3：新人优惠
 @property(nonatomic,retain)NSString *full_money;//满多少钱
@@ -27,5 +28,10 @@
 @property(nonatomic,retain)NSString *shop_id;
 @property(nonatomic,retain)NSString *color;//1=>红色    2=>黄色    3=>蓝色
 @property(nonatomic,retain)NSString *enable_receive;//1=>可以领取  0=>不可以领取
+@property(nonatomic,retain)NSString *newer_money;//新人减钱多少
+@property(nonatomic,retain)NSString *is_use;//是否使用
+@property(nonatomic,retain)NSNumber *is_commmend;//是否推荐
+
+@property(nonatomic,assign)BOOL isUsed;//是否被选中使用
 
 @end
