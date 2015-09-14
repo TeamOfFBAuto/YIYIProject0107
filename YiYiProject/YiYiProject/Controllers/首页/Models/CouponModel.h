@@ -36,7 +36,6 @@
 
 
 //我的钱包
-@property(nonatomic,strong)NSString *newer_money;//新人优惠价钱
 @property(nonatomic,strong)NSString *uc_id;//用不到
 @property(nonatomic,strong)NSString *uid;
 @property(nonatomic,strong)NSString *receive_time;//领取时间
@@ -46,5 +45,6 @@
 @property(nonatomic,strong)NSString *malll_name;//商场名
 @property(nonatomic,assign)int enable_use;//是否可用 1=>可以 , 0=>不可以
 @property(nonatomic,assign)int disable_use_reason;//不能使用原因    1=>已经使用过， 2=>过期
+
 
 @end
