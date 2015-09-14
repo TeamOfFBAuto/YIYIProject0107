@@ -24,6 +24,13 @@
     // Configure the view for the selected state
 }
 
++ (CGFloat)heightForAddress:(NSString *)address
+{
+    CGFloat height = [LTools heightForText:address width:DEVICE_WIDTH - 20 font:14];
+ 
+    return 89 + height + 10 + 10 + 50;
+}
+
 - (void)setCellWithModel:(OrderModel *)aModel
 {
     //只有一个商品
@@ -73,7 +80,7 @@
                 
                 ProductModel *product = [[ProductModel alloc]initWithDictionary:[aModel.products objectAtIndex:i]];
 
-                NSString *imageUrl = product.cover_pic;
+                NSString *imageUrl = [product.small_cover_pic stringValueForKey:@"src"];
                 UIImageView *aImageView = [[UIImageView alloc]initWithFrame:CGRectMake((60 + 10) * i, 0, 60, 60)];
                 [aImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_YIJIAYI];
                 [_contentScroll addSubview:aImageView];
@@ -88,6 +95,8 @@
     CGFloat height = [LTools heightForText:address width:DEVICE_WIDTH - 20 font:14];
     _addressLabel.height = height;
     self.realPriceLabel.text = [NSString stringWithFormat:@"￥%.2f",[aModel.total_fee floatValue]];
+    self.infoView.top = _addressLabel.bottom + 10;
+    self.backView.height = _infoView.bottom;
 }
 
 @end

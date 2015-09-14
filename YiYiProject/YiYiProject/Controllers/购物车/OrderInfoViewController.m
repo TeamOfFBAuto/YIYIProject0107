@@ -87,7 +87,7 @@
 #pragma mark - 网络请求
 
 /**
- *  切换购物地址时 更新邮费
+ *  获取
  */
 - (void)getOrderInfo
 {
@@ -102,22 +102,22 @@
     NSDictionary *params = @{@"authcode":authkey,
                              @"order_id":self.order_id,
                              @"detail":[NSNumber numberWithInt:1]};
+    NSString *url = [LTools url:ORDER_GET_ORDER_INFO withParams:params];
     
 //    __weak typeof(_table)weakTable = _table;
     __weak typeof(self)weakSelf = self;
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_GET_ORDER_INFO parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        
-//        NSLog(@"获取订单详情%@ %@",result[RESULT_INFO],result);
-//        NSDictionary *info = result[@"info"];
-//        OrderModel *aModel = [[OrderModel alloc]initWithDictionary:info];
-//        [weakSelf setViewsWithModel:aModel];
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"获取订单详情 失败 %@",result[RESULT_INFO]);
-//        
-//    }];
     
+    LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        NSLog(@"获取订单详情%@ %@",result[RESULT_INFO],result);
+        NSDictionary *info = result[@"info"];
+        OrderModel *aModel = [[OrderModel alloc]initWithDictionary:info];
+        [weakSelf setViewsWithModel:aModel];
+
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        NSLog(@"获取订单详情 失败 %@",result[RESULT_INFO]);
+
+    }];
 }
 
 #pragma mark - 事件处理
@@ -503,7 +503,7 @@
     
     UIImageView *topImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 10, DEVICE_WIDTH, 3)];
     [headerView addSubview:topImage];
-    topImage.image = [UIImage imageNamed:@"shopping cart_dd_top_line"];
+    topImage.image = [UIImage imageNamed:@"qrdd_top"];
     
     UIView *addressView = [[UIView alloc]initWithFrame:CGRectMake(0, topImage.bottom, DEVICE_WIDTH, 100)];
     addressView.backgroundColor = [UIColor colorWithHexString:@"fffaf4"];
@@ -512,7 +512,7 @@
     //名字icon
     _nameIcon = [[UIImageView alloc]initWithFrame:CGRectMake(10, 13, 12, 17.5)];
     [addressView addSubview:_nameIcon];
-    _nameIcon.image = [UIImage imageNamed:@"shopping cart_dd_top_name"];
+    _nameIcon.image = [UIImage imageNamed:@"qrdd_xingming"];
     _nameIcon.hidden = !haveAddress;
     
     //名字
@@ -523,7 +523,7 @@
     //电话icon
     _phoneIcon = [[UIImageView alloc]initWithFrame:CGRectMake(_nameLabel.right + 10, 13, 12, 17.5)];
     [addressView addSubview:_phoneIcon];
-    _phoneIcon.image = [UIImage imageNamed:@"shopping cart_dd_top_phone"];
+    _phoneIcon.image = [UIImage imageNamed:@"qrdd_dianhua"];
     _phoneIcon.hidden = !haveAddress;
     
     //电话
@@ -536,10 +536,17 @@
     _addressLabel.numberOfLines = 2;
     _addressLabel.lineBreakMode = NSLineBreakByCharWrapping;
     
+//    addressView.backgroundColor = [UIColor redColor];
     
-    UIImageView *bottomImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, addressView.bottom, DEVICE_WIDTH, 3)];
+    CGFloat height = [LTools heightForText:address width:_addressHintLabel.width font:14];
+    _addressLabel.height = height;
+    addressView.height = _addressLabel.bottom + 10;
+    
+    UIImageView *bottomImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, addressView.bottom, DEVICE_WIDTH, 4.5)];
     [headerView addSubview:bottomImage];
-    bottomImage.image = [UIImage imageNamed:@"shopping cart_dd_top_line"];
+    bottomImage.image = [UIImage imageNamed:@"qrdd_bottom"];
+    
+    headerView.height = bottomImage.bottom;
     
     if (!haveAddress) {
         

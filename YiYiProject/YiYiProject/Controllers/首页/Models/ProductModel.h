@@ -52,7 +52,6 @@
 @property(nonatomic,strong)NSString *shop_type;//店铺类型
 @property(nonatomic,strong)NSString *auto_down_time;//自动下架时间
 @property(nonatomic,strong)NSString *product_type;//分类
-@property(nonatomic,strong)NSString *product_type_name;//分类name
 
 //新版本0812添加
 @property(nonatomic,retain)NSArray *tag;//标签

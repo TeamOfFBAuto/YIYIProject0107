@@ -65,7 +65,7 @@
     
     //箭头
     UIImageView *jiantouImage = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 6, 0, 6, 11)];
-    jiantouImage.image = [UIImage imageNamed:@"my_jiantou"];
+    jiantouImage.image = [UIImage imageNamed:@"qrdd_jiantou_small"];
     [footer addSubview:jiantouImage];
     jiantouImage.centerY = _btn_quan.centerY;
     

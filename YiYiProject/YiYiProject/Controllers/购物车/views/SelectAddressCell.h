@@ -16,6 +16,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *addressLabel;
 
 @property (strong, nonatomic) IBOutlet UIImageView *selectImage;
+@property (strong, nonatomic) IBOutlet UIView *infoView;
+@property (strong, nonatomic) IBOutlet UIImageView *editBtn;
 
 - (void)setCellWithModel:(id)aModel;
 

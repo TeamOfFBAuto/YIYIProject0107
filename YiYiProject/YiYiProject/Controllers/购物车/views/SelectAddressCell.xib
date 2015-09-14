@@ -14,43 +14,48 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="87.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Q1R-53-Ydh">
-                        <rect key="frame" x="10" y="15" width="42" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="kQe-wG-tdI">
-                        <rect key="frame" x="73" y="15" width="156" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabel" lineBreakMode="characterWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dfy-dI-Nfl">
-                        <rect key="frame" x="10" y="44" width="265" height="35.5"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                        <color key="textColor" red="0.54509803921568623" green="0.54509803921568623" blue="0.54509803921568623" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="address_duihao.png" id="HHp-dW-ax9">
-                        <rect key="frame" x="277" y="22" width="35" height="44"/>
+                    <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="address_bianji.png" id="HHp-dW-ax9">
+                        <rect key="frame" x="280" y="22" width="35" height="44"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="address_duihao.png" id="6pC-Zo-lJx">
+                        <rect key="frame" x="-1" y="22" width="35" height="44"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
+                    <view contentMode="scaleToFill" id="WB7-Tr-Af4">
+                        <rect key="frame" x="34" y="0.0" width="243" height="88"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabel" lineBreakMode="characterWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dfy-dI-Nfl">
+                                <rect key="frame" x="8" y="44.5" width="227" height="35.5"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.54509803921568623" green="0.54509803921568623" blue="0.54509803921568623" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Q1R-53-Ydh">
+                                <rect key="frame" x="8" y="15" width="222" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </view>
                 </subviews>
             </tableViewCellContentView>
             <connections>
                 <outlet property="addressLabel" destination="dfy-dI-Nfl" id="Po5-fd-Wak"/>
+                <outlet property="editBtn" destination="HHp-dW-ax9" id="gLC-Dz-7kQ"/>
+                <outlet property="infoView" destination="WB7-Tr-Af4" id="ZNN-dS-a2n"/>
                 <outlet property="nameLabel" destination="Q1R-53-Ydh" id="8Fs-ME-sGC"/>
-                <outlet property="phoneLabel" destination="kQe-wG-tdI" id="snM-ie-ExB"/>
-                <outlet property="selectImage" destination="HHp-dW-ax9" id="73A-Xz-miV"/>
+                <outlet property="selectImage" destination="6pC-Zo-lJx" id="8f8-77-fde"/>
             </connections>
-            <point key="canvasLocation" x="315" y="268"/>
+            <point key="canvasLocation" x="25" y="164"/>
         </tableViewCell>
     </objects>
     <resources>
+        <image name="address_bianji.png" width="21" height="21"/>
         <image name="address_duihao.png" width="17" height="21"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

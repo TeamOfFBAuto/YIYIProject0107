@@ -55,6 +55,8 @@
     CGFloat _priceSum;//记录初始总价
     
     UITextField *_firstTf;//记录当前响应textField
+    
+    CGFloat _sumPrice_pay;//实际支付的价格
 }
 
 @property(nonatomic,strong)CustomInputView * input_view;
@@ -146,7 +148,7 @@
         CGFloat price = [aModel.product_price floatValue] * [aModel.product_num intValue];
         CGFloat lastPrice = [[temp_price objectForKey:aModel.product_shop_id] floatValue];
         CGFloat sum = lastPrice + price;
-        [temp_price setObject:NSStringFromFloat(sum) forKey:aModel.product_shop_id];
+        [temp_price setObject:[NSString stringWithFormat:@"%.2f",sum] forKey:aModel.product_shop_id];
         //单品
         NSArray *products = [temp_products arrayValueForKey:aModel.product_shop_id];
         NSMutableArray *arr = [NSMutableArray arrayWithArray:products];//是否崩溃
@@ -312,6 +314,33 @@
 
 }
 
+
+// 将字典或者数组转化为JSON串
+- (NSData *)toJSONData:(id)theData{
+    
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:theData
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    
+    if ([jsonData length] && error == nil){
+        return jsonData;
+    }else{
+        return nil;
+    }
+}
+
+- (NSString *)jsonString:(NSData *)jsonData
+{
+    //使用这个方法的返回，我们就可以得到想要的JSON串
+    
+    
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData
+                                                 encoding:NSUTF8StringEncoding];
+    return jsonString;
+}
+
+
 /**
  *  生成订单
  */
@@ -362,6 +391,16 @@
         }
     }
     
+    //有的话 默认使用 首单减免
+    if (_couponModel_first) {
+        [coupDic setObject:_couponModel_first.coupon_id forKey:@"0"];
+    }
+    
+    NSString *couponString = @"";
+    if (coupDic) {
+        couponString = [self jsonString:[self toJSONData:coupDic]];
+    }
+    
     [_loading show:YES];
     
     
@@ -379,7 +418,7 @@
                              @"product_color_ids":colorIds,
                              @"product_size_ids":sizeIds,
                              @"order_note":note,
-                             @"coupons":coupDic ? : @"",
+                             @"coupons":couponString,
                              @"cart_pro_ids":car_ids};
     
     __weak typeof(_table)weakTable = _table;
@@ -407,28 +446,7 @@
         NSLog(@"提交订单失败 %@",result[RESULT_INFO]);
         [_loading hide:YES];
     }];
-    
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:ORDER_SUBMIT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        
-//        NSLog(@"提交订单成功 %@",result[RESULT_INFO]);
-//        
-//        [_loading hide:YES];
-//        
-//        NSString *orderId = result[@"order_id"];
-//        NSString *orderNum = result[@"order_no"];
-//        
-//        //生成订单成功,更新一下购物车
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
-//
-//        [weakSelf pushToPayPageWithOrderId:orderId orderNum:orderNum];
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"提交订单失败 %@",result[RESULT_INFO]);
-//        
-//        [_loading hide:YES];
-//
-//    }];
+
 }
 
 
@@ -464,18 +482,6 @@
     }
     return NO;
 }
-//
-///**
-// *  判断是否是"其他" 部分section
-// *
-// *  @param section
-// *
-// *  @return
-// */
-//- (BOOL)otherSection:(NSInteger)section
-//{
-//    
-//}
 
 - (void)updateExpressFeeAndSumPrice:(CGFloat)express
 {
@@ -493,11 +499,14 @@
     PayActionViewController *pay = [[PayActionViewController alloc]init];
     pay.orderId = orderId;
     pay.orderNum = orderNum;
-//    pay.sumPrice = self.sumPrice + _expressFee;
-    pay.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:pay animated:YES];
-    
-//    self.navigationController.viewControllers
+    pay.sumPrice = _sumPrice_pay;
+    if (self.lastViewController) {
+        
+        [self.lastViewController.navigationController popToViewController:self.lastViewController animated:NO];
+        [self.lastViewController.navigationController pushViewController:pay animated:YES];
+        return;
+    }
+    [self.navigationController pushViewController:pay animated:YES];    
 }
 
 - (void)clickToHidderkeyboard
@@ -550,27 +559,32 @@
 {
     NSLog(@"---address %@",aModel.address);
     
+    [_table.tableHeaderView removeFromSuperview];
+    _table.tableHeaderView = nil;
+    
+    [self tableHeaderViewWithAddressModel:aModel];
+    
 //    UILabel *_nameLabel;//收货人name
 //    UILabel *_phoneLabel;//收货人电话
 //    UILabel *_addressLabel;//收货地址
     
-    _nameLabel.text = aModel.receiver_username;
-    
-    CGFloat width = [LTools widthForText:_nameLabel.text font:15];
-    _nameLabel.width = width;
-    
-    _phoneIcon.left = _nameLabel.right + 10;
-    _phoneLabel.left = _phoneIcon.right + 10;
-    _phoneLabel.text = aModel.mobile;
-    _addressLabel.text = aModel.address;
-
-    _phoneIcon.hidden = NO;
-    _nameIcon.hidden = NO;
-    
-    if (_addressHintLabel) {
-        [_addressHintLabel removeFromSuperview];
-        _addressHintLabel = nil;
-    }
+//    _nameLabel.text = aModel.receiver_username;
+//    
+//    CGFloat width = [LTools widthForText:_nameLabel.text font:15];
+//    _nameLabel.width = width;
+//    
+//    _phoneIcon.left = _nameLabel.right + 10;
+//    _phoneLabel.left = _phoneIcon.right + 10;
+//    _phoneLabel.text = aModel.mobile;
+//    _addressLabel.text = aModel.address;
+//
+//    _phoneIcon.hidden = NO;
+//    _nameIcon.hidden = NO;
+//    
+//    if (_addressHintLabel) {
+//        [_addressHintLabel removeFromSuperview];
+//        _addressHintLabel = nil;
+//    }
 }
 
 #pragma mark - 创建视图
@@ -663,6 +677,13 @@
 
     //记录初始价格
     _priceSum = sumPrice;
+    
+    CGFloat minus_first = 0.f;
+    if (_couponModel_first) {
+        
+        minus_first = [_couponModel_first.newer_money floatValue];
+    }
+    _sumPrice_pay = sumPrice - minus_first;//记录实际付款价格
 }
 
 /**
@@ -697,8 +718,16 @@
         other = [NSString stringWithFormat:@"(首单立减￥%@)",_couponModel_first.newer_money];
     }
     
-    _priceLabel.text = [NSString stringWithFormat:@"￥%.2f%@",_priceSum - sum_minus,other];}
+    _priceLabel.text = [NSString stringWithFormat:@"￥%.2f%@",_priceSum - sum_minus,other];
 
+    CGFloat minus_first = 0.f;
+    if (_couponModel_first) {
+        
+        minus_first = [_couponModel_first.newer_money floatValue];
+    }
+    
+    _sumPrice_pay = _priceSum - sum_minus - minus_first;//实际付款价格
+}
 
 - (void)tableViewFooter
 {
@@ -733,7 +762,7 @@
     
     UIImageView *topImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 10, DEVICE_WIDTH, 3)];
     [headerView addSubview:topImage];
-    topImage.image = [UIImage imageNamed:@"shopping cart_dd_top_line"];
+    topImage.image = [UIImage imageNamed:@"qrdd_top"];
     
     UIView *addressView = [[UIView alloc]initWithFrame:CGRectMake(0, topImage.bottom, DEVICE_WIDTH, 100)];
     addressView.backgroundColor = [UIColor colorWithHexString:@"fffaf4"];
@@ -742,7 +771,7 @@
     //名字icon
     _nameIcon = [[UIImageView alloc]initWithFrame:CGRectMake(10, 13, 12, 17.5)];
     [addressView addSubview:_nameIcon];
-    _nameIcon.image = [UIImage imageNamed:@"shopping cart_dd_top_name"];
+    _nameIcon.image = [UIImage imageNamed:@"qrdd_xingming"];
     _nameIcon.hidden = !haveAddress;
     
     //名字
@@ -753,7 +782,7 @@
     //电话icon
     _phoneIcon = [[UIImageView alloc]initWithFrame:CGRectMake(_nameLabel.right + 10, 13, 12, 17.5)];
     [addressView addSubview:_phoneIcon];
-    _phoneIcon.image = [UIImage imageNamed:@"shopping cart_dd_top_phone"];
+    _phoneIcon.image = [UIImage imageNamed:@"qrdd_dianhua"];
     _phoneIcon.hidden = !haveAddress;
     
     //电话
@@ -766,15 +795,21 @@
     _addressLabel.numberOfLines = 2;
     _addressLabel.lineBreakMode = NSLineBreakByCharWrapping;
     
+    //控制显示高度
+    
+    CGFloat height = [LTools heightForText:address width:_addressHintLabel.width font:14];
+    _addressLabel.height = height;
+    addressView.height = _addressLabel.bottom + 10;
+    
     //箭头
     UIImageView *arrowImage = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 40, 0, 40, addressView.height)];
     [addressView addSubview:arrowImage];
-    arrowImage.image = [UIImage imageNamed:@"my_jiantou"];
+    arrowImage.image = [UIImage imageNamed:@"qrdd_jiantou_big"];
     arrowImage.contentMode = UIViewContentModeCenter;
     
-    UIImageView *bottomImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, addressView.bottom, DEVICE_WIDTH, 3)];
+    UIImageView *bottomImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, addressView.bottom, DEVICE_WIDTH, 4.5)];
     [headerView addSubview:bottomImage];
-    bottomImage.image = [UIImage imageNamed:@"shopping cart_dd_top_line"];
+    bottomImage.image = [UIImage imageNamed:@"qrdd_bottom"];
     
     if (!haveAddress) {
         
@@ -782,6 +817,7 @@
         [headerView addSubview:_addressHintLabel];
     }
     
+    headerView.height = bottomImage.bottom;
     
     _table.tableHeaderView = headerView;
     

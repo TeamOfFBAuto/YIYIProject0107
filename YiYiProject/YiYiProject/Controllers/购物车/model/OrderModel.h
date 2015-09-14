@@ -34,6 +34,8 @@
 
 @property(nonatomic,retain)NSString *is_comment;//是否已评论
 
+@property(nonatomic,retain)NSString *real_product_total_price;//实际可以退的
+
 -(instancetype)initWithDictionary:(NSDictionary *)dic;
 
 @end

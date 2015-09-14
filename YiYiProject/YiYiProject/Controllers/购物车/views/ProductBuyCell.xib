@@ -39,11 +39,11 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="x 1" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Sqf-ju-XQu">
                                 <rect key="frame" x="241" y="29" width="42" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" red="0.99607843139999996" green="0.40000000000000002" blue="0.59215686270000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="my_jiantou.png" id="w6Y-nq-4zU">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrdd_jiantou_small.png" id="w6Y-nq-4zU">
                                 <rect key="frame" x="298" y="35" width="6" height="11"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -67,11 +67,11 @@
                 <outlet property="priceLabel" destination="Imf-i8-UCL" id="6Zz-UR-0cl"/>
                 <outlet property="productNameLabel" destination="wP0-3g-Kd5" id="XWQ-3F-I0I"/>
             </connections>
-            <point key="canvasLocation" x="-535" y="102.5"/>
+            <point key="canvasLocation" x="-705" y="100.5"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="my_jiantou.png" width="7" height="12"/>
+        <image name="qrdd_jiantou_small.png" width="6" height="11"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
