@@ -235,6 +235,7 @@
 +(NSString *)timechangeAll1:(NSString *)placetime;
 +(NSString*)getTimeWithDate1:(NSDate*)theDate;
 +(NSString *)timechangeAll2:(NSString *)placetime;
++(NSString *)timechangeAll3:(NSString *)placetime;
 
 
 //首页缓存
@@ -261,6 +262,10 @@
 
 //获取当前时间
 +(NSString*)getNowTime;
+
+
+//是否过期
++(BOOL)isGuoqi:(NSString*)test;
 
 
 

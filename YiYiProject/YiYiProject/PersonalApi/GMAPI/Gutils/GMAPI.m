@@ -766,6 +766,16 @@
     NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
     return confromTimespStr;
 }
++(NSString *)timechangeAll3:(NSString *)placetime
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:@"yyyy.MM.dd"];
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
+    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+    return confromTimespStr;
+}
 
 +(NSString*)getTimeWithDate1:(NSDate*)theDate{
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -837,5 +847,24 @@
     NSString *locationString=[dateformatter stringFromDate:senddate];
     return locationString;
 }
+
+
++(BOOL)isGuoqi:(NSString*)test{
+    BOOL isGuoqi = NO;
+    
+    NSDate *date1 = [NSDate dateWithTimeIntervalSince1970:[test doubleValue]];
+    NSDate *date2 = [NSDate date];
+    double bb = [date1 timeIntervalSinceDate:date2];//date2距离date1的时长
+    if (bb<0) {
+        isGuoqi = NO;
+    }else{
+        isGuoqi = YES;
+    }
+    
+    return isGuoqi;
+
+}
+
+
 
 @end

@@ -16,6 +16,5 @@
 
 @property(nonatomic,strong)NSString *jifen;//我的积分
 
-@property(nonatomic,strong)NSArray *dataArray;//奖券列表
 
 @end

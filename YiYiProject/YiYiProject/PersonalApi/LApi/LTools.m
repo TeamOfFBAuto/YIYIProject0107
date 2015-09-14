@@ -1499,6 +1499,20 @@
     return attributedString1;
 }
 
+/**
+ *  加下划线
+ *
+ *  @param content
+ *
+ *  @return
+ */
++ (NSAttributedString *)attributedUnderlineString:(NSString *)content
+{
+    NSMutableAttributedString *attString = [[NSMutableAttributedString alloc]initWithString:content];
+    [attString addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, content.length)];
+    return attString;
+}
+
 
 /**
  *  关键词特殊显示

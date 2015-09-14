@@ -15,7 +15,10 @@
 @property (strong, nonatomic) IBOutlet UIButton *addressButton;
 @property (strong, nonatomic) IBOutlet UIButton *editButton;
 @property (strong, nonatomic) IBOutlet UIButton *deleteButton;
+@property (strong, nonatomic) IBOutlet UIView *toolView;
 
 - (void)setCellWithModel:(id)aModel;
+
++ (CGFloat)heightForCellWithAddress:(NSString *)address;//计算高度
 
 @end

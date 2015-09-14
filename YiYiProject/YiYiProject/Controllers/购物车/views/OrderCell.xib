@@ -26,7 +26,7 @@
                                 <rect key="frame" x="78" y="14" width="205" height="21"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Wlv-Lu-2ZQ">
@@ -87,7 +87,7 @@
                                 <rect key="frame" x="10" y="89" width="302" height="21"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -98,14 +98,16 @@
             <color key="backgroundColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
             <connections>
                 <outlet property="addressLabel" destination="bIQ-cq-gee" id="5px-nl-ig3"/>
+                <outlet property="backView" destination="ZMF-Gd-Prx" id="k12-sY-lq3"/>
                 <outlet property="commentButton" destination="KHs-vv-khl" id="rmA-x6-I2P"/>
                 <outlet property="iconImageView" destination="2HK-I5-sfy" id="GX3-sI-VrV"/>
+                <outlet property="infoView" destination="CdI-bx-Ypq" id="9n9-Hw-Ltz"/>
                 <outlet property="numLabel" destination="oNm-pE-tIh" id="JQe-YR-6rq"/>
                 <outlet property="priceLabel" destination="Wlv-Lu-2ZQ" id="Kxr-pe-yz4"/>
                 <outlet property="realPriceLabel" destination="NSH-xm-WXY" id="Kun-iJ-l2r"/>
                 <outlet property="titleLabel" destination="umk-MK-Sum" id="1ll-zw-5RO"/>
             </connections>
-            <point key="canvasLocation" x="-768" y="75.5"/>
+            <point key="canvasLocation" x="-924" y="54.5"/>
         </tableViewCell>
     </objects>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

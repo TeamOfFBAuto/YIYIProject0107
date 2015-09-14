@@ -15,6 +15,7 @@
 
 #define kPadding_Default 100
 #define kPadding_Delete 1000
+#define kPadding_Edit 2000
 
 @interface ShoppingAddressController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -50,7 +51,8 @@
     self.myTitle = @"收货地址";
     
     if (self.isSelectAddress) {
-        self.rightString = @"管理";
+//        self.rightString = @"管理";
+        self.rightImageName = @"myaddress_add";
         [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     }else
     {
@@ -206,7 +208,7 @@
     _footer = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 43 - 25 - 64, DEVICE_WIDTH, 43 + 25)];
     [self.view addSubview:_footer];
     
-    UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake(33, 0, DEVICE_WIDTH - 66, 43) buttonType:UIButtonTypeCustom normalTitle:@"添加新地址" selectedTitle:nil target:self action:@selector(clickToAddNewAddress:)];
+    UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake(50, 0, DEVICE_WIDTH - 100, 40) buttonType:UIButtonTypeCustom normalTitle:@"添加新地址" selectedTitle:nil target:self action:@selector(clickToAddNewAddress:)];
     btn.backgroundColor = DEFAULT_TEXTCOLOR;
     [btn addCornerRadius:3.f];
     [_footer addSubview:btn];
@@ -252,6 +254,16 @@
 }
 
 #pragma mark - 事件处理
+//编辑
+- (void)clickToEditAddress:(UIButton *)sender
+{
+    AddressModel *aModel = [_table.dataArray objectAtIndex:sender.tag - kPadding_Edit];
+
+    AddAddressController *address = [[AddAddressController alloc]init];
+    address.isEditAddress = YES;
+    address.addressModel = aModel;
+    [self.navigationController pushViewController:address animated:YES];
+}
 
 /**
  *  跳转至收货地址管理
@@ -260,8 +272,12 @@
  */
 -(void)rightButtonTap:(UIButton *)sender
 {
+    if (self.isSelectAddress) {
+        
+        [self clickToAddNewAddress:sender];
+        return;
+    }
     ShoppingAddressController *shopAddress = [[ShoppingAddressController alloc]init];
-    
     [self.navigationController pushViewController:shopAddress animated:YES];
 }
 
@@ -358,7 +374,10 @@
         
         return 88.f;
     }
-    return 150.f;
+//    return 150.f;
+    AddressModel *aModel = _table.dataArray[indexPath.row];
+
+    return [AddressCell heightForCellWithAddress:aModel.address];
 }
 
 #pragma mark - UITableViewDataSource
@@ -380,10 +399,16 @@
         if ([aModel.address_id isEqualToString:self.selectAddressId]) {
             
             cell.selectImage.hidden = NO;
+            cell.infoView.left = cell.selectImage.right;
+
         }else
         {
             cell.selectImage.hidden = YES;
+            cell.infoView.left = 0;
+
         }
+        
+        [cell.editBtn addTaget:self action:@selector(clickToEditAddress:) tag:(int)(kPadding_Edit + indexPath.row)];
         
         return cell;
     }

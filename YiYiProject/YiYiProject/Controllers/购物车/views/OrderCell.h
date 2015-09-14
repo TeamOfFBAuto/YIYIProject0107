@@ -19,9 +19,13 @@
 @property (strong, nonatomic) IBOutlet UILabel *addressLabel;
 @property (strong, nonatomic) IBOutlet UILabel *realPriceLabel;
 @property (strong, nonatomic) IBOutlet UIButton *commentButton;
+@property (strong, nonatomic) IBOutlet UIView *infoView;
+@property (strong, nonatomic) IBOutlet UIView *backView;
 
 @property (nonatomic,retain)UIScrollView *contentScroll;//放置多个商品
 
 - (void)setCellWithModel:(id)aModel;
+
++ (CGFloat)heightForAddress:(NSString *)address;
 
 @end

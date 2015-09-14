@@ -319,9 +319,9 @@ typedef enum {
 }CELLSTYLE;
 
 typedef enum{
-    ORDERTYPE_DaiFu = 1, //待付
+    ORDERTYPE_DaiFu = 1, //待付款
+    ORDERTYPE_DaiFaHuo,//待发货
     ORDERTYPE_PeiSong, //配送中
-    ORDERTYPE_DaiPingJia,//待评价
     ORDERTYPE_WanCheng //完成
 }ORDERTYPE;
 
@@ -752,9 +752,15 @@ typedef enum{
 
 //我的奖券列表
 #define MYJIANGQUAN_LIST @"http://www119.alayy.com/index.php?d=api&c=prize&m=get_join_list"
-
 //我的奖券
 #define MYJIANGQUAN_ONE @"http://www119.alayy.com/index.php?d=api&c=prize&m=get_join_info"
+
+//我的优惠券
+#define MYYOUHUIQUAN_LIST @"http://www119.alayy.com/index.php?d=api&c=order&m=my_coupon_list"
+
+//根据T台id 获取关联店铺优惠券
+#define GETYOUHUIQUAN_RELATIONSHOP @"http://www119.alayy.com/index.php?d=api&c=order&m=tt_coupon_list"
+
 
 //删除买衣日志
 #define DELETE_BUYCLOTHESLOG @"http://www119.alayy.com/index.php?d=api&c=buylog&m=del"

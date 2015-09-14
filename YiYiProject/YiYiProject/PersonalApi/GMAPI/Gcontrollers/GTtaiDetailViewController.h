@@ -11,6 +11,8 @@
 
 #import "MyViewController.h"
 
+@class GgetStoreYouhuiquanViewController;
+
 @interface GTtaiDetailViewController : MyViewController
 
 

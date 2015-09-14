@@ -11,6 +11,7 @@
 #import "BaseModel.h"
 
 @interface CouponModel : BaseModel
+
 @property(nonatomic,retain)NSString *coupon_id;
 @property(nonatomic,retain)NSString *type;//1满减 2打折 3：新人优惠
 @property(nonatomic,retain)NSString *full_money;//满多少钱
@@ -27,5 +28,23 @@
 @property(nonatomic,retain)NSString *shop_id;
 @property(nonatomic,retain)NSString *color;//1=>红色    2=>黄色    3=>蓝色
 @property(nonatomic,retain)NSString *enable_receive;//1=>可以领取  0=>不可以领取
+@property(nonatomic,retain)NSString *newer_money;//新人减钱多少
+@property(nonatomic,retain)NSString *is_use;//是否使用
+@property(nonatomic,retain)NSNumber *is_commmend;//是否推荐
+
+@property(nonatomic,assign)BOOL isUsed;//是否被选中使用
+
+
+//我的钱包
+@property(nonatomic,strong)NSString *newer_money;//新人优惠价钱
+@property(nonatomic,strong)NSString *uc_id;//用不到
+@property(nonatomic,strong)NSString *uid;
+@property(nonatomic,strong)NSString *receive_time;//领取时间
+@property(nonatomic,strong)NSString *use_time;//使用时间
+@property(nonatomic,strong)NSString *brand_logo;//品牌logo
+@property(nonatomic,strong)NSString *brand_name;//品牌名
+@property(nonatomic,strong)NSString *malll_name;//商场名
+@property(nonatomic,assign)int enable_use;//是否可用 1=>可以 , 0=>不可以
+@property(nonatomic,assign)int disable_use_reason;//不能使用原因    1=>已经使用过， 2=>过期
 
 @end

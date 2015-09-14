@@ -12,6 +12,10 @@
 @implementation GTtaiDetailSamettCell
 
 -(void)loadCustomViewWithModel:(id)theModel{
+    
+   
+    
+    
     self.backGroudView = [[UIView alloc]init];
     self.backGroudView.backgroundColor = [UIColor redColor];
     _backGroudView.clipsToBounds = YES;

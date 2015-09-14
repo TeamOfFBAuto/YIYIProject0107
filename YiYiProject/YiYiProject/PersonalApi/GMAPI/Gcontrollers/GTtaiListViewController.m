@@ -274,7 +274,6 @@
     _tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     [_tool_detail requestCompletion:^(NSDictionary *result, NSError *erro) {
         
-        
         NSArray *arr = [result arrayValueForKey:@"advertisements_data"];
         NSMutableArray *viewsArray = [NSMutableArray arrayWithCapacity:1];
         _upScrollViewData = [NSMutableArray arrayWithCapacity:1];
@@ -406,9 +405,16 @@
             [itemArray addObject:item];
         }
         
-        UIView *vvv = [[UIView alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(_topScrollView.frame), DEVICE_WIDTH-10, 32)];
+//        UIView *vvv = [[UIView alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(_topScrollView.frame), DEVICE_WIDTH-10, 32)];
+        UIView *vvv = [[UIView alloc]initWithFrame:CGRectMake(5,  (DEVICE_WIDTH*250/750) ,DEVICE_WIDTH-10, 32)];
         [self.topView addSubview:vvv];
+        
         _topScrollView1 = [[GcycleScrollView1 alloc] initWithFrame:CGRectMake(5, CGRectGetMaxY(vvv.frame), DEVICE_WIDTH - 10,(int)(DEVICE_WIDTH*120/710)) delegate:self imageItems:itemArray isAuto:YES pageControlNum:0];//0为不显示pagecontrol
+        
+//        if (!_topScrollView) {
+//            [_topScrollView1 setFrame:CGRectMake(5, (DEVICE_WIDTH*250/750), DEVICE_WIDTH-10, (int)(DEVICE_WIDTH*120/710))];
+//        }
+        
         [_topScrollView scrollToIndex:0];
     }
     

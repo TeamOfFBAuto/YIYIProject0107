@@ -40,6 +40,9 @@
 
 #import "GChooseColorAndSizeViewController.h"//选择颜色尺寸
 
+#import "GgetStoreYouhuiquanViewController.h"//领取优惠券
+
+
 @interface GTtaiDetailViewController ()<UIScrollViewDelegate,PSWaterFlowDelegate,PSCollectionViewDataSource,GgetllocationDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     
@@ -313,6 +316,7 @@
     GChooseColorAndSizeViewController *cc = [[GChooseColorAndSizeViewController alloc]init];
     cc.theType = CHOOSETYPE_LIJIGOUMAI;
     cc.productModelArray = _allProductArray;
+    cc.lastVc = self;
     [self.navigationController pushViewController:cc animated:YES];
 }
 
@@ -567,7 +571,6 @@
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:list.count];
         
         
-        
         for (int i = 0;i<list.count;i++) {
             NSDictionary *dic = list[i];
             GTtaiRelationStoreModel *amodel = [[GTtaiRelationStoreModel alloc]initWithDictionary:dic];
@@ -585,9 +588,11 @@
                 }
             }
             [temp addObject:amodel];
+            
+            
         }
         
-        if (temp.count >= 6) {
+        if (temp.count >= 1) {
             _isHaveMoreStoreData = YES;
         }else{
             _isHaveMoreStoreData = NO;
@@ -951,7 +956,6 @@
     
     GMoreTtaiSameStroViewController *cc = [[GMoreTtaiSameStroViewController alloc]init];
     cc.tPlat_id = self.tPlat_id;
-    cc.tPlat_id = @"3";
     cc.locationDic = self.locationDic;
     [self.navigationController pushViewController:cc animated:YES];
     
@@ -1357,7 +1361,28 @@
     [view2 addSubview:fenLine3];
     
     
-    [view2 setHeight:CGRectGetMaxY(fenLine3.frame)];
+    //优惠券
+    UILabel *title_youhuiquan = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(fenLine3.frame), (DEVICE_WIDTH-20) *0.5, 35)];
+    title_youhuiquan.text = @"优惠券";
+    title_youhuiquan.font = [UIFont systemFontOfSize:12];
+    [view2 addSubview:title_youhuiquan];
+    
+    //领取优惠券
+    UILabel *youhuiquan_lingqu = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(title_youhuiquan.frame), title_youhuiquan.frame.origin.y, title_youhuiquan.frame.size.width, title_youhuiquan.frame.size.height)];
+    youhuiquan_lingqu.text = @"点击领取店铺优惠券";
+    youhuiquan_lingqu.textColor = RGBCOLOR(244, 76, 139);
+    youhuiquan_lingqu.font = [UIFont systemFontOfSize:12];
+    youhuiquan_lingqu.textAlignment = NSTextAlignmentRight;
+    [youhuiquan_lingqu addTapGestureTarget:self action:@selector(lingquyouhuiquan) tag:0];
+    [view2 addSubview:youhuiquan_lingqu];
+    
+    
+    UIView *fenLine44 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(title_youhuiquan.frame), DEVICE_WIDTH, 0.5)];
+    fenLine44.backgroundColor = fenLine.backgroundColor;
+    [view2 addSubview:fenLine44];
+    
+    
+    [view2 setHeight:CGRectGetMaxY(fenLine44.frame)];
     
     height +=view2.frame.size.height;
     
@@ -1452,6 +1477,18 @@
     
     _collectionView.headerView = _tabHeaderView;
     
+    
+    
+}
+
+
+-(void)lingquyouhuiquan{
+    NSLog(@"%s",__FUNCTION__);
+
+    GgetStoreYouhuiquanViewController *cc = [[GgetStoreYouhuiquanViewController alloc]init];
+    cc.tPlat_id = self.tPlat_id;
+    cc.locationDic = self.locationDic;
+    [self.navigationController pushViewController:cc animated:YES];
     
     
 }
@@ -1570,9 +1607,14 @@
     TPlatModel *model = _collectionView.dataArray[index];
     
     GTtaiDetailSamettCell *cell = (GTtaiDetailSamettCell *)[_collectionView.quitView cellForIndex:index];
-    NSDictionary *params = @{@"button":cell.like_btn,
-                             @"label":cell.like_label,
-                             @"model":model};
+//    GTtaiDetailSamettCell *cell = (GTtaiDetailSamettCell*)[self collectionView:_collectionView cellForRowAtIndex:index];
+    NSDictionary *params = nil;
+    if (cell.like_btn && cell.like_label ) {
+        params = @{@"button":cell.like_btn,
+                                 @"label":cell.like_label,
+                                 @"model":model};
+    }
+    
     [MiddleTools pushToTPlatDetailWithInfoId:model.tt_id fromViewController:self lastNavigationHidden:NO hiddenBottom:YES extraParams:params updateBlock:nil];
     
 }
@@ -1612,9 +1654,11 @@
     [cell loadCustomViewWithModel:amodel];
     
     //设置button参数
+    
     NSDictionary *params = @{@"button":cell.like_btn,
                              @"label":cell.like_label,
                              @"model":amodel};
+    NSLog(@"设置button参数%@",params);
     cell.likeBackBtn.object = params;
     [cell.likeBackBtn addTarget:self action:@selector(clickToZan:) forControlEvents:UIControlEventTouchUpInside];
     

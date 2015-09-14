@@ -23,17 +23,9 @@
 
 - (void)setCellWithModel:(AddressModel *)aModel
 {
-//    UILabel *nameLabel;
-//    @property (strong, nonatomic) IBOutlet UILabel *phoneLabel;
-//    @property (strong, nonatomic) IBOutlet UILabel *addressLabel;
-//    @property (strong, nonatomic) IBOutlet UIImageView *selectImage;
-    
-    self.nameLabel.text = aModel.receiver_username;
+    self.nameLabel.text = [NSString stringWithFormat:@"%@  %@",aModel.receiver_username,aModel.mobile];
     CGFloat width = [LTools widthForText:aModel.receiver_username font:15];
-    self.nameLabel.width = width;
     
-    self.phoneLabel.left = _nameLabel.right + 10;
-    self.phoneLabel.text = aModel.mobile;
     self.addressLabel.text = aModel.address;
     
 //    default_address
@@ -43,7 +35,7 @@
     NSString *keyword = isDefault ? @"[默认]" : @"";
     
     NSString *content = [NSString stringWithFormat:@"%@%@",keyword,aModel.address];
-    NSAttributedString *string = [LTools attributedString:content keyword:keyword color:[UIColor colorWithHexString:@"f98700"]];
+    NSAttributedString *string = [LTools attributedString:content keyword:keyword color:DEFAULT_TEXTCOLOR];
     [self.addressLabel setAttributedText:string];
 }
 

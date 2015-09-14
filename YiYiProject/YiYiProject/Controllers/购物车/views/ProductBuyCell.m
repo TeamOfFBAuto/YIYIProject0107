@@ -23,19 +23,40 @@
 
 - (void)setCellWithModel:(ProductModel *)model
 {
-    [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:model.cover_pic] placeholderImage:DEFAULT_YIJIAYI];
-    self.productNameLabel.text = model.product_name;
+    [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:[model.small_cover_pic stringValueForKey:@"src"]] placeholderImage:DEFAULT_YIJIAYI];
+    self.productNameLabel.text = [NSString stringWithFormat:@"%@: %@",model.product_type_name,model.product_name];
     
-    NSString *price = nil;
-    if ([model.is_seckill intValue] == 1) {
+    NSString *text = [NSString stringWithFormat:@"颜色: %@  尺码: %@",model.color,model.size];
+    self.paramLabel.text = text;
+    
+    //有折扣
+    if (model.discount_num < 1) {
         
-//        price = [model.seckill_info stringValueForKey:@"seckill_price"];
+        //原价
+        NSString *price_original = [NSString stringWithFormat:@"%.2f",[model.original_price floatValue]];
+        NSString *price_discount = [NSString stringWithFormat:@"%.2f",[model.product_price floatValue]];
+        
+        NSString *str = [NSString stringWithFormat:@"￥%@ %@",price_discount,price_original];
+        
+        NSAttributedString *temp = [[NSAttributedString alloc]initWithString:str];
+        
+        NSMutableAttributedString *priceAttString = [[NSMutableAttributedString alloc]initWithAttributedString:temp];
+        
+        //中间加横线
+        NSRange range = [str rangeOfString:price_original];
+        
+        [priceAttString addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:range];
+        [priceAttString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"767676"] range:range];
+        
+        [self.priceLabel setAttributedText:priceAttString];
+        
     }else
     {
-        price = model.product_price;
+        self.priceLabel.text = [NSString stringWithFormat:@"￥%@",model.product_price];
+
     }
     
-    self.priceLabel.text = [NSString stringWithFormat:@"￥%@",price];
+    
     self.numLabel.text = [NSString stringWithFormat:@"x %@",model.product_num];
 }
 

@@ -313,6 +313,15 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
                                 fontSize:(CGFloat)fontSize
                                textColor:(UIColor *)textColor;
 
+/**
+ *  加下划线
+ *
+ *  @param content
+ *
+ *  @return
+ */
++ (NSAttributedString *)attributedUnderlineString:(NSString *)content;
+
 + (NSAttributedString *)attributedString:(NSString *)content keyword:(NSString *)aKeyword color:(UIColor *)textColor;//关键词高亮
 
 + (NSAttributedString *)attributedString:(NSMutableAttributedString *)attibutedString originalString:(NSString *)string AddKeyword:(NSString *)keyword color:(UIColor *)color;//每次一个关键词高亮,多次调用

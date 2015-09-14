@@ -398,7 +398,7 @@
     
     UITabBarController *root = (UITabBarController *)((LNavigationController *)ROOTVIEWCONTROLLER).topViewController;
     
-    root.selectedIndex = 2;
+    root.selectedIndex = 1;
 }
 
 /**
@@ -438,6 +438,7 @@
     ConfirmOrderController *confirm = [[ConfirmOrderController alloc]init];
     confirm.productArray = arr;
     confirm.hidesBottomBarWhenPushed = YES;
+    confirm.lastViewController = self;
     [self.navigationController pushViewController:confirm animated:YES];
     
 }

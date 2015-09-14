@@ -34,6 +34,14 @@
     self.addressLabel.height = [LTools heightForText:aModel.address width:_addressLabel.width font:13];
     self.addressLabel.lineBreakMode = NSLineBreakByCharWrapping;
     self.addressLabel.numberOfLines = 2;
+    
+    self.toolView.top = self.addressLabel.bottom + 10;
+}
+
++ (CGFloat)heightForCellWithAddress:(NSString *)address
+{
+   CGFloat height = [LTools heightForText:address width:DEVICE_WIDTH - 20 font:13];
+    return height + 50 + 10 + 44 + 10;
 }
 
 @end

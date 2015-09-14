@@ -8,6 +8,8 @@
 
 #import "GChooseColorAndSizeViewController.h"
 #import "GChooseColorSizeTableViewCell.h"
+#import "ConfirmOrderController.h"
+#import "GTtaiDetailViewController.h"
 
 @interface GChooseColorAndSizeViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -124,9 +126,22 @@
     
     if (self.theType == CHOOSETYPE_GOUWUCHE) {//购物车
         
-//        [self.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
         
-    }else if (self.theType == CHOOSETYPE_LIJIGOUMAI){//立即购买
+    }else if (self.theType == CHOOSETYPE_LIJIGOUMAI){//立即购买 跳转订单
+        
+        if (self.lastVc) {
+            [self.lastVc.navigationController popViewControllerAnimated:NO];
+            ConfirmOrderController *confirm = [[ConfirmOrderController alloc]init];
+            confirm.productArray = resultProducts;
+            [self.lastVc.navigationController pushViewController:confirm animated:YES];
+        }else{
+            ConfirmOrderController *confirm = [[ConfirmOrderController alloc]init];
+            confirm.productArray = resultProducts;
+            [self.navigationController pushViewController:confirm animated:YES];
+        }
+        
+        
         
     }
     

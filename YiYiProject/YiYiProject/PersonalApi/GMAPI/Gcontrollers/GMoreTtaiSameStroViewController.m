@@ -118,7 +118,9 @@
     NSString *longitude = [self.locationDic stringValueForKey:@"long"];
     NSString *latitude = [self.locationDic stringValueForKey:@"lat"];
     
-    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@&longitude=%@&latitude=%@&tt_id=%@",TTAI_STORE,[GMAPI getAuthkey],longitude,latitude,self.tPlat_id];
+    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@&longitude=%@&latitude=%@&tt_id=%@page=%d&count=%d",TTAI_STORE,[GMAPI getAuthkey],longitude,latitude,self.tPlat_id,_tab.pageNum,L_PAGE_SIZE];
+    
+    NSLog(@"爱你也需要很大的勇气%@",url);
     
     tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     
