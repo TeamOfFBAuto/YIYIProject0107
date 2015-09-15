@@ -331,7 +331,7 @@
     }else if (index >= kPadding_Refund){
 
         kadding = kPadding_Refund;
-        OrderModel *aModel = [[self refreshTableForIndex:2].dataArray objectAtIndex:index - kadding];
+        OrderModel *aModel = [[self refreshTableForIndex:1].dataArray objectAtIndex:index - kadding];
         TuiKuanViewController *tuiKuan = [[TuiKuanViewController alloc]init];
         tuiKuan.tuiKuanPrice = [aModel.real_product_total_price floatValue];
         tuiKuan.orderId = aModel.order_id;

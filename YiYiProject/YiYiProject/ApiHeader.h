@@ -122,6 +122,7 @@ alpha:(a)]
 
 #define NOTIFICATION_UPDATELOCATION_SUCCESS @"NOTIFICATION_UPLOADLOCATION_SUCCESS"//定位成功后通知
 
+#define NOTIFICATION_TUIKUAN_SUCCESS @"NOTIFICATION_TUIKUAN_SUCCESS"//退款成功
 
 //单品关注相关操作
 #define NOTIFICATION_GUANZHU_PRODUCT @"guanzhu_product"
@@ -853,6 +854,11 @@ typedef enum{
 
 //53、用户取消或删除订单
 #define ORDER_HANDLE_ORDER @"http://www119.alayy.com/index.php?d=api&c=order&m=handle_order"
+
+
+//退款
+#define KUIKUAN @"http://www119.alayy.com/index.php?d=api&c=order&m=apply_refund"
+
 
 //获取购物车数量
 #define GET_SHOPPINGCAR_NUM @"http://www119.alayy.com/index.php?d=api&c=order&m=get_cart_pro_num"

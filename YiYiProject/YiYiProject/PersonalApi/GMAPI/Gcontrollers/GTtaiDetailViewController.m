@@ -42,6 +42,8 @@
 
 #import "GgetStoreYouhuiquanViewController.h"//领取优惠券
 
+#import "ShoppingCarController.h"//购物车
+
 
 @interface GTtaiDetailViewController ()<UIScrollViewDelegate,PSWaterFlowDelegate,PSCollectionViewDataSource,GgetllocationDelegate,UITableViewDataSource,UITableViewDelegate>
 {
@@ -217,6 +219,7 @@
     //购物车
     
     UIButton *carBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 45, DEVICE_HEIGHT - 64 - 50 - 5 - 45, 45, 45) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:[UIImage imageNamed:@"danpinxq_gouwuche"] selectedImage:nil target:self action:@selector(clickToShoppingCar)];
+    
     [self.view addSubview:carBtn];
     //导航按钮
     
@@ -325,7 +328,10 @@
  */
 - (void)clickToShoppingCar
 {
-    
+    ShoppingCarController *order = [[ShoppingCarController alloc]init];
+    order.hidesBottomBarWhenPushed = YES;
+    order.lastPageNavigationHidden = YES;
+    [self.navigationController pushViewController:order animated:YES];
 }
 
 //进入店铺

@@ -79,13 +79,15 @@
     
     
     //总价
-    _t_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, quedingBtn.frame.origin.x - 10, downView.frame.size.height*0.5)];
+    _t_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 11, quedingBtn.frame.origin.x - 10, 12)];
     _t_priceLabel.font = [UIFont systemFontOfSize:12];
+//    _t_priceLabel.backgroundColor = [UIColor orangeColor];
     [downView addSubview:_t_priceLabel];
     
     //原价
-    _o_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_t_priceLabel.frame), _t_priceLabel.frame.size.width, downView.frame.size.height * 0.5)];
+    _o_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(_t_priceLabel.frame)+5, _t_priceLabel.frame.size.width, 12)];
     _o_priceLabel.font = [UIFont systemFontOfSize:12];
+//    _o_priceLabel.backgroundColor = [UIColor purpleColor];
     [downView addSubview:_o_priceLabel];
     
     
@@ -111,7 +113,16 @@
             NSLog(@"pname %@",model.product_name);
             NSLog(@"colorName %@  colorId %@",model.colorDic[@"color_name"],model.colorDic[@"color_id"]);
             NSLog(@"sizeName %@  sizeid %@",model.sizeDic[@"size_name"],model.sizeDic[@"size_id"]);
-            NSLog(@"num %ld",model.tnum);
+            NSLog(@"num %d",model.tnum);
+            
+            model.product_num = [NSString stringWithFormat:@"%d",model.tnum];
+            model.color = model.colorDic[@"color_name"];
+            model.color_id = model.colorDic[@"color_id"];
+            model.size = model.sizeDic[@"size_name"];
+            model.size_id = model.sizeDic[@"size_id"];
+            model.small_cover_pic = model.product_cover_pic;
+            
+            
             [resultProducts addObject:model];
         }
         
