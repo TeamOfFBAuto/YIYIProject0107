@@ -16,8 +16,13 @@
 #import "PayActionViewController.h"//支付页面
 #import "ConfirmOrderController.h"//确认订单
 #import "SelectCell.h"
+#import "OrderOtherInfoCell.h"
+
+#import "RCIM.h"
 
 #import "OrderModel.h"
+#import "ShopModel.h"
+#import "CouponModel.h"
 
 #define ALIPAY @"支付宝支付"
 #define WXPAY  @"微信支付"
@@ -51,6 +56,8 @@
     
     UILabel *_addressHintLabel;//收货地址提示
     OrderModel *_orderModel;//订单model
+    
+    NSArray *_shop_arr;
 }
 
 @end
@@ -104,7 +111,7 @@
                              @"detail":[NSNumber numberWithInt:1]};
     NSString *url = [LTools url:ORDER_GET_ORDER_INFO withParams:params];
     
-//    __weak typeof(_table)weakTable = _table;
+    __weak typeof(_table)weakTable = _table;
     __weak typeof(self)weakSelf = self;
     
     LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
@@ -112,7 +119,66 @@
         NSLog(@"获取订单详情%@ %@",result[RESULT_INFO],result);
         NSDictionary *info = result[@"info"];
         OrderModel *aModel = [[OrderModel alloc]initWithDictionary:info];
+        
+        //判断是否使用 首单减免
+        if (aModel.newer_coupons && [aModel.newer_coupons isKindOfClass:[NSDictionary class]]) {
+            
+            CouponModel *c_model = [[CouponModel alloc]initWithDictionary:aModel.newer_coupons];
+            aModel.couponModel = c_model;
+        }
+        
         [weakSelf setViewsWithModel:aModel];
+        
+        NSArray *arr = [info arrayValueForKey:@"shop_products"];
+        NSMutableArray *temp = [NSMutableArray array];
+        if (arr) {
+            for (NSDictionary *aDic in arr) {
+                ShopModel *aModel = [[ShopModel alloc]initWithDictionary:aDic];
+                
+                CGFloat sum = 0.f;//计算单品总价
+                NSInteger p_sum = 0;//单品的个数
+                //对应的单品
+                NSArray *productsArray = [aDic arrayValueForKey:@"products"];
+                NSMutableArray *temp_product = [NSMutableArray arrayWithCapacity:productsArray.count];
+                for (NSDictionary *p_dic in productsArray) {
+                    ProductModel *p_model = [[ProductModel alloc]initWithDictionary:p_dic];
+                    [temp_product addObject:p_model];
+                    
+                    sum += ([p_model.product_price floatValue] * [p_model.product_num intValue]);
+                    
+                    p_sum += [p_model.product_num integerValue];
+                }
+                aModel.productsArray = temp_product;
+                
+                //优惠劵
+                NSArray *couponArray = [aDic arrayValueForKey:@"coupons"];
+                NSMutableArray *temp_coupon = [NSMutableArray arrayWithCapacity:couponArray.count];
+                for (NSDictionary *c_dic in couponArray) {
+                    CouponModel *c_model = [[CouponModel alloc]initWithDictionary:c_dic];
+                    [temp_coupon addObject:c_model];
+                }
+                aModel.couponsArray = temp_coupon;
+                
+                //单品个数
+                
+                aModel.productNum = [NSString stringWithFormat:@"%d",(int)p_sum];
+                
+                //使用的优惠劵
+                if (temp_coupon.count) {
+                    aModel.couponModel = [temp_coupon lastObject];
+                }
+                
+                //总价
+                aModel.total_price = [NSString stringWithFormat:@"%.2f",sum];
+                
+                //是否只用于显示
+                aModel.onlyShow = YES;
+                
+                [temp addObject:aModel];
+            }
+        }
+        _shop_arr = [NSArray arrayWithArray:temp];
+        [weakTable reloadData];
 
     } failBlock:^(NSDictionary *result, NSError *erro) {
         NSLog(@"获取订单详情 失败 %@",result[RESULT_INFO]);
@@ -121,6 +187,38 @@
 }
 
 #pragma mark - 事件处理
+
+/**
+ *  判断section是否是显示单品
+ *
+ *  @param section
+ *
+ *  @return
+ */
+- (BOOL)productsSection:(NSInteger)section
+{
+    if (section > 0 && section <= _shop_arr.count) {
+        return YES;
+    }
+    return NO;
+}
+
+/**
+ *  判断是否是否是单品IndexPath
+ *
+ *  @param indexPath
+ *
+ *  @return
+ */
+- (BOOL)productIndexPath:(NSIndexPath *)indexPath
+{
+    ShopModel *shopModel = _shop_arr[indexPath.section - 1];
+    if (indexPath.row < shopModel.productsArray.count) {
+        
+        return YES;
+    }
+    return NO;
+}
 
 /**
  *  再次购买
@@ -189,19 +287,9 @@
         alert.tag = ALERT_TAG_DEL_ORDER;
         [alert show];
         
-    }else if ([text isEqualToString:@"评价晒图"]){
+    }else if ([text isEqualToString:@"申请退款"]){
         
-        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:_orderModel.products.count];
-        for (NSDictionary *aDic in _orderModel.products) {
-            
-            ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
-//            aModel.is_recommend
-            [temp addObject:aModel];
-        }
-//        AddCommentViewController *addComment = [[AddCommentViewController alloc]init];
-//        addComment.dingdanhao = _orderModel.order_no;
-//        addComment.theModelArray = temp;
-//        [self.navigationController pushViewController:addComment animated:YES];
+        
     }
 }
 
@@ -231,41 +319,18 @@
  *  @param sender
  */
 - (void)clickToChat:(UIButton *)sender
-{    
-//    RCRichContentMessage
-//    
-//    SimpleMessage *msg = [SimpleMessage messageWithContent:@"哈哈可以发送任何类型的消息,自定义的消息😄来了"];
-//    msg.extra = @"http://pic.nipic.com/2007-11-09/2007119122519868_2.jpg";
-//    
-//    [[RCIMClient sharedRCIMClient]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"推送自定义" success:^(long messageId) {
-//        NSLog(@"messageid %ld",messageId);
-//    } error:^(RCErrorCode nErrorCode, long messageId) {
-//        NSLog(@"nErrorCode %ld",nErrorCode);
-//        
-//    }];
-    
-//    NSString *imageUrl = _theProductModel.cover_pic;
-//    NSString *digest = [NSString stringWithFormat:@"%@\n现价:%.2f\n原价:%.2f",_theProductModel.product_name,[_theProductModel.current_price floatValue],[_theProductModel.original_price floatValue]];
-//    NSString *productId = [NSString stringWithFormat:@"productId:%@",_theProductModel.product_id];
-    
+{
     NSString *text = [NSString stringWithFormat:@"订单编号:%@",_orderModel.order_no];
     RCTextMessage *msg = [[RCTextMessage alloc]init];
     msg.content = text;
     msg.extra = @"订单编号:";
     
-//    [[RCIMClient sharedRCIMClient]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" success:^(long messageId) {
-//        NSLog(@"messageid %ld",messageId);
-//    } error:^(RCErrorCode nErrorCode, long messageId) {
-//        NSLog(@"nErrorCode %ld",nErrorCode);
-//        
-//    }];
-//    
-//    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
-//    chatService.userName = @"客服";
-//    chatService.targetId = SERVICE_ID;
-//    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
-//    chatService.title = chatService.userName;
-//    [self.navigationController pushViewController:chatService animated:YES];
+    
+    [[RCIM sharedRCIM]sendTextMessage:ConversationType_PRIVATE targetId:_orderModel.yy_uid textMessage:msg delegate:nil object:nil];
+    
+    
+    [MiddleTools chatWithUserId:_orderModel.yy_uid userName:_orderModel.yy_username forViewController:self lastNavigationHidden:NO];
+
 }
 
 /**
@@ -295,6 +360,28 @@
     line.backgroundColor = [UIColor colorWithHexString:@"e4e4e4"];
     [bottom addSubview:line];
     
+//    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 36, 50) title:@"合计:" font:15 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"303030"]];
+//    [bottom addSubview:label];
+//    
+//    //总价
+//    _priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 10, 5, 150, 20) title:@"" font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR];
+//    [bottom addSubview:_priceLabel];
+//    
+//    //原价
+//    UILabel *_price_original = [[UILabel alloc]initWithFrame:CGRectMake(_priceLabel.left, _priceLabel.bottom, _priceLabel.width, _priceLabel.height) title:@"原价" font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"7e7e7e"]];
+//    [bottom addSubview:_price_original];
+//    
+//    //未优惠之前总费用
+//    NSString *sum_price = [NSString stringWithFormat:@"￥%.2f",[_orderModel.product_total_price floatValue] + [_orderModel.express_fee floatValue]];
+//    [_price_original setAttributedText:[LTools attributedUnderlineString:sum_price]];
+//    
+//    //判断是否有收单减优惠劵
+//    
+//    //显示实际的
+//    _priceLabel.text = [NSString stringWithFormat:@"￥%.2f",[_orderModel.total_fee floatValue]];
+//    
+//    
+    
     NSString *text1 = nil;
     NSString *text2 = nil;
     
@@ -319,18 +406,21 @@
         //接着判断是否评价
     }
     
-    UIButton *button1 = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 80, 15, 80, 20) buttonType:UIButtonTypeRoundedRect normalTitle:text1 selectedTitle:nil target:self action:@selector(clickToAction:)];
-    [button1 addCornerRadius:3.f];
-    [button1 setTitleColor:[UIColor colorWithHexString:@"f98700"] forState:UIControlStateNormal];
+    CGFloat btn_width = 70;
+    CGFloat btn_height = 30;
+    CGFloat top = (bottom.height - btn_height)/2.f;
+    UIButton *button1 = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - btn_width, top, btn_width, btn_height) buttonType:UIButtonTypeRoundedRect normalTitle:text1 selectedTitle:nil target:self action:@selector(clickToAction:)];
+    [button1 addCornerRadius:btn_height/2.f];
+    [button1 setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
     [button1.titleLabel setFont:[UIFont systemFontOfSize:13]];
-    [button1 setBorderWidth:0.5f borderColor:[UIColor colorWithHexString:@"f98700"]];
+    [button1 setBorderWidth:0.5f borderColor:DEFAULT_TEXTCOLOR];
     [bottom addSubview:button1];
     
-    UIButton *button2 = [[UIButton alloc]initWithframe:CGRectMake(button1.left - 15 - 80, 15, 80, 20) buttonType:UIButtonTypeRoundedRect normalTitle:text2 selectedTitle:nil target:self action:@selector(clickToAction:)];
-    [button2 addCornerRadius:3.f];
-    [button2 setTitleColor:[UIColor colorWithHexString:@"646464"] forState:UIControlStateNormal];
+    UIButton *button2 = [[UIButton alloc]initWithframe:CGRectMake(button1.left - 15 - btn_width, top, btn_width, btn_height) buttonType:UIButtonTypeRoundedRect normalTitle:text2 selectedTitle:nil target:self action:@selector(clickToAction:)];
+    [button2 addCornerRadius:btn_height/2.f];
+    [button2 setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
     [button2.titleLabel setFont:[UIFont systemFontOfSize:13]];
-    [button2 setBorderWidth:0.5f borderColor:[UIColor colorWithHexString:@"646464"]];
+    [button2 setBorderWidth:0.5f borderColor:DEFAULT_TEXTCOLOR];
     [bottom addSubview:button2];
     
     if ([text2 isEqualToString:@"查看物流"]) {
@@ -343,8 +433,8 @@
         
         //购买完成需要评论
         
-        UIButton *button3 = [[UIButton alloc]initWithframe:CGRectMake(button2.left - 15 - 80, 15, 80, 20) buttonType:UIButtonTypeRoundedRect normalTitle:@"评价晒图" selectedTitle:nil target:self action:@selector(clickToAction:)];
-        [button3 addCornerRadius:3.f];
+        UIButton *button3 = [[UIButton alloc]initWithframe:CGRectMake(button2.left - 15 - btn_width, top, btn_width, btn_height) buttonType:UIButtonTypeRoundedRect normalTitle:@"评价晒图" selectedTitle:nil target:self action:@selector(clickToAction:)];
+        [button3 addCornerRadius:btn_height/2.f];
         [button3 setTitleColor:[UIColor colorWithHexString:@"646464"] forState:UIControlStateNormal];
         [button3.titleLabel setFont:[UIFont systemFontOfSize:13]];
         [button3 setBorderWidth:0.5f borderColor:[UIColor colorWithHexString:@"646464"]];
@@ -405,20 +495,20 @@
             NSDictionary *params = @{@"authcode":authkey,
                                      @"order_id":_orderModel.order_id,
                                      @"action":@"cancel"};
-//            [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_HANDLE_ORDER parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//                
-//                NSLog(@"result取消订单 %@",result);
-//                
-//                //刷新配送中列表
-//                //刷新待评价列表
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_CANCEL object:nil];
-//                
-//                [weakSelf.navigationController popViewControllerAnimated:YES];
-//                
-//            } failBlock:^(NSDictionary *result) {
-//                
-//                
-//            }];
+            
+            NSString *url = [LTools url:ORDER_HANDLE_ORDER withParams:params];
+            LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+            [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+                
+                
+            } failBlock:^(NSDictionary *result, NSError *erro) {
+                
+                NSLog(@"result取消订单 %@",result);
+
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_CANCEL object:nil];
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+            }];
+
         }
         
     }else if (alertView.tag == ALERT_TAG_DEL_ORDER){
@@ -430,20 +520,17 @@
             NSDictionary *params = @{@"authcode":authkey,
                                      @"order_id":_orderModel.order_id,
                                      @"action":@"del"};
-//            [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_HANDLE_ORDER parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//                
-//                NSLog(@"result删除订单 %@",result);
-//                
-//                //刷新配送中列表
-//                //刷新待评价列表
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_DEL object:nil];
-//                
-//                [weakSelf.navigationController popViewControllerAnimated:YES];
-//                
-//            } failBlock:^(NSDictionary *result) {
-//                
-//                
-//            }];
+            
+            NSString *url = [LTools url:ORDER_HANDLE_ORDER withParams:params];
+            LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+            [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+                NSLog(@"删除订单");
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_DEL object:nil];
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+                
+            } failBlock:^(NSDictionary *result, NSError *erro) {
+                
+            }];
         }
 
     }else if (alertView.tag == ALERT_TAG_RECIEVER_CONFIRM){
@@ -455,20 +542,17 @@
             __weak typeof(self)weakSelf = self;
             NSDictionary *params = @{@"authcode":authkey,
                                      @"order_id":_orderModel.order_id};
-//            [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_RECEIVING_CONFIRM parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//                
-//                NSLog(@"result确认收货 %@",result);
-//                
-//                //刷新配送中列表
-//                //刷新待评价列表
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_RECIEVE_CONFIRM object:nil];
-//                
-//                [weakSelf.navigationController popViewControllerAnimated:YES];
-//                
-//            } failBlock:^(NSDictionary *result) {
-//                
-//                
-//            }];
+            
+            NSString *url = [LTools url:ORDER_RECEIVING_CONFIRM withParams:params];
+            LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+            [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+                
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_RECIEVE_CONFIRM object:nil];
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+                
+            } failBlock:^(NSDictionary *result, NSError *erro) {
+                
+            }];
         }
 
     }
@@ -564,148 +648,195 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-        
+    
+    NSLog(@"点击商品name = ");
+    
     if (indexPath.section == 1) {
-
-        ProductModel *aModel = [[ProductModel alloc]initWithDictionary:[_orderModel.products objectAtIndex:indexPath.row]] ;
         
-        [MiddleTools pushToProductDetailWithId:aModel.product_id fromViewController:self lastNavigationHidden:NO hiddenBottom:NO extraParams:nil updateBlock:nil];
+//        ProductModel *aModel = [self.productArray objectAtIndex:indexPath.row];
+        
+//        NSLog(@"点击商品name = %@",aModel.product_name);
+        
+        //        ProductDetailViewController *cc = [[ProductDetailViewController alloc]init];
+        //        cc.product_id = aModel.product_id;
+        //        [self.navigationController pushViewController:cc animated:YES];
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0 || indexPath.section == 2 || indexPath.section == 3) {
-        return 30;
+    if (indexPath.section == 0) {
+        return 0;
     }
-    if (indexPath.section == 1) {
-        return 85;
+    if ([self productsSection:indexPath.section]) {
+        
+        if ([self productIndexPath:indexPath]) {
+            
+            return 85;
+        }
+        
+        //优惠劵 备注部分
+        return 276 / 2.f + 4;
     }
     
-    return 44;
+    return 50;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    if ([self productsSection:section]) {
+        return 50;
+    }
+    
     return 37.5;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 37.5)];
-    
-    NSString *title = nil;
-    
-    if (section == 0) {
+    if ([self productsSection:section]) {
         
-        title = @"支付信息";
-    }else if (section == 1){
-        title = @"商品清单";
-    }else if (section == 2){
-        title = @"价格清单";
-    }else if (section == 3){
-        title = @"订单信息";
+        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 50)];
+        view.backgroundColor = [UIColor whiteColor];
+        ShopModel *aModel = _shop_arr[section - 1];
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 30, 30)];
+        [view addSubview:imageView];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:aModel.brand_logo] placeholderImage:DEFAULT_YIJIAYI];
+        
+        NSString *title = [NSString stringWithFormat:@"%@-%@",aModel.brand_name,aModel.mall_name];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(imageView.right + 10, 0, DEVICE_WIDTH - 10 - imageView.right - 10, view.height) title:title font:13 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"313131"]];
+        [view addSubview:titleLabel];
+        
+        return view;
+    }else
+    {
+        NSString *title;
+        //商品清单
+        if (section == 0) {
+            title = @"商品清单";
+        }else
+        {
+            title = @"价格清单";
+        }
+        
+        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 35)];
+        
+        UIView *redPoint = [[UIView alloc]initWithFrame:CGRectMake(10, 0, 4, 4)];
+        redPoint.backgroundColor = DEFAULT_TEXTCOLOR;
+        [redPoint addRoundCorner];
+        [view addSubview:redPoint];
+        redPoint.centerY = view.height/2.f;
+        
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(redPoint.right + 8, 0, 100, view.height) title:title font:12 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"9d9d9d"]];
+        [view addSubview:label];
+        view.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
+        
+        return view;
+        
     }
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 100, view.height) title:title font:12 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"9d9d9d"]];
-    [view addSubview:label];
-    view.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
-    
-    return view;
+    return nil;
 }
 
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) {
-        
-        return 1;
-    }
-    if (section == 1) {
-        
-        return _orderModel.products.count;
+    if ([self productsSection:section]) {
+        ShopModel *aModel = _shop_arr[section - 1];
+        return aModel.productsArray.count + 1;
     }
     
-    if (section == 3) {
-        return 1;
+    if (section == 0) {
+        return 0;
+    }else
+    {
+        if (_orderModel.couponModel) {
+            
+            return 3;
+        }
+        
+        return 2;
     }
-    return 2;
+    
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1) {
-        static NSString *identify = @"ProductBuyCell";
-        ProductBuyCell *cell = (ProductBuyCell *)[LTools cellForIdentify:identify cellName:identify forTable:tableView];
+    if ([self productsSection:indexPath.section]) {
         
-        ProductModel *aModel = [[ProductModel alloc]initWithDictionary:[_orderModel.products objectAtIndex:indexPath.row]] ;
-        [cell setCellWithModel:aModel];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-        return cell;
-    }
-    
-    if (indexPath.section == 2) {
-        
-        static NSString *identify = @"ConfirmInfoCell";
-        ConfirmInfoCell *cell = (ConfirmInfoCell *)[LTools cellForIdentify:identify cellName:identify forTable:tableView];
-        if (indexPath.row == 0) {
+        if ([self productIndexPath:indexPath]) {
             
-            cell.nameLabel.text = @"商品总价";
-            cell.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",[_orderModel.total_price floatValue]];
+            static NSString *identify = @"ProductBuyCell";
+            ProductBuyCell *cell = (ProductBuyCell *)[LTools cellForIdentify:identify cellName:identify forTable:tableView];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-        }else if (indexPath.row == 1){
-            cell.nameLabel.text = @"运费";
-            cell.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",[_orderModel.express_fee floatValue]];
+            ShopModel *shopModel = _shop_arr[indexPath.section - 1];
+            
+            ProductModel *aModel = [shopModel.productsArray objectAtIndex:indexPath.row];
+            
+            [cell setCellWithModel:aModel];
+            
+            return cell;
         }
         
+        static NSString *identify = @"OrderOtherInfoCell";
+        OrderOtherInfoCell *cell = (OrderOtherInfoCell *)[tableView cellForRowAtIndexPath:indexPath];
+        if (!cell) {
+            cell = [[OrderOtherInfoCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+        }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        return cell;
-    }
-    
-    static NSString *identify = @"SelectCell";
-    SelectCell *cell = (SelectCell *)[LTools cellForIdentify:identify cellName:identify forTable:tableView];
-    cell.arrowImageView.hidden = YES;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-    if (indexPath.section == 0) {
-        cell.nameLabel.text = @"支付方式";
-        cell.contentLabel.left = DEVICE_WIDTH - cell.contentLabel.width - 20;
-        if (indexPath.row == 0) {
-            
-            NSLog(@"支付方式 --- %@",_orderModel.pay_type);
-            
-            int type = [_orderModel.pay_type intValue];
-            if (type == 1) {
-                
-                cell.contentLabel.text = @"支付宝支付";
-            }else if(type == 2)
-            {
-                cell.contentLabel.text = @"微信支付";
-            }else
-            {
-                cell.contentLabel.text = @"未选择";
-            }
-        }
-    }
-    
-    if (indexPath.section == 3) {
+        ShopModel *shopModel = _shop_arr[indexPath.section - 1];
+        [cell setCellWithModel:shopModel];
         
-        cell.nameLabel.text = @"订单编号";
-        cell.contentLabel.left = DEVICE_WIDTH - cell.contentLabel.width - 20;
-        cell.contentLabel.text = _orderModel.order_no;
+        cell.tf.indexPath = indexPath;
+        
+        
+        return cell;
+        
+    }
+    
+    static NSString *identify = @"ConfirmInfoCell";
+    ConfirmInfoCell *cell = (ConfirmInfoCell *)[LTools cellForIdentify:identify cellName:identify forTable:tableView];
+    if (indexPath.row == 1) {
+        
+        cell.nameLabel.text = @"运费";
+        
+        NSString *text = @"免运费";
+        if ([_orderModel.express_fee floatValue] > 0) {
+            text = [NSString stringWithFormat:@"%.2f",[_orderModel.express_fee floatValue]];
+        }
+        cell.priceLabel.text = text;
+        
+    }else if (indexPath.row == 2){
+        
+        cell.nameLabel.text = @"优惠";
+        
+        //显示实际的
+        NSString *other = @"";
+        CouponModel *c_mdoel = (CouponModel *)_orderModel.couponModel;
+        if (c_mdoel) {
+            
+            other = [NSString stringWithFormat:@"首单立减%@元",c_mdoel.newer_money];
+        }
+        cell.priceLabel.text = other;
+        
+    }else if (indexPath.row == 0){
+        cell.nameLabel.text = @"实付款";
+        //显示实际的
+        cell.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",[_orderModel.total_fee floatValue]];
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
+    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4;
+    return _shop_arr.count + 1 + 1;//单品部分、商品清单、其他
 }
 
 

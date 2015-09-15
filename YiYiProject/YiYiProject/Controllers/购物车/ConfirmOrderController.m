@@ -36,7 +36,7 @@
     
     NSString *_payStyle;//支付类型
     
-    float _expressFee;//邮费
+    CGFloat _expressFee;//邮费
     UILabel *_priceLabel;//邮费加产品价格
     
     MBProgressHUD *_loading;//加载
@@ -110,9 +110,6 @@
     
     [self getAddressAndFee];//获取收货地址和邮费
     
-    [self getUserCouponList];
-    
-//    [self createInputView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -229,14 +226,14 @@
             NSArray *products = [productDic arrayValueForKey:shopId];
             
             ShopModel *shopModel = [[ShopModel alloc]initWithShopId:shopId productsArray:products couponsArray:coupArr mallName:[shopinfo stringValueForKey:@"mall_name"] brandName:[shopinfo stringValueForKey:@"brand_name"] brandLogo:[shopinfo stringValueForKey:@"brand_logo"] totalPrice:[priceDic stringValueForKey:shopId] productNum:NSStringFromInt((int)products.count)];
-            //加个单价
-            if (products.count) {
-                ProductModel *aModel = [products lastObject];
-                shopModel.productPrice = aModel.product_price;
-            }else
-            {
-                shopModel.productPrice = @"0";
-            }
+//            //加个单价
+//            if (products.count) {
+//                ProductModel *aModel = [products lastObject];
+//                shopModel.productPrice = aModel.product_price;
+//            }else
+//            {
+//                shopModel.productPrice = @"0";
+//            }
             
             [_shop_arr addObject:shopModel];
         }
@@ -263,7 +260,6 @@
     float weight = 0;//总重
     
     NSDictionary *params = @{@"authcode":authkey,
-                             @"weight":[NSNumber numberWithFloat:weight],
                              @"address_id":addressId};
     
     __weak typeof(_table)weakTable = _table;
@@ -306,6 +302,9 @@
         NSDictionary *address = result[@"address"];
         AddressModel *aModel = [[AddressModel alloc]initWithDictionary:address];
         [weakSelf setViewsWithModel:aModel];
+        
+        [weakSelf getUserCouponList];//获取地址成功才有效
+
         
     } failBlock:^(NSDictionary *result, NSError *erro) {
         NSLog(@"获取收货地址和邮费 失败 %@",result[RESULT_INFO]);
@@ -378,12 +377,15 @@
     NSString *car_ids = [cart_pro_ids componentsJoinedByString:@","];
     
     NSString *authkey = [GMAPI getAuthkey];
-    NSString *note = @"";//备注
     NSString *expressFee = @"0";
     
-    NSMutableDictionary *coupDic = [NSMutableDictionary dictionary];
+    NSMutableDictionary *coupDic = [NSMutableDictionary dictionary];//优惠劵
+    NSMutableDictionary *noteDic = [NSMutableDictionary dictionary];//备注
     //优惠劵数据
     for (ShopModel *shopModel in _shop_arr) {
+        
+        NSString *note = shopModel.note ? : @"";
+        [noteDic setObject:note forKey:shopModel.product_shop_id];//备注
         
         if (shopModel.couponModel) {
             CouponModel *c_model = (CouponModel *)shopModel.couponModel;
@@ -391,11 +393,18 @@
         }
     }
     
+    //备注
+    NSString *noteString = @"";
+    if (noteDic) {
+        noteString = [self jsonString:[self toJSONData:noteDic]];
+    }
+    
     //有的话 默认使用 首单减免
     if (_couponModel_first) {
         [coupDic setObject:_couponModel_first.coupon_id forKey:@"0"];
     }
     
+    //优惠劵
     NSString *couponString = @"";
     if (coupDic) {
         couponString = [self jsonString:[self toJSONData:coupDic]];
@@ -417,7 +426,7 @@
                              @"express_fee":expressFee,//免运费
                              @"product_color_ids":colorIds,
                              @"product_size_ids":sizeIds,
-                             @"order_note":note,
+                             @"order_note":noteString,
                              @"coupons":couponString,
                              @"cart_pro_ids":car_ids};
     
@@ -523,10 +532,6 @@
 {
     //去生成订单
     [self postOrderInfo];
-    
-    //test
-
-//    [self pushToPayPageWithOrderId:@"1" orderNum:@"11"];
 }
 
 /**
@@ -743,6 +748,7 @@
  */
 - (void)setViewsWithModel:(AddressModel *)aModel
 {
+    _expressFee = [aModel.express_fee floatValue];//邮费
     _selectAddressId = aModel.address_id;
     [self tableHeaderViewWithAddressModel:aModel];
 }
@@ -1014,29 +1020,8 @@
             }
         };
         
-        NSLog(@"cellFrame %@",NSStringFromCGRect(cell.frame));
-        
-        
         return cell;
-        
     }
-    
-//    if (indexPath.section == 0) {
-//        
-//        static NSString *identify = @"tableCell";
-//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify];
-//        if (!cell) {
-//            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
-//            _inputTf = [[UITextField alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH - 20, 30)];
-//            _inputTf.placeholder = @"填写备注";
-//            _inputTf.font = [UIFont systemFontOfSize:12];
-//            [cell.contentView addSubview:_inputTf];
-//            _inputTf.clearButtonMode = UITextFieldViewModeWhileEditing;
-//        }
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//        
-//        return cell;
-//    }
     
     
     static NSString *identify = @"ConfirmInfoCell";
@@ -1044,8 +1029,14 @@
     if (indexPath.row == 0) {
         
     cell.nameLabel.text = @"运费";
-    cell.priceLabel.text = @"免运费";
         
+        if (_expressFee > 0) {
+            cell.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",_expressFee];
+        }else
+        {
+            cell.priceLabel.text = @"免运费";
+
+        }
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;

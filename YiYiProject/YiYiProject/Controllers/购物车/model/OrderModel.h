@@ -14,15 +14,19 @@
 
 @property(nonatomic,retain)NSString *order_id;
 @property(nonatomic,retain)NSString *order_no;
-@property(nonatomic,retain)NSString *total_fee;
 @property(nonatomic,retain)NSString *address;
 @property(nonatomic,retain)NSArray *products;
 
 //订单详情
-@property(nonatomic,retain)NSString *total_price;
+@property(nonatomic,retain)NSString *total_price;//现价
+@property(nonatomic,retain)NSString *total_fee;//最终的价格(优惠后加邮费)
+@property(nonatomic,retain)NSString *product_total_price;//商品总价 不包含运费的
 @property(nonatomic,retain)NSString *address_id;
-@property(nonatomic,retain)NSString *express_fee;
+@property(nonatomic,retain)NSString *express_fee;//运费
 @property(nonatomic,retain)NSString *merchant_phone;//客服电话
+
+@property(nonatomic,retain)NSString *yy_uid;//联系人id
+@property(nonatomic,retain)NSString *yy_username;//联系人name
 
 @property(nonatomic,retain)NSString *receiver_username;
 @property(nonatomic,retain)NSString *receiver_mobile;
@@ -35,6 +39,10 @@
 @property(nonatomic,retain)NSString *is_comment;//是否已评论
 
 @property(nonatomic,retain)NSString *real_product_total_price;//实际可以退的
+
+@property(nonatomic,retain)id couponModel;//记录该订单是否用首单减免
+
+@property(nonatomic,retain)NSDictionary *newer_coupons;//首单减免
 
 -(instancetype)initWithDictionary:(NSDictionary *)dic;
 

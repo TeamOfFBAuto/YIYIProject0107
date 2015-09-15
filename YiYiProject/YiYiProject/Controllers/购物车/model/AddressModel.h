@@ -23,5 +23,6 @@
 @property(nonatomic,retain)NSString *address;//详细地址如：北京市东城区东华门街道
 
 @property(nonatomic,retain)NSString *fee;//邮费
+@property(nonatomic,retain)NSString *express_fee;//邮费
 
 @end

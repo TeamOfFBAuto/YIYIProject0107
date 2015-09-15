@@ -412,6 +412,8 @@
 		13D560DE1AA1B3C800C28927 /* LDataBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D560D91AA1B3C800C28927 /* LDataBase.m */; };
 		13D560E31AA1B3F500C28927 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D560E21AA1B3F500C28927 /* DataManager.m */; };
 		13D560E51AA1B40C00C28927 /* yiyiDB.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 13D560E41AA1B40C00C28927 /* yiyiDB.sqlite */; };
+		13E18C941BA7FE9A00C43522 /* order_chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13E18C921BA7FE9A00C43522 /* order_chat@2x.png */; };
+		13E18C951BA7FE9A00C43522 /* order_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13E18C931BA7FE9A00C43522 /* order_phone@2x.png */; };
 		13E7F7A41B2AA2730029F4D5 /* productDetail_collect_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13E7F7A31B2AA2730029F4D5 /* productDetail_collect_selected@2x.png */; };
 		13E7F7A61B2AA2E90029F4D5 /* productDetail_zan_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13E7F7A51B2AA2E90029F4D5 /* productDetail_zan_selected@2x.png */; };
 		13E7F7AB1B2AE58B0029F4D5 /* productDetail_zan_nornal_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13E7F7AA1B2AE58B0029F4D5 /* productDetail_zan_nornal_white@2x.png */; };
@@ -1319,6 +1321,8 @@
 		13D560E11AA1B3F500C28927 /* DataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataManager.h; sourceTree = "<group>"; };
 		13D560E21AA1B3F500C28927 /* DataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataManager.m; sourceTree = "<group>"; };
 		13D560E41AA1B40C00C28927 /* yiyiDB.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = yiyiDB.sqlite; sourceTree = "<group>"; };
+		13E18C921BA7FE9A00C43522 /* order_chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_chat@2x.png"; sourceTree = "<group>"; };
+		13E18C931BA7FE9A00C43522 /* order_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_phone@2x.png"; sourceTree = "<group>"; };
 		13E7F7A31B2AA2730029F4D5 /* productDetail_collect_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "productDetail_collect_selected@2x.png"; sourceTree = "<group>"; };
 		13E7F7A51B2AA2E90029F4D5 /* productDetail_zan_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "productDetail_zan_selected@2x.png"; sourceTree = "<group>"; };
 		13E7F7AA1B2AE58B0029F4D5 /* productDetail_zan_nornal_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "productDetail_zan_nornal_white@2x.png"; sourceTree = "<group>"; };
@@ -2033,6 +2037,8 @@
 		130E5CD21B9C354E00614343 /* 购买支付其他 */ = {
 			isa = PBXGroup;
 			children = (
+				13E18C921BA7FE9A00C43522 /* order_chat@2x.png */,
+				13E18C931BA7FE9A00C43522 /* order_phone@2x.png */,
 				13CE05E61BA6AA29003D2AEC /* my_weixin@2x.png */,
 				13CE05E71BA6AA29003D2AEC /* my_zhifubao@2x.png */,
 				130E5CD31B9C354E00614343 /* homepage_search@2x.png */,
@@ -4257,6 +4263,7 @@
 				E3108AE21B8BCB5000C93A66 /* g_redline_down@2x.png in Resources */,
 				13934DC81B26CDE900705B02 /* danpin_price@2x.png in Resources */,
 				E3108B051B8BCB5000C93A66 /* search_fangdajing@2x.png in Resources */,
+				13E18C951BA7FE9A00C43522 /* order_phone@2x.png in Resources */,
 				135A59981BA137EA00D17AFF /* youhuiquan_y@2x.png in Resources */,
 				13A82BBB1B049A1300B3AC56 /* black.png in Resources */,
 				139A788D1B186A0900EFA10A /* Ttai_collect_normal@2x.png in Resources */,
@@ -4284,6 +4291,7 @@
 				E3108B071B8BCB5000C93A66 /* stianjia@2x.png in Resources */,
 				134BBFBC1B2939270047E0D9 /* danpin_discount_b@2x.png in Resources */,
 				E3B7BE0F1ACA578100FE8495 /* my_down@2x.png in Resources */,
+				13E18C941BA7FE9A00C43522 /* order_chat@2x.png in Resources */,
 				13ABB0741B01ADCD002DC700 /* UMSCommentInputControlleriPad.xib in Resources */,
 				1387B08F1A5EDF51006365D8 /* apply_qq_image@2x.png in Resources */,
 				13CC038C1B10A0A300A42BC1 /* collection_jiantou@2x.png in Resources */,
