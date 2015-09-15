@@ -25,6 +25,7 @@
 #define TABLEVIEW_TAG_DaiFaHuo 1 //待发货
 #define TABLEVIEW_TAG_PeiSong 2 //配送中
 #define TABLEVIEW_TAG_WanCheng 3 //完成
+#define TABLEVIEW_TAG_TuiHuan 4 //退换
 
 @interface CustomeAlertView : UIAlertView
 
@@ -52,11 +53,11 @@
 {
     [super viewWillAppear:animated];
     
-    if (self.lastPageNavigationHidden) {
-        self.navigationController.navigationBarHidden = NO;
-        return;
-    }
-    self.navigationController.navigationBarHidden = YES;
+//    if (self.lastPageNavigationHidden) {
+//        self.navigationController.navigationBarHidden = NO;
+//        return;
+//    }
+//    self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBarHidden = NO;
 }
 
@@ -67,7 +68,7 @@
     self.myTitle = @"我的订单";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    NSArray *titles = @[@"待付款",@"待发货",@"配送中",@"已完成"];
+    NSArray *titles = @[@"待付款",@"待发货",@"配送中",@"已完成",@"退换"];
     int count = (int)titles.count;
     CGFloat width = DEVICE_WIDTH / count;
     _buttonNum = count;
@@ -196,6 +197,9 @@
             break;
         case ORDERTYPE_WanCheng:
             status = @"complete";
+            break;
+        case ORDERTYPE_TuiHuan:
+            status = @"refund";
             break;
         default:
             break;
@@ -494,6 +498,35 @@
     static NSString *identify = @"OrderCell";
     OrderCell *cell = (OrderCell *)[LTools cellForIdentify:identify cellName:identify forTable:tableView];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    RefreshTableView *table = (RefreshTableView *)tableView;
+    
+    NSString *text = @"";
+    
+    int refund_status = 0;
+    
+    if (indexPath.row < table.dataArray.count) {
+        
+        OrderModel *aModel = [table.dataArray objectAtIndex:indexPath.row];
+        [cell setCellWithModel:aModel];
+        
+        
+        refund_status = [aModel.refund_status intValue];
+        
+        //代表有退款状态
+        if (refund_status > 0) {
+            
+            if (refund_status == 1 || refund_status == 2) {
+                text = @"退款中";
+            }else if (refund_status == 3){
+                text = @"退款成功";
+            }else if (refund_status == 4 || refund_status == 5){
+                text = @"退款失败";
+            }
+            
+        }
+    }
+    
     int tableViewTag = (int)tableView.tag;
     switch (tableViewTag) {
         case 200:
@@ -519,8 +552,11 @@
         {
             [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
             cell.commentButton.tag = kPadding_BuyAgain + indexPath.row;
-
-            
+        }
+            break;
+        case 204:
+        {
+            [cell.commentButton setTitle:text forState:UIControlStateNormal];
         }
             break;
         default:
@@ -528,14 +564,6 @@
     }
     
     [cell.commentButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    RefreshTableView *table = (RefreshTableView *)tableView;
-    
-    if (indexPath.row < table.dataArray.count) {
-        
-        OrderModel *aModel = [table.dataArray objectAtIndex:indexPath.row];
-        [cell setCellWithModel:aModel];
-    }
         
     return cell;
 }

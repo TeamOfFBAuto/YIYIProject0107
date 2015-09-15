@@ -14,7 +14,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    [self.commentButton setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"f98702"]];
+    [self.commentButton setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
     [self.commentButton addCornerRadius:3.f];
 }
 

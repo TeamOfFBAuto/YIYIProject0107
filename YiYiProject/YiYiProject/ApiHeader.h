@@ -322,7 +322,8 @@ typedef enum{
     ORDERTYPE_DaiFu = 1, //待付款
     ORDERTYPE_DaiFaHuo,//待发货
     ORDERTYPE_PeiSong, //配送中
-    ORDERTYPE_WanCheng //完成
+    ORDERTYPE_WanCheng, //完成
+    ORDERTYPE_TuiHuan //退换
 }ORDERTYPE;
 
 //单品分类

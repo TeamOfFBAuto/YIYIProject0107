@@ -36,6 +36,9 @@
 //订单状态 1=》待付款 2=》已付款 3=》已发货 4=》已送达（已收货） 5=》已取消 6=》已删除
 @property(nonatomic,retain)NSString *status;
 
+//退单状态 0=>未申请退款 1=》用户已提交申请退款 2=》同意退款（已提交微信/支付宝）3=》同意退款（退款成功） 4=》同意退款（退款失败） 5=》拒绝退款
+@property(nonatomic,retain)NSString *refund_status;
+
 @property(nonatomic,retain)NSString *is_comment;//是否已评论
 
 @property(nonatomic,retain)NSString *real_product_total_price;//实际可以退的
