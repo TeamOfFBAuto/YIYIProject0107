@@ -19,6 +19,8 @@
     NSMutableArray *_sizeLabelArray;
     NSIndexPath *_theIndexPath;
     
+    UIButton *_jianBtn;
+    
 }
 
 
@@ -61,7 +63,7 @@
     
     NSString *imvUrl = amodel.product_cover_pic[@"src"];
     
-    NSLog(@"李白 imvurl %@ ",imvUrl);
+    NSLog(@"imvurl %@ ",imvUrl);
     
     
     UIImageView *picImv = [[UIImageView alloc]initWithFrame:CGRectMake(35, 8, 44, 44)];
@@ -93,7 +95,7 @@
     [self.contentView addSubview:fline];
     
     //选择颜色view
-    UIView *colorChooseView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(fline.frame)+2.5, DEVICE_WIDTH, 65)];
+    UIView *colorChooseView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(fline.frame)+2.5, DEVICE_WIDTH, 55)];
     [self.contentView addSubview:colorChooseView];
     UILabel *title_color = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH-10, 25)];
     title_color.text = @"颜色:";
@@ -101,7 +103,7 @@
     [colorChooseView addSubview:title_color];
     
     
-    UIScrollView *colorScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(title_color.frame), DEVICE_WIDTH, 35)];
+    UIScrollView *colorScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(title_color.frame), DEVICE_WIDTH, 30)];
     colorScrollView.showsHorizontalScrollIndicator = NO;
     colorScrollView.showsVerticalScrollIndicator = NO;
     [colorChooseView addSubview:colorScrollView];
@@ -138,7 +140,7 @@
         colorLabel.font = [UIFont systemFontOfSize:12];
         colorLabel.layer.borderWidth = 0.5;
         colorLabel.layer.borderColor = [RGBCOLOR(134, 135, 136)CGColor];
-        [colorLabel setMatchedFrame4LabelWithOrigin:CGPointMake(last_x_color, 2.5) height:30 limitMaxWidth:DEVICE_WIDTH];
+        [colorLabel setMatchedFrame4LabelWithOrigin:CGPointMake(last_x_color, 2.5) height:25 limitMaxWidth:DEVICE_WIDTH];
         [colorLabel setWidth:colorLabel.width +25];
         [colorWidthArray addObject:[NSString stringWithFormat:@"%f",colorLabel.frame.size.width]];
         last_x_color += colorLabel.frame.size.width+10;
@@ -176,7 +178,7 @@
         
         
     }
-    [colorScrollView setContentSize:CGSizeMake(colorScrollViewContentWidth, 30)];
+    [colorScrollView setContentSize:CGSizeMake(colorScrollViewContentWidth, 25)];
     
     
     UIView *fline1 = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(colorChooseView.frame)+5, DEVICE_WIDTH-10, 0.5)];
@@ -186,14 +188,15 @@
     
     
     //选择尺码view
-    UIView *sizeChooseView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(fline1.frame)+2.5, DEVICE_WIDTH, 65)];
+    UIView *sizeChooseView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(fline1.frame)+2.5, DEVICE_WIDTH, 55)];
+//    sizeChooseView.backgroundColor = [UIColor orangeColor];
     [self.contentView addSubview:sizeChooseView];
     UILabel *title_size = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH, 25)];
     title_size.text = @"尺码:";
     title_size.font = [UIFont systemFontOfSize:12];
     [sizeChooseView addSubview:title_size];
     
-    UIScrollView *sizeScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(title_color.frame), DEVICE_WIDTH, 35)];
+    UIScrollView *sizeScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(title_color.frame), DEVICE_WIDTH, 30)];
     sizeScrollView.showsHorizontalScrollIndicator = NO;
     sizeScrollView.showsVerticalScrollIndicator = NO;
     [sizeChooseView addSubview:sizeScrollView];
@@ -226,7 +229,7 @@
         sizeLabel.font = [UIFont systemFontOfSize:12];
         sizeLabel.layer.borderWidth = 0.5;
         sizeLabel.layer.borderColor = [RGBCOLOR(234, 235, 236)CGColor];
-        [sizeLabel setMatchedFrame4LabelWithOrigin:CGPointMake(last_x_size, 2.5) height:30 limitMaxWidth:DEVICE_WIDTH];
+        [sizeLabel setMatchedFrame4LabelWithOrigin:CGPointMake(last_x_size, 2.5) height:25 limitMaxWidth:DEVICE_WIDTH];
         [sizeLabel setWidth:sizeLabel.width +25];
         [sizeWidthArray addObject:[NSString stringWithFormat:@"%f",sizeLabel.frame.size.width]];
         last_x_size += sizeLabel.frame.size.width+10;
@@ -264,7 +267,7 @@
         
         
     }
-    [sizeScrollView setContentSize:CGSizeMake(sizeScrollViewContentWidth, 30)];
+    [sizeScrollView setContentSize:CGSizeMake(sizeScrollViewContentWidth, 25)];
     
     
     UIView *fline2 = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(sizeChooseView.frame)+5, DEVICE_WIDTH-10, 0.5)];
@@ -273,35 +276,40 @@
 
     
     //数量
-    UIView *numChooseView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(fline2.frame)+2.5, DEVICE_WIDTH, 65)];
+    UIView *numChooseView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(fline2.frame)+2.5, DEVICE_WIDTH, 55)];
     [self.contentView addSubview:numChooseView];
     UILabel *title_num = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH, 25)];
     title_num.font = [UIFont systemFontOfSize:12];
     title_num.text = @"数量";
     [numChooseView addSubview:title_num];
     
-    UIView *numBackView = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(title_num.frame), 120, 35)];
-    numBackView.backgroundColor = [UIColor whiteColor];
-    numBackView.layer.borderColor = [RGBCOLOR(244, 76, 139)CGColor];
-    numBackView.layer.cornerRadius = 5;
-    numBackView.layer.borderWidth = 0.5;
+    UIImageView *numBackView = [[UIImageView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(title_num.frame), 100, 25)];
+    numBackView.userInteractionEnabled = YES;
+    [numBackView setImage:[UIImage imageNamed:@"shoppingcart_right.png"]];
     [numChooseView addSubview:numBackView];
     
-    UIButton *jianBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [jianBtn setFrame:CGRectMake(0, 0, numBackView.frame.size.width *0.25, 35)];
-    [jianBtn addTarget:self action:@selector(jianBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    jianBtn.backgroundColor = [UIColor orangeColor];
-    [numBackView addSubview:jianBtn];
+    _jianBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_jianBtn setFrame:CGRectMake(0, 0, 28, 25)];
+    [_jianBtn addTarget:self action:@selector(jianBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    ProductModel *model = self.delegate.productModelArray[_theIndexPath.row];
+    if (model.tnum == 1) {
+        [_jianBtn setImage:[UIImage imageNamed:@"shoppingcart_reduce_gray.png"] forState:UIControlStateNormal];
+    }else{
+        [_jianBtn setImage:[UIImage imageNamed:@"shoppingcart_reduce_r.png"] forState:UIControlStateNormal];
+    }
+    
+    [numBackView addSubview:_jianBtn];
     
     UIButton *jiaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [jiaBtn setFrame:CGRectMake(numBackView.frame.size.width*0.75, 0, numBackView.frame.size.width*0.25, 35)];
+    [jiaBtn setFrame:CGRectMake(numBackView.frame.size.width-28, 0, 28, 25)];
     [jiaBtn addTarget:self action:@selector(jiaBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    jiaBtn.backgroundColor = [UIColor orangeColor];
+    [jiaBtn setImage:[UIImage imageNamed:@"shoppingcart_right_+.png"] forState:UIControlStateNormal];
     [numBackView addSubview:jiaBtn];
     
-    _numLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jianBtn.frame), 0, numBackView.frame.size.width*0.5, 35)];
+    _numLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_jianBtn.frame), 0, numBackView.frame.size.width - 56, 25)];
     _numLabel.textAlignment = NSTextAlignmentCenter;
     _numLabel.textColor = RGBCOLOR(80, 81, 82);
+    _numLabel.font = [UIFont systemFontOfSize:12];
     _numLabel.text = [NSString stringWithFormat:@"%ld",amodel.tnum];
     [numBackView addSubview:_numLabel];
     
@@ -315,7 +323,7 @@
 }
 
 
--(void)jianBtnClicked{
+-(void)jianBtnClicked:(UIButton *)sender{
     
     ProductModel *model = self.delegate.productModelArray[_theIndexPath.row];
     
@@ -326,8 +334,16 @@
     }
     _numLabel.text = [NSString stringWithFormat:@"%ld",num];
     
-    
     model.tnum = num;
+    
+    if (model.tnum == 1) {
+        [sender setImage:[UIImage imageNamed:@"shoppingcart_reduce_gray.png"] forState:UIControlStateNormal];
+    }else{
+        [sender setImage:[UIImage imageNamed:@"shoppingcart_reduce_r.png"] forState:UIControlStateNormal];
+    }
+    
+    
+    
 }
 
 -(void)jiaBtnClicked{
@@ -336,6 +352,16 @@
     num++;
     _numLabel.text = [NSString stringWithFormat:@"%ld",num];
     model.tnum = num;
+    
+    if (model.tnum == 1) {
+        [_jianBtn setImage:[UIImage imageNamed:@"shoppingcart_reduce_gray.png"] forState:UIControlStateNormal];
+    }else{
+        [_jianBtn setImage:[UIImage imageNamed:@"shoppingcart_reduce_r.png"] forState:UIControlStateNormal];
+    }
+    
+    
+    
+    
 }
 
 
