@@ -23,13 +23,11 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>sina</string>
+			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>sina.fe596bc4ac8c92316ad5f255fbc49432</string>
+				<string>com.yijiayi.yijiayi</string>
 			</array>
 		</dict>
 		<dict>

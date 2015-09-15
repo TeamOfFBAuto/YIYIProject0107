@@ -41,7 +41,9 @@
         
         ProductModel *product = [[ProductModel alloc]initWithDictionary:[aModel.products lastObject]];
         
-        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:product.cover_pic] placeholderImage:DEFAULT_YIJIAYI];
+        NSString *imageUrl = [product.small_cover_pic stringValueForKey:@"src"];
+
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_YIJIAYI];
         self.titleLabel.text = product.product_name;
         _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
         _titleLabel.numberOfLines = 2;

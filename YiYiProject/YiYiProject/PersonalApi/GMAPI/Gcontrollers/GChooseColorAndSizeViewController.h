@@ -25,7 +25,7 @@ typedef enum{
 @property(nonatomic,assign)CHOOSETYPE theType;
 @property(nonatomic,strong)NSArray *productModelArray;//产品model数组 需要添加的字段参看productModel
 
-@property(nonatomic,assign)GTtaiDetailViewController *lastVc;
+@property(nonatomic,assign)UIViewController *lastVc;
 
 -(void)jisuanPrice;
 

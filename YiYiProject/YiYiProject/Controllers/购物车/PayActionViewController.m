@@ -47,7 +47,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
+//    self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBarHidden = NO;
 }
 
@@ -130,26 +130,24 @@
     NSDictionary *params = @{@"authcode":authkey,
                              @"order_id":self.orderId};
     __weak typeof(self)weakSelf = self;
+    NSString *url = [LTools url:ORDER_GET_ORDER_PAY withParams:params];
+    LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        [weakSelf stopTimer];
+        int pay = [result[@"pay"]intValue];
+        if (pay == 1) {
+
+            [weakSelf payResultSuccess:YES erroInfo:nil];
+        }else
+        {
+            [weakSelf payResultSuccess:NO erroInfo:result[RESULT_INFO]];
+        }
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        _validateTime --;
+    }];
     
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_GET_ORDER_PAY parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        NSLog(@"result %@",result);
-//        
-//        [weakSelf stopTimer];
-//        
-//        int pay = [result[@"pay"]intValue];
-//        if (pay == 1) {
-//            
-//            [weakSelf payResultSuccess:YES erroInfo:nil];
-//        }else
-//        {
-//            [weakSelf payResultSuccess:NO erroInfo:result[Erro_Info]];
-//        }
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        NSLog(@"result fail %@",result);
-//        
-//        _validateTime --;
-//    }];
 }
 
 
@@ -169,29 +167,28 @@
                              @"sign_type":signType};
     
     __weak typeof(self)weakSelf = self;
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_GET_SIGN parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        
-//        NSLog(@"获取签名信息 %@ %@",result,result[RESULT_INFO]);
-//        
-//        if ([signType isEqualToString:@"ali"]) {
-//            
-//            NSString *data_str = result[@"data_str"];
-//            NSString *sign = result[@"sign"];
-//            
-//            [weakSelf alipayWithSingString:sign orderDes:data_str];
-//            
-//        }else if ([signType isEqualToString:@"weixin"]){
-//            
-//            NSDictionary *preOrderResult = result[@"pre_order_info"];
-//            [weakSelf weiXinWithPreOrderInfo:preOrderResult];
-//        }
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"获取签名信息 失败 %@ %@",result,result[RESULT_INFO]);
-//        
-//    }];
-    
+    NSString *url = [LTools url:ORDER_GET_SIGN withParams:params];
+    LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    [tool  requestCompletion:^(NSDictionary *result, NSError *erro) {
+        NSLog(@"获取签名信息 %@ %@",result,result[RESULT_INFO]);
+
+        if ([signType isEqualToString:@"ali"]) {
+
+            NSString *data_str = result[@"data_str"];
+            NSString *sign = result[@"sign"];
+
+            [weakSelf alipayWithSingString:sign orderDes:data_str];
+
+        }else if ([signType isEqualToString:@"weixin"]){
+
+            NSDictionary *preOrderResult = result[@"pre_order_info"];
+            [weakSelf weiXinWithPreOrderInfo:preOrderResult];
+        }
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        NSLog(@"获取签名信息 失败 %@ %@",result,result[RESULT_INFO]);
+
+    }];
 }
 
 /**
@@ -209,7 +206,7 @@
     NSString *orderSpec = orderDes;
     NSString *signedString = signString;//签名信息
     //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
-    NSString *appScheme = @"com.wjxc.wjxc";
+    NSString *appScheme = @"com.yijiayi.yijiayi";
     
     //将签名成功字符串格式化为订单字符串,请严格按照该格式
     NSString *orderString = nil;

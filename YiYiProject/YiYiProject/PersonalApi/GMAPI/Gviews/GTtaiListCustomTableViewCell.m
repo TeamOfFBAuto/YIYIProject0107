@@ -68,7 +68,6 @@
     huodongLabel.textColor = RGBCOLOR(36, 37, 38);
     
     if ([model.activity isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"字典");
         NSString *huodong_str = [model.activity stringValueForKey:@"activity_title"];
         huodongLabel.text = huodong_str;
         

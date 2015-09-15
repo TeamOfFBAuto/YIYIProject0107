@@ -106,26 +106,12 @@
     [super viewWillAppear:animated];
     
     self.navigationController.navigationBarHidden = NO;
-    
-    //判断是否需要同步到服务器 1、数据库有 2、登录了
-    
-    NSString *authkey = [GMAPI getAuthkey];
-//    BOOL isExist = [[DBManager shareInstance]isExistUnsyncProduct];
-//    if (authkey.length && isExist) {
-//        
-//        //同步数据
-//        
-//        [self syncCartInfo];
-//    }else
-//    {
-//        [_table showRefreshHeader:YES];
         
-//        if (_isUpdateCart) {
-//            
-//            [_table showRefreshHeader:YES];
-//            _isUpdateCart = NO;
-//        }
-//    }
+    if (_isUpdateCart) {
+        
+        [_table showRefreshHeader:YES];
+        _isUpdateCart = NO;
+    }
     
 }
 

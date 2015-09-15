@@ -70,13 +70,13 @@
 {
     [super viewWillAppear:animated];
     
-    self.navigationController.navigationBarHidden = YES;
+//    self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBarHidden = NO;
     
 //    [_input_view addKeyBordNotification];
     
-    self.myTitle = @"确认订单";
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+//    self.myTitle = @"确认订单";
+//    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -819,8 +819,10 @@
     
     if (!haveAddress) {
         
-        _addressHintLabel = [[UILabel alloc]initWithFrame:headerView.bounds title:@"请填写收货地址以确保商品顺利到达" font:13 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"646462"]];
-        [headerView addSubview:_addressHintLabel];
+        _addressHintLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40) title:@"请填写收货地址以确保商品顺利到达" font:13 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"646462"]];
+        [addressView addSubview:_addressHintLabel];
+        _addressHintLabel.centerY = addressView.height / 2.f;
+
     }
     
     headerView.height = bottomImage.bottom;

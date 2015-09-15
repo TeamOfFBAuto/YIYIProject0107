@@ -30,6 +30,8 @@
 #import "MallListViewController.h"//相似单品所在商场
 #import "GwebViewController.h"//浏览器
 
+#import "GChooseColorAndSizeViewController.h"//选择尺码和颜色
+
 #import "PSCollectionView.h"
 #import "ProductCell.h"
 
@@ -663,6 +665,8 @@
 - (void)clickToAddToShoppingCar
 {
     [self netWorkForAddProductToShoppingCarProductId:@"214" colorId:@"2" sizeId:@"3"];
+    
+//    [self pushToColorAndSize:CHOOSETYPE_GOUWUCHE];
 }
 
 /**
@@ -670,8 +674,21 @@
  */
 - (void)clickToBuy
 {
-    [self netWorkForAddProductToShoppingCarProductId:@"215" colorId:@"7" sizeId:@"6"];
+//    [self netWorkForAddProductToShoppingCarProductId:@"215" colorId:@"7" sizeId:@"6"];
 
+//    [self pushToColorAndSize:CHOOSETYPE_LIJIGOUMAI];
+}
+
+- (void)pushToColorAndSize:(CHOOSETYPE)type
+{
+//    clickToAddToShoppingCar
+    GChooseColorAndSizeViewController *choose = [[GChooseColorAndSizeViewController alloc]init];
+    choose.theType = type;
+    choose.productModelArray = [NSArray arrayWithObject:_aModel];
+    if (type == CHOOSETYPE_LIJIGOUMAI) {
+        choose.lastVc = self;
+    }
+    [self.navigationController pushViewController:choose animated:YES];
 }
 
 /**
