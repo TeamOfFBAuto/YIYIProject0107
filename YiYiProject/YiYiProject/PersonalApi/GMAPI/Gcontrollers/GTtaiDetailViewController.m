@@ -109,6 +109,9 @@
     
     NSMutableArray *_allProductArray;//所有关联商场的单品
     
+    UILabel *_shopCarNumLabel;
+    UIButton *_carBtn;
+    
     
 }
 @end
@@ -127,6 +130,8 @@
     _collectionView.quitView = nil;
     _collectionView = nil;
      [self removeObserver:self forKeyPath:@"_count"];
+    
+    [self removeObserver:self forKeyPath:NOTIFICATON_UPDATESHOPCAR_NUM];
     
 }
 
@@ -170,6 +175,9 @@
     _isHaveMoreStoreData = NO;
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getshopcarNum) name:NOTIFICATON_UPDATESHOPCAR_NUM object:nil];
     
     
     for (int i=0; i<10; i++) {
@@ -218,9 +226,24 @@
 {
     //购物车
     
-    UIButton *carBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 45, DEVICE_HEIGHT - 64 - 50 - 5 - 45, 45, 45) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:[UIImage imageNamed:@"danpinxq_gouwuche"] selectedImage:nil target:self action:@selector(clickToShoppingCar)];
+    _carBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 45, DEVICE_HEIGHT - 64 - 50 - 5 - 45, 45, 45) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:[UIImage imageNamed:@"danpinxq_gouwuche"] selectedImage:nil target:self action:@selector(clickToShoppingCar)];
     
-    [self.view addSubview:carBtn];
+    
+    [self.view addSubview:_carBtn];
+    
+    _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+    _shopCarNumLabel.textColor = [UIColor whiteColor];
+    _shopCarNumLabel.backgroundColor = RGBCOLOR(255, 126, 170);
+    _shopCarNumLabel.layer.cornerRadius = 5;
+    _shopCarNumLabel.layer.borderColor = [RGBCOLOR(255, 126, 170)CGColor];
+    _shopCarNumLabel.layer.borderWidth = 0.5f;
+    _shopCarNumLabel.layer.masksToBounds = YES;
+    _shopCarNumLabel.font = [UIFont systemFontOfSize:11];
+    _shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
+    [_carBtn addSubview:_shopCarNumLabel];
+    
+    
+    
     //导航按钮
     
     UIView *bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 50, DEVICE_WIDTH, 50)];
@@ -456,8 +479,40 @@
 }
 
 
+-(void)updateShopCarNumAndFrame{
+    if ([_shopCarNumLabel.text intValue] == 0) {
+        _shopCarNumLabel.hidden = YES;
+    }else{
+        [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
+        CGFloat with = _shopCarNumLabel.frame.size.width + 5;
+        [_shopCarNumLabel setFrame:CGRectMake(_carBtn.bounds.size.width - with, -2, with, 11)];
+        
+    }
+}
+
 
 #pragma mark - 请求网络数据
+
+//获取购物车数量
+-(void)getshopcarNum{
+    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@",GET_SHOPPINGCAR_NUM,[GMAPI getAuthkey]];
+    
+    NSLog(@"获取购物车数量url %@",url);
+    
+    LTools *aa = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    [aa requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        if (_shopCarNumLabel) {
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[result intValueForKey:@"num"]];
+            [self updateShopCarNumAndFrame];
+        }
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+    }];
+}
+
+
+
 //请求T台详情数据
 -(void)prepareNetDataForTtaiDetail{
     if (tool_detail) {
@@ -1597,6 +1652,10 @@
 
 - (void)waterLoadNewDataForWaterView:(PSCollectionView *)waterView
 {
+    
+    
+    [self getshopcarNum];
+    
     _count = 0;
     [self getCurrentLocation];
     

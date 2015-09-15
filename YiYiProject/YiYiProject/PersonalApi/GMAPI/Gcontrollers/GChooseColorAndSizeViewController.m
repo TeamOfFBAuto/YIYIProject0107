@@ -137,7 +137,27 @@
     
     if (self.theType == CHOOSETYPE_GOUWUCHE) {//购物车
         
-        [self.navigationController popViewControllerAnimated:YES];
+        NSMutableArray *productIds = [NSMutableArray arrayWithCapacity:1];
+        NSMutableArray *colorIds = [NSMutableArray arrayWithCapacity:1];
+        NSMutableArray *sizeIds = [NSMutableArray arrayWithCapacity:1];
+        NSMutableArray *pnums = [NSMutableArray arrayWithCapacity:1];
+        
+        for (ProductModel *model in resultProducts) {
+            [productIds addObject:model.product_id];
+            [colorIds addObject:model.color_id];
+            [sizeIds addObject:model.size_id];
+            [pnums addObject:model.product_num];
+            
+        }
+        
+        NSString *productsIds_str = [productIds componentsJoinedByString:@","];
+        NSString *colorIds_str = [colorIds componentsJoinedByString:@","];
+        NSString *sizeIds_str = [sizeIds componentsJoinedByString:@","];
+        NSString *pnum_str = [pnums componentsJoinedByString:@","];
+        
+        [self netWorkForAddProductToShoppingCarProductId:productsIds_str colorId:colorIds_str sizeId:sizeIds_str num:pnum_str];
+        
+        
         
     }else if (self.theType == CHOOSETYPE_LIJIGOUMAI){//立即购买 跳转订单
         
@@ -159,6 +179,57 @@
     
 }
 
+
+/**
+ *  加入到购物车
+ */
+- (void)netWorkForAddProductToShoppingCarProductId:(NSString *)productId
+                                           colorId:(NSString *)colorId
+                                            sizeId:(NSString *)sizeId
+                                               num:(NSString *)pnum
+{
+    
+    
+    NSDictionary *params = @{@"authcode":[GMAPI getAuthkey],
+                             @"product_id":productId,
+                             @"color_id":colorId,
+                             @"size_id":sizeId,
+                             @"product_num":pnum
+                             };
+    
+    NSLog(@"添加购物车postdata%@",params);
+    
+    NSString *api = ORDER_ADD_TO_CART;
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    NSString *post = [LTools url:nil withParams:params];
+    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    
+    LTools *tool = [[LTools alloc]initWithUrl:api isPost:YES postData:postData];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        NSLog(@"-->%@",result);
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        [GMAPI showAutoHiddenMBProgressWithText:[result stringValueForKey:@"msg"] addToView:self.view];
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATON_UPDATESHOPCAR_NUM object:nil];
+        
+        [self performSelector:@selector(goPop) withObject:self afterDelay:1.2];
+        
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+    }];
+}
+
+-(void)goPop{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 -(void)creatTab{
     _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64-50) style:UITableViewStylePlain];
