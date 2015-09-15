@@ -79,7 +79,7 @@
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_TUIKUAN_SUCCESS object:nil];
         
-        [self performSelector:@selector(goPop) withObject:self afterDelay:3];
+        [self performSelector:@selector(goPop) withObject:self afterDelay:2.5];
         
     } failBlock:^(NSDictionary *result, NSError *erro) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
