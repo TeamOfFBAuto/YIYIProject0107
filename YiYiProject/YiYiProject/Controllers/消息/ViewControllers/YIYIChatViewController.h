@@ -19,6 +19,7 @@
 
 @property(nonatomic,strong)ProductModel *theModel;//产品
 
+@property(nonatomic,strong)NSString *orderInfo;//订单信息
 
 @property(nonatomic,assign)BOOL isProductDetailVcPush;//是否从产品详情页跳转过来的
 

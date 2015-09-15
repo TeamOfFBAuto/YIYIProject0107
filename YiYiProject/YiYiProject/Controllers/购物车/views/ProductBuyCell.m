@@ -23,7 +23,9 @@
 
 - (void)setCellWithModel:(ProductModel *)model
 {
-    [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:[model.small_cover_pic stringValueForKey:@"src"]] placeholderImage:DEFAULT_YIJIAYI];
+    if ([model.small_cover_pic isKindOfClass:[NSDictionary class]]) {
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:[model.small_cover_pic stringValueForKey:@"src"]] placeholderImage:DEFAULT_YIJIAYI];
+    }
     self.productNameLabel.text = [NSString stringWithFormat:@"%@: %@",model.product_type_name,model.product_name];
     
     NSString *text = [NSString stringWithFormat:@"颜色: %@  尺码: %@",model.color,model.size];

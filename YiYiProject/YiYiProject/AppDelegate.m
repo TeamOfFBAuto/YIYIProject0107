@@ -30,10 +30,6 @@
 
 //融云cloud
 
-//上线
-#define RONGCLOUD_IM_APPKEY    @"qf3d5gbj3a8gh" //正式 融云账号 18600912932 cocos2d
-#define RONGCLOUD_IM_APPSECRET @"rcUmYEhqkfs"
-
 #define UmengAppkey @"548bae91fd98c50d0c000b8b"//正式 umeng后台：mobile@jiruijia.com mobile2014
 
 #define SinaAppKey @"2208620241" //正式审核通过 微博开放平台账号szkyaojiayou@163.com 密码：mobile2014
@@ -52,6 +48,13 @@
 //#define BAIDU_APPKEY @"iiUyYDDK4A6CnzmHL4SVUvuo" //企业 com.yijiayi.yjy
 #define BAIDU_APPKEY @"xVfbtQq4cB5OLkTk8hmxlyLd" //appStore com.yijiayi.yijiayi
 
+//测试
+#define RONGCLOUD_IM_APPKEY    @"kj7swf8o7zaf2" //正式 融云账号 18600912932 cocos2d
+#define RONGCLOUD_IM_APPSECRET @"2cCSWhaLcCm37"
+
+//上线
+//#define RONGCLOUD_IM_APPKEY    @"qf3d5gbj3a8gh" //正式 融云账号 18600912932 cocos2d
+//#define RONGCLOUD_IM_APPSECRET @"rcUmYEhqkfs"
 
 //sns.whalecloud.com
 

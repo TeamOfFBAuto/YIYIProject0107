@@ -106,6 +106,12 @@
 
 //发送产品图文链接
 -(void)sendProductDetailMessage{
+    
+    if (self.orderInfo) {
+        
+        
+    }
+    
     if (!self.theModel) {
         return;
     }

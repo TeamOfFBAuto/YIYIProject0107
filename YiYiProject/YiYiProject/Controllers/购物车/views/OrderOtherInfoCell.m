@@ -24,6 +24,8 @@
     UIButton *couponBtn;//优惠劵
     CoupeView *_coupeView;//使用优惠劵界面
     ShopModel *_shopModel;
+    UILabel *_label_coupon;//显示是否使用
+    UIImageView *_jiantouImage;
 }
 
 - (void)awakeFromNib {
@@ -64,14 +66,14 @@
     [footer addSubview:_btn_quan];
     
     //箭头
-    UIImageView *jiantouImage = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 6, 0, 6, 11)];
-    jiantouImage.image = [UIImage imageNamed:@"qrdd_jiantou_small"];
-    [footer addSubview:jiantouImage];
-    jiantouImage.centerY = _btn_quan.centerY;
+    _jiantouImage = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 6, 0, 6, 11)];
+    _jiantouImage.image = [UIImage imageNamed:@"qrdd_jiantou_small"];
+    [footer addSubview:_jiantouImage];
+    _jiantouImage.centerY = _btn_quan.centerY;
     
     //未使用优惠劵
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(jiantouImage.left - 10 - 40, _btn_quan.top, 40, 43) title:@"未使用" font:13 align:NSTextAlignmentRight textColor:[UIColor colorWithHexString:@"333333"]];
-    [footer addSubview:label];
+    _label_coupon = [[UILabel alloc]initWithFrame:CGRectMake(_jiantouImage.left - 10 - 40, _btn_quan.top, 40, 43) title:@"未使用" font:13 align:NSTextAlignmentRight textColor:[UIColor colorWithHexString:@"333333"]];
+    [footer addSubview:_label_coupon];
     
     //优惠券
     CGFloat aWidth = [LTools fitWidth:85];
@@ -234,7 +236,6 @@
     if (shopModel.couponModel) {
         
         title = @"已使用";
-        
         [couponBtn addTarget:self action:@selector(clickToSelectCoupon) forControlEvents:UIControlEventTouchUpInside];
         
     }else
@@ -245,10 +246,25 @@
             [couponBtn addTarget:self action:@selector(clickToSelectCoupon) forControlEvents:UIControlEventTouchUpInside];
         }else
         {
-            title = @"暂无优惠";
-            [couponBtn removeTarget:self action:@selector(clickToSelectCoupon) forControlEvents:UIControlEventTouchUpInside];
+            if (shopModel.onlyShow) {
+                
+                title = @"无";
+            }else
+            {
+                title = @"暂无优惠";
+                [couponBtn removeTarget:self action:@selector(clickToSelectCoupon) forControlEvents:UIControlEventTouchUpInside];
+            }
         }
     }
+    
+    //只是展示
+    if (shopModel.onlyShow) {
+        
+        _label_coupon.hidden = YES;
+        _jiantouImage.hidden = YES;
+        _tf.enabled = NO;
+    }
+    
     [_btn_quan setTitle:title forState:UIControlStateNormal];
     
     [self updateCouponViewDateWithModel:shopModel.couponModel];
