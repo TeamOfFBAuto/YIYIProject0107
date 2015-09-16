@@ -233,7 +233,7 @@
     for (int i = 0; i < _table.dataArray.count; i ++) {
         
         ProductModel *aModel = [_table.dataArray objectAtIndex:i];
-        if ([_selectDic[aModel.product_id] isEqualToString:@"no"]) {
+        if ([_selectDic[aModel.cart_pro_id] isEqualToString:@"no"]) {
             
             return NO;
         }
@@ -252,7 +252,7 @@
     for (int i = 0; i < _table.dataArray.count; i ++) {
         
         ProductModel *aModel = [_table.dataArray objectAtIndex:i];
-        if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
+        if ([_selectDic[aModel.cart_pro_id] isEqualToString:@"yes"]) {
             
             sum ++;
         }
@@ -271,9 +271,8 @@
     for (int i = 0; i < _table.dataArray.count; i ++) {
         
         ProductModel *aModel = [_table.dataArray objectAtIndex:i];
-        if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
+        if ([_selectDic[aModel.cart_pro_id] isEqualToString:@"yes"]) {
             [arr_id addObject:aModel.cart_pro_id];
-            NSLog(@"delete %@",aModel.cart_pro_id);
         }
     }
     return [arr_id componentsJoinedByString:@","];
@@ -291,7 +290,7 @@
         
         ProductModel *aModel = [_table.dataArray objectAtIndex:i];
         
-        if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
+        if ([_selectDic[aModel.cart_pro_id] isEqualToString:@"yes"]) {
             
             sum += ([aModel.product_num floatValue] * [aModel.product_price floatValue]);
         }
@@ -357,7 +356,7 @@
         
         self.my_right_button.hidden = NO;
 
-        _table.height = DEVICE_HEIGHT - 64 - 49 - 50;
+        _table.height = DEVICE_HEIGHT - 64 - 49;
 
     }
     
@@ -406,7 +405,7 @@
         
         ProductModel *aModel = [_table.dataArray objectAtIndex:i];
         
-        if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
+        if ([_selectDic[aModel.cart_pro_id] isEqualToString:@"yes"]) {
             
             NSLog(@"购买:%@ 单价:%@ 数量:%@",aModel.product_name,aModel.product_price,aModel.product_num);
             
@@ -441,11 +440,11 @@
     
     if (!sender.selected) {
         
-        [_selectDic setObject:@"yes" forKey:aModel.product_id];
+        [_selectDic setObject:@"yes" forKey:aModel.cart_pro_id];
 
     }else
     {
-        [_selectDic setObject:@"no" forKey:aModel.product_id];
+        [_selectDic setObject:@"no" forKey:aModel.cart_pro_id];
     }
     
     //注意顺序,一定要先设置 yes or no再做如下操作
@@ -464,7 +463,7 @@
     for (int i = 0; i < _table.dataArray.count; i ++) {
         
         ProductModel *aModel = [_table.dataArray objectAtIndex:i];
-        [_selectDic setObject:@"yes" forKey:aModel.product_id];
+        [_selectDic setObject:@"yes" forKey:aModel.cart_pro_id];
         
     }
 }
@@ -479,7 +478,7 @@
         
         ProductModel *aModel = [_table.dataArray objectAtIndex:i];
         BOOL isOK = sender.selected;
-        [_selectDic setObject:isOK ? @"yes" : @"no" forKey:aModel.product_id];
+        [_selectDic setObject:isOK ? @"yes" : @"no" forKey:aModel.cart_pro_id];
 
     }
     
@@ -553,12 +552,14 @@
     __weak typeof(_table)weakTable = _table;
     __weak typeof(self)weakSelf = self;
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *post = [LTools url:nil withParams:params];
     NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     
     LTools *tool = [[LTools alloc]initWithUrl:ORDER_DEL_CART_PRODUCT isPost:YES postData:postData];
     [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
         
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATON_UPDATESHOPCAR_NUM object:nil];
         weakTable.pageNum = 1;
         weakTable.isReloadData = YES;
         [weakSelf getCartList];
@@ -599,6 +600,8 @@
     [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
         
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        //更新购物车显示数字
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATON_UPDATESHOPCAR_NUM object:nil];
         aModel.product_num = [NSString stringWithFormat:@"%d",[aModel.product_num intValue] + num];
         [weakTable reloadData];
         [weakSelf updateSumPrice];
@@ -641,7 +644,7 @@
                 ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
                 [temp addObject:aModel];
                 
-                [_selectDic setObject:@"yes" forKey:aModel.product_id];
+                [_selectDic setObject:@"yes" forKey:aModel.cart_pro_id];
             }
             [weakTable reloadData:temp pageSize:L_PAGE_SIZE noDataView:[weakSelf footerViewForNoProduct]];
         }
@@ -682,7 +685,8 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    ProductModel *aModel = [_table.dataArray objectAtIndex:indexPath.row];
+    [MiddleTools pushToProductDetailWithId:aModel.product_id fromViewController:self lastNavigationHidden:NO hiddenBottom:NO];
 }
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath
@@ -714,7 +718,7 @@
     cell.selectedButton.tag = kPadding_select + indexPath.row;
 
     //默认 yes
-    NSString *state = _selectDic[aModel.product_id];
+    NSString *state = _selectDic[aModel.cart_pro_id];
     cell.selectedButton.selected = [state isEqualToString:@"yes"] ? YES : NO;
     
     [cell.addButton addTarget:self action:@selector(clickToAdd:) forControlEvents:UIControlEventTouchUpInside];

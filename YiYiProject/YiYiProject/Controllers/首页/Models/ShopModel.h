@@ -14,6 +14,7 @@
 
 @property(nonatomic,retain)NSString *product_shop_id;
 @property(nonatomic,retain)NSArray *productsArray;//单品列表
+@property(nonatomic,retain)NSArray *products;//存字典
 @property(nonatomic,retain)NSArray *couponsArray;//优惠劵
 
 @property(nonatomic,retain)NSString *mall_name;//商场或者店铺名

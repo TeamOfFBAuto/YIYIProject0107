@@ -86,9 +86,7 @@ char* const ASSOCIATION_TOPBUTTON = "ASSOCIATION_TOPBUTTON";
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"contentOffset"]) {
-        
-//        NSLog(@"keyPath %@",change);
-        
+                
         UIScrollView *scroll = object;
 
         if ([scroll isKindOfClass:[UIScrollView class]] && scroll.contentOffset.y > DEVICE_HEIGHT) {

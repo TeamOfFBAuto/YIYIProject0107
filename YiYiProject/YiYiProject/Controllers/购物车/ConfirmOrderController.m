@@ -367,7 +367,9 @@
         [product_nums addObject:aModel.product_num];
         [product_size_ids addObject:aModel.size_id];
         [product_color_ids addObject:aModel.color_id];
-        [cart_pro_ids addObject:aModel.cart_pro_id];
+        if (aModel.cart_pro_id) {
+            [cart_pro_ids addObject:aModel.cart_pro_id];
+        }
     }
     
     NSString *ids = [product_ids componentsJoinedByString:@","];
@@ -862,17 +864,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    NSLog(@"点击商品name = ");
-
-    if (indexPath.section == 1) {
+    if ([self productsSection:indexPath.section]) {
         
-        ProductModel *aModel = [self.productArray objectAtIndex:indexPath.row];
-        
-        NSLog(@"点击商品name = %@",aModel.product_name);
-        
-//        ProductDetailViewController *cc = [[ProductDetailViewController alloc]init];
-//        cc.product_id = aModel.product_id;
-//        [self.navigationController pushViewController:cc animated:YES];
+        if ([self productIndexPath:indexPath]) {
+            
+            ShopModel *shopModel = _shop_arr[indexPath.section - 1];
+            ProductModel *aModel = [shopModel.productsArray objectAtIndex:indexPath.row];
+            [MiddleTools pushToProductDetailWithId:aModel.product_id fromViewController:self lastNavigationHidden:NO hiddenBottom:NO];
+        }
     }
 }
 

@@ -48,7 +48,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥200.00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xFM-VM-zpb">
-                                <rect key="frame" x="116" y="41" width="86" height="21"/>
+                                <rect key="frame" x="116" y="44" width="86" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.99607843139999996" green="0.40000000000000002" blue="0.59215686270000001" alpha="1" colorSpace="calibratedRGB"/>

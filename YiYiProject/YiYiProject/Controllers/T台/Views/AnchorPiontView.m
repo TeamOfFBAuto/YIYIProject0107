@@ -218,7 +218,7 @@
     self.location_x = r.origin.x + ACHORVIEW_HEIGHT *0.5 + r.size.width - 2;
     self.location_y = r.origin.y + ACHORVIEW_HEIGHT*0.5;
     
-    NSLog(@"left 初始化的locationx = %f locationy = %f",self.location_x,self.location_y);
+//    NSLog(@"left 初始化的locationx = %f locationy = %f",self.location_x,self.location_y);
     
     self.frame = r;
 }

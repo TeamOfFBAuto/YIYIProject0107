@@ -30,7 +30,7 @@
     
     [self.productImageView sd_setImageWithURL:[NSURL URLWithString:small_cover_pic] placeholderImage:DEFAULT_YIJIAYI];
     NSString *name = aModel.product_name;
-    self.nameLabel.width = [LTools widthForText:name font:13];
+//    self.nameLabel.width = [LTools widthForText:name font:13];
     _nameLabel.numberOfLines = 2;
     _nameLabel.lineBreakMode = NSLineBreakByCharWrapping;
     _nameLabel.height = [LTools heightForText:name width:_nameLabel.width font:13];

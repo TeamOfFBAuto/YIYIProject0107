@@ -18,6 +18,7 @@
 #import "SelectCell.h"
 #import "OrderOtherInfoCell.h"
 #import "TuiKuanViewController.h"//申请退款
+#import "ShopModel.h"//店铺model
 
 #import "RCIM.h"
 
@@ -231,15 +232,20 @@
     //先返回购物车,然后
     
     NSMutableArray *temp = [NSMutableArray arrayWithCapacity:order.products.count];
-    for (NSDictionary *aDic in order.products) {
+    for (NSDictionary *aDic in order.shop_products) {
         
-        ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
-        [temp addObject:aModel];
+        //test
+        ShopModel *shopModel = [[ShopModel alloc]initWithDictionary:aDic];
+        for (NSDictionary *p_dic in shopModel.products) {
+            ProductModel *aModel = [[ProductModel alloc]initWithDictionary:p_dic];
+            aModel.product_shop_id = shopModel.product_shop_id;
+            [temp addObject:aModel];
+        }
     }
     NSArray *productArr = temp;
     ConfirmOrderController *confirm = [[ConfirmOrderController alloc]init];
     confirm.productArray = productArr;
-//    confirm.sumPrice = [order.total_fee floatValue];
+    confirm.lastViewController = self;
     [self.navigationController pushViewController:confirm animated:YES];
     
 }

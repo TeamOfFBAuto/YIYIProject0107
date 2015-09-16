@@ -854,9 +854,7 @@
  *  监控 单品详情 和 相似单品都请求完再显示
  */
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    NSLog(@"keyPath %@",change);
-    
+{    
     NSNumber *num = [change objectForKey:@"new"];
     if ([num intValue] == 3) {
         

@@ -15,7 +15,8 @@
 @property(nonatomic,retain)NSString *order_id;
 @property(nonatomic,retain)NSString *order_no;
 @property(nonatomic,retain)NSString *address;
-@property(nonatomic,retain)NSArray *products;
+@property(nonatomic,retain)NSArray *products;//单品列表
+@property(nonatomic,retain)NSArray *shop_products;//单品列表(不同地方不同叫法)
 
 //订单详情
 @property(nonatomic,retain)NSString *total_price;//现价

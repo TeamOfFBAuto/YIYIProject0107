@@ -498,6 +498,7 @@
 
 //获取购物车数量
 -(void)getshopcarNum{
+    
     NSString *url = [NSString stringWithFormat:@"%@&authcode=%@",GET_SHOPPINGCAR_NUM,[GMAPI getAuthkey]];
     
     NSLog(@"获取购物车数量url %@",url);
@@ -1106,12 +1107,9 @@
  */
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    NSLog(@"keyPath %@",change);
     
     if ([keyPath isEqualToString:@"contentSize"]) {
-        
-        NSLog(@"change %@",change);
-        
+                
         return;
     }
     

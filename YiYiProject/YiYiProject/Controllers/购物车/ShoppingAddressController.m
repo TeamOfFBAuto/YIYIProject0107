@@ -69,9 +69,7 @@
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
     [_table setDataArrayObeserverBlock:^(NSString *keyPath,NSDictionary *change){
-        
-        NSLog(@"keyPath %@ change %@",keyPath,change);
-        
+                
         int new = [change[@"new"]intValue];
         if (new > 0) {
             
@@ -83,7 +81,6 @@
         }
         
     }];
-
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateAddress) name:NOTIFICATION_ADDADDRESS object:nil];
 }
@@ -105,27 +102,44 @@
 - (void)updateDefaultAddress:(UIButton *)sender
 {
     __weak typeof(_table)weakTable = _table;
+    __weak typeof(self)weakSelf = self;
     __weak AddressModel *aModel = [_table.dataArray objectAtIndex:sender.tag - kPadding_Default];
     
     NSString *authkey = [GMAPI getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"address_id":aModel.address_id};
     
+    [MBProgressHUD  showHUDAddedTo:self.view animated:YES];
     NSString *post = [LTools url:nil withParams:params];
     NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     
     LTools *tool = [[LTools alloc]initWithUrl:USER_ADDRESS_SETDEFAULT isPost:YES postData:postData];
     [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
         
-        aModel.default_address = @"1";
-        _defaultAddress.default_address = @"0";
-        [weakTable reloadData];
+        [weakSelf updateSortForAddress:aModel];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
     } failBlock:^(NSDictionary *result, NSError *erro) {
         
-        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+
     }];
 
+}
+
+/**
+ *  更新默认地址顺序
+ *
+ *  @param addressModel
+ */
+- (void)updateSortForAddress:(AddressModel *)addressModel
+{
+    addressModel.default_address = @"1";
+    _defaultAddress.default_address = @"0";
+    [_table reloadData];
+    [_table.dataArray removeObject:addressModel];
+    [_table.dataArray insertObject:addressModel atIndex:0];
+    [_table reloadData];
 }
 
 /**
@@ -145,16 +159,18 @@
     NSString *post = [LTools url:nil withParams:params];
     NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     LTools *tool = [[LTools alloc]initWithUrl:USER_ADDRESS_DELETE isPost:YES postData:postData];
     [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
         
         weakTable.pageNum = 1;
         weakTable.isReloadData = YES;
         [weakSelf getAddressList];
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
     } failBlock:^(NSDictionary *result, NSError *erro) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         NSLog(@"result %@",result);
     }];
 

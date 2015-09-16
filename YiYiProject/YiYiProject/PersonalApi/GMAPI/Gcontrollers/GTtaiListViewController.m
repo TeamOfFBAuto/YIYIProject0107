@@ -607,7 +607,10 @@
         [al show];
     }
 
-    [_table showRefreshHeader:YES];
+    _table.isReloadData = YES;
+    [self loadNewData];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [_table showRefreshHeader:YES];
 }
 
 - (void)createNavigationbarTools
@@ -660,6 +663,7 @@
             
         }
         
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [_table reloadData:arr pageSize:L_PAGE_SIZE];
         
     }
@@ -784,14 +788,11 @@
         if (_table.pageNum == 1) {
             
             [DataManager cacheDataType:Cache_TPlat content:result];
-            
         }
-        
-        
         
     } failBlock:^(NSDictionary *failDic, NSError *erro) {
         
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
         NSLog(@"failBlock == %@",failDic[RESULT_INFO]);
         
