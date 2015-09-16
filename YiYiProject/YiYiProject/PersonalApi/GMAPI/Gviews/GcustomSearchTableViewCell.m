@@ -29,16 +29,16 @@
 
 
 
--(CGFloat)loadCustomViewWithData:(NSDictionary*)theData indexPath:(NSIndexPath*)theIndex{
+-(CGFloat)loadCustomViewWithData:(NSDictionary*)theData indexPath:(NSIndexPath*)theIndex showDidtance:(BOOL)isShow{
     
     CGFloat height = 0.0f;
     if (self.theType == GSEARCHTYPE_SHANGPU) {//商铺
-        height = [self loadCustomCellWithDic:theData type:GSEARCHTYPE_SHANGPU];
+        height = [self loadCustomCellWithDic:theData type:GSEARCHTYPE_SHANGPU showDidtance:isShow];
     }else if (self.theType == GSEARCHTYPE_DANPIN){//单品
-        [self loadCustomCellWithDicOfProduct:theData];
+        [self loadCustomCellWithDicOfProduct:theData showDidtance:isShow];
         height = 90;
     }else if (self.theType == GSEARCHTYPE_PINPAI){//品牌
-        height = [self loadCustomCellWithDic:theData type:GSEARCHTYPE_PINPAI];
+        height = [self loadCustomCellWithDic:theData type:GSEARCHTYPE_PINPAI showDidtance:isShow];
     }
     
     
@@ -50,7 +50,7 @@
 
 
 //搜索品牌或商铺
--(CGFloat)loadCustomCellWithDic:(NSDictionary *)dic type:(GSEARCHTYPE)theType{
+-(CGFloat)loadCustomCellWithDic:(NSDictionary *)dic type:(GSEARCHTYPE)theType showDidtance:(BOOL)isShow{
     
     CGFloat cellHeight = 0.0f;
     
@@ -74,6 +74,9 @@
             distanceLabel.text = [NSString stringWithFormat:@"%.2fkm",juli_f];
         }
         [distanceLabel sizeToFit];
+        if (!isShow) {
+            distanceLabel.hidden = YES;
+        }
         
         
         //箭头
@@ -146,7 +149,7 @@
 
 
 
--(void)loadCustomCellWithDicOfProduct:(NSDictionary *)dic{
+-(void)loadCustomCellWithDicOfProduct:(NSDictionary *)dic showDidtance:(BOOL)isShow{
     //图片
     UIImageView *picImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 50, 70)];
     [self.contentView addSubview:picImv];
@@ -163,19 +166,31 @@
     [self.contentView addSubview:titleLabel];
     
     //附加信息
+     UILabel *detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x, CGRectGetMaxY(titleLabel.frame), titleLabel.frame.size.width, titleLabel.frame.size.height)];
     
-    UILabel *detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x, CGRectGetMaxY(titleLabel.frame), titleLabel.frame.size.width, titleLabel.frame.size.height)];
-    detailLabel.font = [UIFont systemFontOfSize:15];
-    detailLabel.numberOfLines = 2;
-    NSString *distance = [dic stringValueForKey:@"distance"];
-    detailLabel.text = [NSString stringWithFormat:@"%@元   %@m",[dic stringValueForKey:@"product_price"],distance];
-    
-    CGFloat juli_f = 0.0f;
-    if ([distance intValue] >=1000) {
-        juli_f = [distance floatValue]*0.001;
-        distance = [NSString stringWithFormat:@"%.2f",juli_f];
-        detailLabel.text = [NSString stringWithFormat:@"%@元   %@km",[dic stringValueForKey:@"product_price"],distance];
+    if (!isShow) {
+       
+        detailLabel.font = [UIFont systemFontOfSize:15];
+        detailLabel.numberOfLines = 2;
+        detailLabel.text = [NSString stringWithFormat:@"%@元",[dic stringValueForKey:@"product_price"]];
+    }else{
+       
+        detailLabel.font = [UIFont systemFontOfSize:15];
+        detailLabel.numberOfLines = 2;
+        NSString *distance = [dic stringValueForKey:@"distance"];
+        detailLabel.text = [NSString stringWithFormat:@"%@元   %@m",[dic stringValueForKey:@"product_price"],distance];
+        
+        CGFloat juli_f = 0.0f;
+        if ([distance intValue] >=1000) {
+            juli_f = [distance floatValue]*0.001;
+            distance = [NSString stringWithFormat:@"%.2f",juli_f];
+            detailLabel.text = [NSString stringWithFormat:@"%@元   %@km",[dic stringValueForKey:@"product_price"],distance];
+        }
     }
+    
+    
+    
+    
     
     
     

@@ -27,7 +27,7 @@ typedef enum{
 @property(nonatomic,assign)BOOL isHaveKeyWord;//是否有关键字
 
 
--(CGFloat)loadCustomViewWithData:(NSDictionary*)theData indexPath:(NSIndexPath*)theIndex;
+-(CGFloat)loadCustomViewWithData:(NSDictionary*)theData indexPath:(NSIndexPath*)theIndex showDidtance:(BOOL)isShow;
 
 
 

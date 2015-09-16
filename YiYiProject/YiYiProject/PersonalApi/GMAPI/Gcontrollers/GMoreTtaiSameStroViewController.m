@@ -255,10 +255,15 @@
     
     
     GTtaiRelationStoreModel *amodel = _tab.dataArray[section];
-    ttLabel.text = [NSString stringWithFormat:@"%@-%@ %@m",amodel.brand_name,amodel.mall_name,amodel.distance];
+    NSString *distance;
+    if ([amodel.distance integerValue]>=1000) {
+        distance = [NSString stringWithFormat:@"%.1fkm",[amodel.distance floatValue]*0.001];
+    }else{
+        distance = [NSString stringWithFormat:@"%.1fm",[amodel.distance floatValue]];
+    }
+    ttLabel.text = [NSString stringWithFormat:@"%@-%@ %@",amodel.brand_name,amodel.mall_name,distance];
     ttLabel.font = [UIFont systemFontOfSize:12];
     [view addSubview:ttLabel];
-    //    ttLabel.backgroundColor = [UIColor orangeColor];
     
     
     CGFloat totlePrice = 0;

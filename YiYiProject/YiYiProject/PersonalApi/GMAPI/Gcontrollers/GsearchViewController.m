@@ -259,25 +259,44 @@
         _tableView_Shop.hidden = YES;
         _tableView_product.hidden = YES;
         if (_tableView_brand.dataArray.count>0) {
-            return;
+            if ([LTools isEmpty:_searchTextField.text]) {
+                return;
+            }else{
+                [_tableView_brand showRefreshHeader:YES];
+            }
+        }else{
+            [_tableView_brand showRefreshHeader:YES];
         }
-        [_tableView_brand showRefreshHeader:YES];
+        
     }else if (_selectIndex == 101){//店铺
         _tableView_brand.hidden = YES;
         _tableView_Shop.hidden = NO;
         _tableView_product.hidden = YES;
         if (_tableView_Shop.dataArray.count>0) {
-            return;
+            if ([LTools isEmpty:_searchTextField.text]) {
+                return;
+            }else{
+                [_tableView_Shop showRefreshHeader:YES];
+            }
+            
+        }else{
+            [_tableView_Shop showRefreshHeader:YES];
         }
-        [_tableView_Shop showRefreshHeader:YES];
+        
     }else if (_selectIndex == 102){//单品
         _tableView_brand.hidden = YES;
         _tableView_Shop.hidden = YES;
         _tableView_product.hidden = NO;
         if (_tableView_product.dataArray.count>0) {
-            return;
+            if ([LTools isEmpty:_searchTextField.text]) {
+                return;
+            }else{
+                [_tableView_product showRefreshHeader:YES];
+            }
+        }else{
+            [_tableView_product showRefreshHeader:YES];
         }
-        [_tableView_product showRefreshHeader:YES];
+        
     }
 }
 
@@ -310,6 +329,17 @@
 }
 
 
+-(void)isLocationDic{
+    if ([LTools isEmpty:[_locationDic stringValueForKey:@"long"]] || [LTools isEmpty:[_locationDic stringValueForKey:@"lat"]]) {
+        //金领时代 40.041951,116.33934
+        _locationDic = @{
+                         @"long":@"116.33934",
+                         @"lat":@"40.041951",
+                         @"isget":@"no"
+                         };
+    }
+}
+
 //请求网络数据
 -(void)prepareNetData_brand{
     
@@ -317,6 +347,9 @@
         [_tool_brand cancelRequest];
     }
     NSString *theWord = _searchTextField.text;
+    
+    [self isLocationDic];
+    
     NSString *url = [NSString stringWithFormat:@"%@&keywords=%@&page=%d&per_page=%d&long=%@&lat=%@&type=brand",GSEARCH,theWord,_tableView_brand.pageNum,L_PAGE_SIZE,[_locationDic stringValueForKey:@"long"],[_locationDic stringValueForKey:@"lat"]];
     
     //接口url:
@@ -346,6 +379,10 @@
         [_tool_shop cancelRequest];
     }
     
+    
+    [self isLocationDic];
+    
+    
     NSString *theWord = _searchTextField.text;
     NSString *url = [NSString stringWithFormat:@"%@&keywords=%@&page=%d&per_page=%d&long=%@&lat=%@&type=mall",GSEARCH,theWord,_tableView_Shop.pageNum,L_PAGE_SIZE,[_locationDic stringValueForKey:@"long"],[_locationDic stringValueForKey:@"lat"]];
     //接口url:
@@ -374,6 +411,8 @@
     if (_tool_product) {
         [_tool_product cancelRequest];
     }
+    
+    [self isLocationDic];
     
     NSString *theWord = _searchTextField.text;
     NSString *url = [NSString stringWithFormat:@"%@&keywords=%@&page=%d&per_page=%d&long=%@&lat=%@&type=product",GSEARCH,theWord,_tableView_product.pageNum,L_PAGE_SIZE,[_locationDic stringValueForKey:@"long"],[_locationDic stringValueForKey:@"lat"]];
@@ -531,6 +570,8 @@
 #pragma mark -  UITableViewDataSource
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
+
+    
     //重用相关
     
     GcustomSearchTableViewCell *cell;
@@ -552,7 +593,12 @@
             cell.isHaveKeyWord = NO;
         }
         NSDictionary *data_dic = _tableView_brand.dataArray[indexPath.row];
-        [cell loadCustomViewWithData:data_dic indexPath:indexPath];
+        BOOL isshow = YES;
+        if ([[_locationDic stringValueForKey:@"isget"] isEqualToString:@"no"]) {
+            isshow = NO;
+        }
+        
+        [cell loadCustomViewWithData:data_dic indexPath:indexPath showDidtance:isshow];
         
     }else if (tableView == _tableView_Shop){//商铺
         static NSString *identi_shop = @"refresh_shop";
@@ -566,7 +612,13 @@
         }
         cell.theType = GSEARCHTYPE_SHANGPU;
         NSDictionary *data_dic = _tableView_Shop.dataArray[indexPath.row];
-        [cell loadCustomViewWithData:data_dic indexPath:indexPath];
+        
+        BOOL isshow = YES;
+        if ([[_locationDic stringValueForKey:@"isget"] isEqualToString:@"no"]) {
+            isshow = NO;
+        }
+        
+        [cell loadCustomViewWithData:data_dic indexPath:indexPath showDidtance:isshow];
         
     }else if (tableView == _tableView_product){//单品
         static NSString *identi_product = @"refresh_product";
@@ -580,7 +632,11 @@
         }
         cell.theType = GSEARCHTYPE_DANPIN;
         NSDictionary *data_dic = _tableView_product.dataArray[indexPath.row];
-        [cell loadCustomViewWithData:data_dic indexPath:indexPath];
+        BOOL isshow = YES;
+        if ([[_locationDic stringValueForKey:@"isget"] isEqualToString:@"no"]) {
+            isshow = NO;
+        }
+        [cell loadCustomViewWithData:data_dic indexPath:indexPath showDidtance:isshow];
     }
     
     
