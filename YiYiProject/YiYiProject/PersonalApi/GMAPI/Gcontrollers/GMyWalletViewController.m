@@ -328,6 +328,9 @@
         title_minus = @"优惠券";
         title_full = [NSString stringWithFormat:@"本店享%@折优惠",discount];
         
+    }else if (type == 3){
+        title_minus = [NSString stringWithFormat:@"￥%@",aModel.newer_money];
+        title_full = [NSString stringWithFormat:@"新人首单优惠"];
     }
     
     aHeight = btn.height / 2.f - 5;
@@ -341,7 +344,20 @@
     //店铺名
     UILabel *shopNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(pinpaiLogoImv.frame)+5, pinpaiLogoImv.frame.origin.y, DEVICE_WIDTH - 10 - aWidth - 5 - CGRectGetMaxX(pinpaiLogoImv.frame)-5, pinpaiLogoImv.frame.size.height *0.5)];
     shopNameLabel.font = [UIFont systemFontOfSize:shopNameLabel.frame.size.height*0.5];
-    shopNameLabel.text = [NSString stringWithFormat:@"%@-%@",aModel.brand_name,aModel.malll_name];
+    
+    
+    
+    if ([LTools isEmpty:aModel.brand_name] || [LTools isEmpty:aModel.malll_name]) {
+        shopNameLabel.text = @" ";
+    }else{
+        shopNameLabel.text = [NSString stringWithFormat:@"%@-%@",aModel.brand_name,aModel.malll_name];
+    }
+    
+    
+    if (type == 3){
+        shopNameLabel.text = [NSString stringWithFormat:@"新人首单优惠"];
+    }
+    
     [cell.contentView addSubview:shopNameLabel];
     
     //使用期限
@@ -461,6 +477,7 @@
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0.1)];
     
     
@@ -527,6 +544,9 @@
                 title_minus = @"优惠券";
                 title_full = [NSString stringWithFormat:@"本店享%@折优惠",discount];
                 
+            }else if (type == 3){
+                title_minus = [NSString stringWithFormat:@"￥%@",aModel.newer_money];
+                title_full = [NSString stringWithFormat:@"新人首单优惠"];
             }
             
             aHeight = btn.height / 2.f - 5;
@@ -540,7 +560,17 @@
             //店铺名
             UILabel *shopNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(pinpaiLogoImv.frame)+5, pinpaiLogoImv.frame.origin.y, DEVICE_WIDTH - 10 - aWidth - 5 - CGRectGetMaxX(pinpaiLogoImv.frame)-5, pinpaiLogoImv.frame.size.height *0.5)];
             shopNameLabel.font = [UIFont systemFontOfSize:shopNameLabel.frame.size.height*0.5];
-            shopNameLabel.text = [NSString stringWithFormat:@"%@-%@",aModel.brand_name,aModel.malll_name];
+            if ([LTools isEmpty:aModel.brand_name] || [LTools isEmpty:aModel.malll_name]) {
+                shopNameLabel.text = @" ";
+            }else{
+                shopNameLabel.text = [NSString stringWithFormat:@"%@-%@",aModel.brand_name,aModel.malll_name];
+            }
+            
+            if (type == 3){
+                shopNameLabel.text = [NSString stringWithFormat:@"新人首单优惠"];
+            }
+            
+            
             [view_one addSubview:shopNameLabel];
             
             //使用期限
@@ -644,8 +674,9 @@
     
     _isOpen[ges.view.tag-10]=!_isOpen[ges.view.tag-10];
     
-    NSIndexSet *indexSet=[[NSIndexSet alloc]initWithIndex:ges.view.tag-10];
-    [_tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+//    NSIndexSet *indexSet=[[NSIndexSet alloc]initWithIndex:ges.view.tag-10];
+//    [_tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationTop];
+    [_tableView reloadData];
     
     
     

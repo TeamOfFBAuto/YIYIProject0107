@@ -485,6 +485,7 @@
     if ([_shopCarNumLabel.text intValue] == 0) {
         _shopCarNumLabel.hidden = YES;
     }else{
+        _shopCarNumLabel.hidden = NO;
         [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
         CGFloat with = _shopCarNumLabel.frame.size.width + 5;
         [_shopCarNumLabel setFrame:CGRectMake(_carBtn.bounds.size.width - with, -2, with, 11)];
@@ -1667,6 +1668,10 @@
 {
     [self prepareMoreNetDataForTtaiDetail];
 }
+
+
+
+
 
 - (void)waterDidSelectRowAtIndexPath:(NSInteger)index
 {

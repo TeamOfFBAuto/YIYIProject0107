@@ -384,9 +384,11 @@ static inline NSInteger PSCollectionIndexForKey(NSString *key) {
  */
 - (PSCollectionViewCell *)cellForIndex:(NSInteger)index
 {
-    if (index < self.visibleViews.count) {
+    if (index < [self.visibleViews allKeys].count) {
         
         return [self.visibleViews objectForKey:NSStringFromInt((int)index)];
+        
+        
     }
     return nil;
 }
