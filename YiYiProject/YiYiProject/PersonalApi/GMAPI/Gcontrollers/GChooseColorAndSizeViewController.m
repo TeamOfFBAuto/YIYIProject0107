@@ -118,7 +118,7 @@
             model.size = model.sizeDic[@"size_name"];
             model.size_id = model.sizeDic[@"size_id"];
             model.small_cover_pic = model.product_cover_pic;
-            
+            model.product_shop_id = model.shop_id;
             
             [resultProducts addObject:model];
         }

@@ -655,7 +655,7 @@
             
         }
         
-        if (temp.count >= 1) {
+        if (temp.count >= 6) {
             _isHaveMoreStoreData = YES;
         }else{
             _isHaveMoreStoreData = NO;
