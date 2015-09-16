@@ -273,6 +273,7 @@
         ProductModel *aModel = [_table.dataArray objectAtIndex:i];
         if ([_selectDic[aModel.product_id] isEqualToString:@"yes"]) {
             [arr_id addObject:aModel.cart_pro_id];
+            NSLog(@"delete %@",aModel.cart_pro_id);
         }
     }
     return [arr_id componentsJoinedByString:@","];

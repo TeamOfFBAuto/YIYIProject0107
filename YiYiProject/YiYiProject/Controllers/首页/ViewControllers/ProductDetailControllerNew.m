@@ -29,8 +29,10 @@
 #import "TTaiCommentViewController.h"//评论列表
 #import "MallListViewController.h"//相似单品所在商场
 #import "GwebViewController.h"//浏览器
+#import "ShoppingCarController.h"//购物车
 
 #import "GChooseColorAndSizeViewController.h"//选择尺码和颜色
+#import "UILabel+GautoMatchedText.h"
 
 #import "PSCollectionView.h"
 #import "ProductCell.h"
@@ -78,6 +80,9 @@
     UIView *_commentView;//评论背景view
     
     CoupeView *_coupeView;//领取优惠券view
+    
+    UILabel *_shopCarNumLabel;
+    UIButton *_carBtn;
 }
 
 @property (strong, nonatomic) UIImageView *bigImageView;
@@ -178,6 +183,8 @@
     
     //登录通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLogin) name:NOTIFICATION_LOGIN object:nil];
+    //获取购物车个数
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getshopcarNum) name:NOTIFICATON_UPDATESHOPCAR_NUM object:nil];
 }
 
 /**
@@ -663,6 +670,67 @@
     }];
 }
 
+-(void)updateShopCarNumAndFrame{
+    if ([_shopCarNumLabel.text intValue] == 0) {
+        _shopCarNumLabel.hidden = YES;
+    }else{
+        [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
+        CGFloat with = _shopCarNumLabel.frame.size.width + 5;
+        [_shopCarNumLabel setFrame:CGRectMake(_carBtn.bounds.size.width - with, -2, with, 11)];
+        
+    }
+}
+
+//获取购物车数量
+-(void)getshopcarNum{
+    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@",GET_SHOPPINGCAR_NUM,[GMAPI getAuthkey]];
+    
+    NSLog(@"获取购物车数量url %@",url);
+    
+    LTools *aa = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    [aa requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        if (_shopCarNumLabel) {
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[result intValueForKey:@"num"]];
+            [self updateShopCarNumAndFrame];
+        }
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+    }];
+}
+
+#pragma - mark 地图坐标
+
+- (void)getCurrentLocation
+{
+    __weak typeof(self)weakSelf = self;
+    [[GMAPI appDeledate]startDingweiWithBlock:^(NSDictionary *dic) {
+        
+        [weakSelf theLocationDictionary:dic];
+    }];
+    
+}
+- (void)theLocationDictionary:(NSDictionary *)dic{
+    
+    NSLog(@"time====2 %@",[NSDate date]);
+    
+    CGFloat lat = [dic[@"lat"]doubleValue];;
+    CGFloat lon = [dic[@"long"]doubleValue];
+    
+    _latitude = lat;
+    _longtitude = lon;
+    
+    //请求单品详情
+    [self networkForDetail];
+    
+    //请求单品同款
+    [self networkForDetailSameStyle];
+    
+    //请求评论
+    [self networkForCommentList:NO];
+}
+
+
 #pragma mark - 事件处理
 
 
@@ -703,7 +771,8 @@
  */
 - (void)clickToShoppingCar
 {
-    
+    ShoppingCarController *shoppingCar = [[ShoppingCarController alloc]init];
+    [self.navigationController pushViewController:shoppingCar animated:YES];
 }
 
 /**
@@ -829,37 +898,6 @@
     list.tag_id = [tagList[index] objectForKey:@"tag_id"];
     list.tag_name = [tagList[index] objectForKey:@"tag_name"];
     [self.navigationController pushViewController:list animated:YES];
-}
-
-#pragma - mark 地图坐标
-
-- (void)getCurrentLocation
-{
-    __weak typeof(self)weakSelf = self;
-    [[GMAPI appDeledate]startDingweiWithBlock:^(NSDictionary *dic) {
-        
-        [weakSelf theLocationDictionary:dic];
-    }];
-
-}
-- (void)theLocationDictionary:(NSDictionary *)dic{
-    
-    NSLog(@"time====2 %@",[NSDate date]);
-    
-    CGFloat lat = [dic[@"lat"]doubleValue];;
-    CGFloat lon = [dic[@"long"]doubleValue];
-    
-    _latitude = lat;
-    _longtitude = lon;
-    
-    //请求单品详情
-    [self networkForDetail];
-    
-    //请求单品同款
-    [self networkForDetailSameStyle];
-    
-    //请求评论
-    [self networkForCommentList:NO];
 }
 
 /**
@@ -1866,8 +1904,22 @@
 {
     //购物车
     
-    UIButton *carBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 45, DEVICE_HEIGHT - 64 - 50 - 5 - 45, 45, 45) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:[UIImage imageNamed:@"danpinxq_gouwuche"] selectedImage:nil target:self action:@selector(clickToShoppingCar)];
-    [self.view addSubview:carBtn];
+    _carBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 45, DEVICE_HEIGHT - 64 - 50 - 5 - 45, 45, 45) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:[UIImage imageNamed:@"danpinxq_gouwuche"] selectedImage:nil target:self action:@selector(clickToShoppingCar)];
+    [self.view addSubview:_carBtn];
+    
+    _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+    _shopCarNumLabel.textColor = [UIColor whiteColor];
+    _shopCarNumLabel.backgroundColor = RGBCOLOR(255, 126, 170);
+    _shopCarNumLabel.layer.cornerRadius = 5;
+    _shopCarNumLabel.layer.borderColor = [RGBCOLOR(255, 126, 170)CGColor];
+    _shopCarNumLabel.layer.borderWidth = 0.5f;
+    _shopCarNumLabel.layer.masksToBounds = YES;
+    _shopCarNumLabel.font = [UIFont systemFontOfSize:11];
+    _shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
+    [_carBtn addSubview:_shopCarNumLabel];
+    
+    [self getshopcarNum];//获取购物车数量
+    
     //导航按钮
     
     UIView *bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 50, DEVICE_WIDTH, 50)];

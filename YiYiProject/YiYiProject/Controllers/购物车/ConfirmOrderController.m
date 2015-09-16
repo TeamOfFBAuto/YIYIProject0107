@@ -448,6 +448,8 @@
 
         //生成订单成功,更新一下购物车
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+        //更新购物车显示数字
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATON_UPDATESHOPCAR_NUM object:nil];
 
         [weakSelf pushToPayPageWithOrderId:orderId orderNum:orderNum];
         

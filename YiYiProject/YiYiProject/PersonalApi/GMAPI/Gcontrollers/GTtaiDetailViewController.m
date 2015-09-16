@@ -131,7 +131,9 @@
     _collectionView = nil;
      [self removeObserver:self forKeyPath:@"_count"];
     
-    [self removeObserver:self forKeyPath:NOTIFICATON_UPDATESHOPCAR_NUM];
+//    [self removeObserver:self forKeyPath:NOTIFICATON_UPDATESHOPCAR_NUM];
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIFICATON_UPDATESHOPCAR_NUM];
     
 }
 
