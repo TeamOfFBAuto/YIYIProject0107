@@ -160,6 +160,17 @@
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
+    //test
+    NSString *productId = self.product_id;
+    if ([productId intValue] % 2 == 0) {
+        
+        productId = @"214";
+    }else
+    {
+        productId = @"215";
+    }
+    self.product_id = productId;
+    
     _collectionView = [[LWaterFlow2 alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 46) waterDelegate:self waterDataSource:self noHeadeRefresh:NO noFooterRefresh:NO];
     [self.view addSubview:_collectionView];
     
@@ -384,12 +395,8 @@
     
     __weak typeof(self)weakSelf = self;
     
-    //test
-    
     NSString *url = [NSString stringWithFormat:HOME_PRODUCT_DETAIL,self.product_id,[GMAPI getAuthkey]];
     
-    url = [NSString stringWithFormat:HOME_PRODUCT_DETAIL,@"11",[GMAPI getAuthkey]];
-
     tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     
     [tool_detail requestCompletion:^(NSDictionary *result, NSError *erro) {
@@ -664,9 +671,9 @@
  */
 - (void)clickToAddToShoppingCar
 {
-    [self netWorkForAddProductToShoppingCarProductId:@"214" colorId:@"2" sizeId:@"3"];
+//    [self netWorkForAddProductToShoppingCarProductId:@"214" colorId:@"2" sizeId:@"3"];
     
-//    [self pushToColorAndSize:CHOOSETYPE_GOUWUCHE];
+    [self pushToColorAndSize:CHOOSETYPE_GOUWUCHE];
 }
 
 /**
@@ -676,7 +683,7 @@
 {
 //    [self netWorkForAddProductToShoppingCarProductId:@"215" colorId:@"7" sizeId:@"6"];
 
-//    [self pushToColorAndSize:CHOOSETYPE_LIJIGOUMAI];
+    [self pushToColorAndSize:CHOOSETYPE_LIJIGOUMAI];
 }
 
 - (void)pushToColorAndSize:(CHOOSETYPE)type

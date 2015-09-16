@@ -46,9 +46,6 @@
 
     [self prepareNetData];
     
-    
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -113,9 +110,9 @@
             NSLog(@"pname %@",model.product_name);
             NSLog(@"colorName %@  colorId %@",model.colorDic[@"color_name"],model.colorDic[@"color_id"]);
             NSLog(@"sizeName %@  sizeid %@",model.sizeDic[@"size_name"],model.sizeDic[@"size_id"]);
-            NSLog(@"num %d",model.tnum);
+            NSLog(@"num %ld",(long)model.tnum);
             
-            model.product_num = [NSString stringWithFormat:@"%d",model.tnum];
+            model.product_num = [NSString stringWithFormat:@"%ld",(long)model.tnum];
             model.color = model.colorDic[@"color_name"];
             model.color_id = model.colorDic[@"color_id"];
             model.size = model.sizeDic[@"size_name"];
@@ -351,8 +348,8 @@
         
     }
     
-    _t_priceLabel.text = [NSString stringWithFormat:@"总计：￥%.1f",t_price];
-    NSString *o_price_str = [NSString stringWithFormat:@"￥%.1f",o_price];
+    _t_priceLabel.text = [NSString stringWithFormat:@"总计：￥%.2f",t_price];
+    NSString *o_price_str = [NSString stringWithFormat:@"￥%.2f",o_price];
     
     NSMutableAttributedString  *yyy = [[NSMutableAttributedString alloc]initWithString:o_price_str];
     [yyy addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(1, o_price_str.length-1)];

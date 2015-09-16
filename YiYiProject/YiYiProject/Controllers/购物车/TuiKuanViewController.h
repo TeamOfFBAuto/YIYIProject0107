@@ -13,5 +13,6 @@
 
 @property(nonatomic,assign)CGFloat tuiKuanPrice;
 @property(nonatomic,retain)NSString *orderId;//订单id
+@property(nonatomic,retain)UIViewController *lastVc;
 
 @end

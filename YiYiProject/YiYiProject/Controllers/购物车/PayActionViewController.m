@@ -389,7 +389,11 @@
     result.sumPrice = self.sumPrice;
     result.isPaySuccess = success;
     result.erroInfo = erroInfo;
-    result.hidesBottomBarWhenPushed = YES;
+    if (self.lastVc) {
+        [self.lastVc.navigationController popViewControllerAnimated:NO];
+        [self.lastVc.navigationController pushViewController:result animated:YES];
+        return;
+    }
     [self.navigationController pushViewController:result animated:YES];
 }
 

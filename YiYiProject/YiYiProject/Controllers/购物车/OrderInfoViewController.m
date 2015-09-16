@@ -17,6 +17,7 @@
 #import "ConfirmOrderController.h"//确认订单
 #import "SelectCell.h"
 #import "OrderOtherInfoCell.h"
+#import "TuiKuanViewController.h"//申请退款
 
 #import "RCIM.h"
 
@@ -289,7 +290,12 @@
         
     }else if ([text isEqualToString:@"申请退款"]){
         
-        
+        OrderModel *aModel = _orderModel;
+        TuiKuanViewController *tuiKuan = [[TuiKuanViewController alloc]init];
+        tuiKuan.tuiKuanPrice = [aModel.real_product_total_price floatValue];
+        tuiKuan.orderId = aModel.order_id;
+        tuiKuan.lastVc = self;
+        [self.navigationController pushViewController:tuiKuan animated:YES];
     }
 }
 
@@ -304,6 +310,7 @@
     pay.orderNum = orderNum;
     pay.sumPrice = [_orderModel.total_fee floatValue];
     pay.payStyle = [_orderModel.pay_type intValue];//支付类型
+    pay.lastVc = self;
     pay.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:pay animated:YES];
 }
@@ -509,13 +516,13 @@
             LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
             [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
                 
-                
-            } failBlock:^(NSDictionary *result, NSError *erro) {
-                
                 NSLog(@"result取消订单 %@",result);
-
+                
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_CANCEL object:nil];
                 [weakSelf.navigationController popViewControllerAnimated:YES];
+                
+            } failBlock:^(NSDictionary *result, NSError *erro) {
+               
             }];
 
         }
@@ -533,6 +540,7 @@
             NSString *url = [LTools url:ORDER_HANDLE_ORDER withParams:params];
             LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
             [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+                
                 NSLog(@"删除订单");
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_DEL object:nil];
                 [weakSelf.navigationController popViewControllerAnimated:YES];
@@ -657,19 +665,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    NSLog(@"点击商品name = ");
-    
-    if (indexPath.section == 1) {
+    if ([self productsSection:indexPath.section]) {
         
-//        ProductModel *aModel = [self.productArray objectAtIndex:indexPath.row];
-        
-//        NSLog(@"点击商品name = %@",aModel.product_name);
-        
-        //        ProductDetailViewController *cc = [[ProductDetailViewController alloc]init];
-        //        cc.product_id = aModel.product_id;
-        //        [self.navigationController pushViewController:cc animated:YES];
+        if ([self productIndexPath:indexPath]) {
+            
+            ShopModel *shopModel = _shop_arr[indexPath.section - 1];
+            ProductModel *aModel = [shopModel.productsArray objectAtIndex:indexPath.row];
+            [MiddleTools pushToProductDetailWithId:aModel.product_id fromViewController:self lastNavigationHidden:NO hiddenBottom:NO];
+        }
     }
+
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

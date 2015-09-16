@@ -315,6 +315,7 @@
     pay.orderNum = orderNum;
     pay.sumPrice = sumPrice;
     pay.hidesBottomBarWhenPushed = YES;
+    pay.lastVc = self;
     [self.navigationController pushViewController:pay animated:YES];
 }
 

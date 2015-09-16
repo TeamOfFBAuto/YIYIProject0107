@@ -121,6 +121,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForRecieveConfirm:) name:NOTIFICATION_RECIEVE_CONFIRM object:nil];//确认收货
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForCancelOrder:) name:NOTIFICATION_ORDER_CANCEL object:nil];//取消订单
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDelOrder:) name:NOTIFICATION_ORDER_DEL object:nil];//删除订单
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForTuiKuan:) name:NOTIFICATION_TUIKUAN_SUCCESS object:nil];//退款
 
 }
 
@@ -167,6 +168,17 @@
 - (void)notificationForDelOrder:(NSNotification *)notify
 {
     [[self refreshTableForIndex:TABLEVIEW_TAG_WanCheng]showRefreshHeader:YES];//待评价
+}
+
+/**
+ *  退款通知刷新待付款和退换
+ *
+ */
+- (void)notificationForTuiKuan:(NSNotification *)notify
+{
+    
+    [[self refreshTableForIndex:TABLEVIEW_TAG_DaiFaHuo]showRefreshHeader:YES];//待付款
+    [[self refreshTableForIndex:TABLEVIEW_TAG_TuiHuan]showRefreshHeader:YES];//退货列表
 }
 
 #pragma - mark 网络请求
@@ -360,6 +372,7 @@
     pay.orderNum = orderNum;
     pay.sumPrice = sumPrice;
     pay.payStyle = payStyle;
+    pay.lastVc = self;
     [self.navigationController pushViewController:pay animated:YES];
 }
 

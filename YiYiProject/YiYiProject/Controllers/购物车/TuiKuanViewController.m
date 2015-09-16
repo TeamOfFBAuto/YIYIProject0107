@@ -64,8 +64,6 @@
         return;
     }
     
-    
-    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     NSString *postStr = [NSString stringWithFormat:@"authcode=%@&order_id=%@&refund_reason=%@",[GMAPI getAuthkey],self.orderId,_refund_reason_tf.text];
@@ -92,6 +90,13 @@
 }
 
 -(void)goPop{
+    
+    if (self.lastVc) { //如果是来自订单详情成功之后需要先pop掉详情
+        
+        [self.lastVc.navigationController popViewControllerAnimated:NO];
+        [self.lastVc.navigationController popViewControllerAnimated:YES];
+        return;
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

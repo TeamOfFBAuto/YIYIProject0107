@@ -236,14 +236,21 @@
     if (shopModel.couponModel) {
         
         title = @"已使用";
-        [couponBtn addTarget:self action:@selector(clickToSelectCoupon) forControlEvents:UIControlEventTouchUpInside];
+        
+        if (!shopModel.onlyShow) {
+            [couponBtn addTarget:self action:@selector(clickToSelectCoupon) forControlEvents:UIControlEventTouchUpInside];
+        }
         
     }else
     {
         int count = (int)shopModel.couponsArray.count;
         if (count) {
             title = [NSString stringWithFormat:@"有%d张优惠券可用",count];
-            [couponBtn addTarget:self action:@selector(clickToSelectCoupon) forControlEvents:UIControlEventTouchUpInside];
+            
+            if (!shopModel.onlyShow) {
+                [couponBtn addTarget:self action:@selector(clickToSelectCoupon) forControlEvents:UIControlEventTouchUpInside];
+            }
+            
         }else
         {
             if (shopModel.onlyShow) {
