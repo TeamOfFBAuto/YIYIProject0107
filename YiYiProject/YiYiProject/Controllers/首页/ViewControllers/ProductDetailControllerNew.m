@@ -238,14 +238,14 @@
     [self getRecommentProductList];
 }
 
-- (void)waterDidSelectRowAtIndexPath:(NSInteger)index
+- (void)waterDidSelectRowAtIndexPath:(NSInteger)index collectionViewCell:(PSCollectionViewCell *)cell
 {
     ProductModel *aMode = _collectionView.dataArray[index];
-    TMPhotoQuiltViewCell *cell = (TMPhotoQuiltViewCell*)[_collectionView.quitView cellForIndex:index];
     NSDictionary *params = @{@"cell":cell,
                              @"model":aMode};
     [MiddleTools pushToProductDetailWithId:aMode.product_id fromViewController:self lastNavigationHidden:NO hiddenBottom:YES extraParams:params updateBlock:nil];
 }
+
 
 - (void)waterScrollViewDidScroll:(UIScrollView *)scrollView
 {

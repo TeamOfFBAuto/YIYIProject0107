@@ -375,23 +375,6 @@ static inline NSInteger PSCollectionIndexForKey(NSString *key) {
     }
 }
 
-/**
- *  根据index获取 PSCollectionViewCell
- *
- *  @param index 下标
- *
- *  @return PSCollectionViewCell
- */
-- (PSCollectionViewCell *)cellForIndex:(NSInteger)index
-{
-    if (index < [self.visibleViews allKeys].count) {
-        
-        return [self.visibleViews objectForKey:NSStringFromInt((int)index)];
-        
-        
-    }
-    return nil;
-}
 
 #pragma mark - Reusing Views
 
