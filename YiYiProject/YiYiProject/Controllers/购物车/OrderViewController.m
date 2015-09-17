@@ -103,10 +103,9 @@
         [_scroll addSubview:_table];
         _table.tag = 200 + i;
         
-        [_table showRefreshHeader:YES];
-        
-
         [_table reloadData:nil pageSize:10 noDataView:[self noDataView]];
+        
+        [_table showRefreshHeader:YES];
 
     }
     
@@ -337,7 +336,7 @@
         kadding = kPadding_Confirm;
         NSString *msg = [NSString stringWithFormat:@"收货成功之后再确定,避免不必要损失!"];
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"确认收货" message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-        alert.tag = index - kPadding_Refund;
+        alert.tag = index - kadding;
         [alert show];
         
     }else if (index >= kPadding_Refund){
@@ -439,7 +438,14 @@
         
         NSString *authey = [GMAPI getAuthkey];
 
-        OrderModel *aModel = [[self refreshTableForIndex:1].dataArray objectAtIndex:alertView.tag];
+        int index = (int)alertView.tag;
+        
+        NSArray *temp = [self refreshTableForIndex:TABLEVIEW_TAG_PeiSong].dataArray;
+        if (index > temp.count) {
+            NSLog(@"越界了");
+            return;
+        }
+        OrderModel *aModel = [temp objectAtIndex:index];
         
         __weak typeof(RefreshTableView)*weakTable = [self refreshTableForIndex:TABLEVIEW_TAG_PeiSong];
         __weak typeof(RefreshTableView)*weakTable2 = [self refreshTableForIndex:TABLEVIEW_TAG_WanCheng];

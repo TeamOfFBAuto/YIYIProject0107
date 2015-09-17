@@ -430,9 +430,10 @@
         [_waterDelegate waterDidSelectRowAtIndexPath:index];
         
     }
-//    else if (_waterDelegate && [_waterDelegate respondsToSelector:@selector(waterDidSelectRowAtIndexPath:water:)]){
-//        [_waterDelegate waterDidSelectRowAtIndexPath:index water:collectionView];
-//    }
+    
+    if (_waterDelegate && [_waterDelegate respondsToSelector:@selector(waterDidSelectRowAtIndexPath:collectionViewCell:)]) {
+        [_waterDelegate waterDidSelectRowAtIndexPath:index collectionViewCell:cell];
+    }
     
 }
 //- (Class)collectionView:(PSCollectionView *)collectionView cellClassForRowAtIndex:(NSInteger)index
