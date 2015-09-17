@@ -110,7 +110,7 @@
     
     NSString *url = [NSString stringWithFormat:@"%@&authcode=%@&longitude=%@&latitude=%@&tt_id=%@&page=%d&per_page=%d",GETYOUHUIQUAN_RELATIONSHOP,[GMAPI getAuthkey],longitude,latitude,self.tPlat_id,_tab.pageNum,L_PAGE_SIZE];
     
-//    url = @"http://www119.alayy.com/index.php?d=api&c=order&m=tt_coupon_list&tt_id=421&longitude=160&latitude=40&authcode=BnlXLlUsULZS6QyRU+MK3QClC+lXogPyU35SYwBlVmEHOVJhUTQCNAUxAjVePw5+BjE=";
+
     
     tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     
@@ -388,7 +388,15 @@
 
 
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    return [UIView new];
+}
 
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01f;
+}
 
 
 
