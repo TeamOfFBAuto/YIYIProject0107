@@ -382,7 +382,6 @@
         aModel.enable_receive = @"0";
         sender.selected = YES;
         
-        
     } failBlock:^(NSDictionary *failDic, NSError *erro) {
         
         NSLog(@"failBlock == %@",failDic[RESULT_INFO]);
@@ -440,6 +439,15 @@
         NSDictionary *dic = result[@"pinfo"];
         
         ProductModel *aModel1 = [[ProductModel alloc]initWithDictionary:dic];
+        NSArray *couponList = aModel1.coupon_list;
+        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:couponList.count];
+        if (couponList.count) {
+            for (NSDictionary *c_dic in couponList) {
+                CouponModel *c_model = [[CouponModel alloc]initWithDictionary:c_dic];
+                [temp addObject:c_model];
+            }
+        }
+        aModel1.coupons = [NSArray arrayWithArray:temp];
         self.theModel = aModel1;
         _aModel = aModel1;
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
@@ -785,7 +793,7 @@
         _coupeView = nil;
     }
     
-    _coupeView = [[CoupeView alloc]initWithCouponArray:_aModel.coupon_list];
+    _coupeView = [[CoupeView alloc]initWithCouponArray:_aModel.coupons userStyle:USESTYLE_Get];
 
     __weak typeof(self)weakSelf = self;
 

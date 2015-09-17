@@ -145,6 +145,11 @@
         CGFloat price = [aModel.product_price floatValue] * [aModel.product_num intValue];
         CGFloat lastPrice = [[temp_price objectForKey:aModel.product_shop_id] floatValue];
         CGFloat sum = lastPrice + price;
+        //shopId为空判断
+        if (aModel.product_shop_id == nil) {
+            
+            aModel.product_shop_id = @"0";
+        }
         [temp_price setObject:[NSString stringWithFormat:@"%.2f",sum] forKey:aModel.product_shop_id];
         //单品
         NSArray *products = [temp_products arrayValueForKey:aModel.product_shop_id];

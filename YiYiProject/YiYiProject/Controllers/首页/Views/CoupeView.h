@@ -28,7 +28,7 @@ typedef enum {
 
 @property(nonatomic,copy)COUPEBLOCK coupeBlock;
 
--(instancetype)initWithCouponArray:(NSArray *)couponArray;
+//-(instancetype)initWithCouponArray:(NSArray *)couponArray;
 
 -(instancetype)initWithCouponArray:(NSArray *)couponArray
                          userStyle:(USESTYLE)userStyle;

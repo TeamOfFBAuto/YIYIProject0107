@@ -12,55 +12,55 @@
 
 @implementation CoupeView
 
--(instancetype)initWithCouponArray:(NSArray *)couponArray
-{
-    self = [super initWithFrame:[UIScreen mainScreen].bounds];
-    if (self) {
-        
-        self.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:0.5];
-        
-        CGFloat left = [LTools fitWidth:25];
-        CGFloat aWidth = DEVICE_WIDTH - left * 2;
-        
-        NSArray *coupeList = couponArray;
-        
-        _coupeArray = couponArray;
-        
-        UIView *listView = [[UIView alloc]initWithFrame:CGRectMake(left, 0, aWidth, 0)];
-        [self addSubview:listView];
-        listView.backgroundColor = [UIColor whiteColor];
-        [listView addCornerRadius:5.f];
-        
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, listView.width, [LTools fitHeight:40]) title:@"领取优惠劵" font:15 align:NSTextAlignmentCenter textColor:[UIColor blackColor]];
-        [listView addSubview:titleLabel];
-        
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.bottom, listView.width, 0.5)];
-        line.backgroundColor = DEFAULT_LINE_COLOR;
-        [listView addSubview:line];
-        
-        CGFloat bottom = line.bottom;
-        CGFloat top = line.bottom;
-        NSInteger count = coupeList.count;
-        for (int i = 0; i < count; i ++) {
-            CouponModel *aModel = [[CouponModel alloc]initWithDictionary:coupeList[i]];
-            UIView *aView = [self coupeViewWithCoupeModel:aModel frame:CGRectMake(0, top + [LTools fitHeight:50] * i, listView.width, [LTools fitHeight:50]) tag:100 + i];
-            [listView addSubview:aView];
-            bottom = aView.bottom;
-        }
-        
-        UIButton *closeBtn = [[UIButton alloc]initWithframe:CGRectMake(0,bottom + [LTools fitHeight:15], [LTools fitWidth:173], [LTools fitHeight:25]) buttonType:UIButtonTypeCustom normalTitle:@"暂不领取" selectedTitle:nil target:self action:@selector(clickToCloseCoupeView)];
-        [listView addSubview:closeBtn];
-        closeBtn.backgroundColor = [UIColor colorWithHexString:@"999999"];
-        [closeBtn addCornerRadius:5.f];
-        [closeBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
-        closeBtn.centerX = listView.width / 2.f;
-        
-        listView.height = closeBtn.bottom + [LTools fitHeight:15];
-        listView.centerY = DEVICE_HEIGHT / 2.f;
-        
-    }
-    return self;
-}
+//-(instancetype)initWithCouponArray:(NSArray *)couponArray
+//{
+//    self = [super initWithFrame:[UIScreen mainScreen].bounds];
+//    if (self) {
+//        
+//        self.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:0.5];
+//        
+//        CGFloat left = [LTools fitWidth:25];
+//        CGFloat aWidth = DEVICE_WIDTH - left * 2;
+//        
+//        NSArray *coupeList = couponArray;
+//        
+//        _coupeArray = couponArray;
+//        
+//        UIView *listView = [[UIView alloc]initWithFrame:CGRectMake(left, 0, aWidth, 0)];
+//        [self addSubview:listView];
+//        listView.backgroundColor = [UIColor whiteColor];
+//        [listView addCornerRadius:5.f];
+//        
+//        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, listView.width, [LTools fitHeight:40]) title:@"领取优惠劵" font:15 align:NSTextAlignmentCenter textColor:[UIColor blackColor]];
+//        [listView addSubview:titleLabel];
+//        
+//        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.bottom, listView.width, 0.5)];
+//        line.backgroundColor = DEFAULT_LINE_COLOR;
+//        [listView addSubview:line];
+//        
+//        CGFloat bottom = line.bottom;
+//        CGFloat top = line.bottom;
+//        NSInteger count = coupeList.count;
+//        for (int i = 0; i < count; i ++) {
+//            CouponModel *aModel = [[CouponModel alloc]initWithDictionary:coupeList[i]];
+//            UIView *aView = [self coupeViewWithCoupeModel:aModel frame:CGRectMake(0, top + [LTools fitHeight:50] * i, listView.width, [LTools fitHeight:50]) tag:100 + i];
+//            [listView addSubview:aView];
+//            bottom = aView.bottom;
+//        }
+//        
+//        UIButton *closeBtn = [[UIButton alloc]initWithframe:CGRectMake(0,bottom + [LTools fitHeight:15], [LTools fitWidth:173], [LTools fitHeight:25]) buttonType:UIButtonTypeCustom normalTitle:@"暂不领取" selectedTitle:nil target:self action:@selector(clickToCloseCoupeView)];
+//        [listView addSubview:closeBtn];
+//        closeBtn.backgroundColor = [UIColor colorWithHexString:@"999999"];
+//        [closeBtn addCornerRadius:5.f];
+//        [closeBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+//        closeBtn.centerX = listView.width / 2.f;
+//        
+//        listView.height = closeBtn.bottom + [LTools fitHeight:15];
+//        listView.centerY = DEVICE_HEIGHT / 2.f;
+//        
+//    }
+//    return self;
+//}
 
 //使用优惠劵
 
@@ -112,17 +112,7 @@
         NSInteger count = coupeList.count;
         for (int i = 0; i < count; i ++) {
             
-            CouponModel *aModel;
-
-            if (userStyle == USESTYLE_Get) {
-                
-                aModel = [[CouponModel alloc]initWithDictionary:coupeList[i]];
-
-            }else
-            {
-                aModel = coupeList[i];
-            }
-            
+            CouponModel *aModel = coupeList[i];
             UIView *aView = [self coupeViewWithCoupeModel:aModel frame:CGRectMake(0, top + [LTools fitHeight:50] * i, listView.width, [LTools fitHeight:50]) tag:100 + i];
             [listView addSubview:aView];
             bottom = aView.bottom;
@@ -225,8 +215,12 @@
         
         int isGet = [aModel.enable_receive intValue];
         btn_get.selected = !isGet;
+        if (btn_get.selected) {
+            btn_get.userInteractionEnabled = NO;
+        }
     }else if (_userStyle == USESTYLE_Use){
         btn_get.selected = aModel.isUsed;
+        
     }
     
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, btn.bottom + btn.top, view.width, 0.5)];
@@ -241,6 +235,7 @@
     _coupeBlock = coupeBlock;
 }
 
+
 /**
  *  获取优惠券
  *
@@ -248,44 +243,91 @@
  */
 - (void)clickToGetCoupe:(ButtonProperty *)sender
 {
-    int count = (int)_coupeArray.count;
-    for (int i = 0; i < count; i ++) {
-        
-        ButtonProperty *btn = (ButtonProperty *)[self viewWithTag:100 + i];
-        CouponModel *aModel = btn.object;
-
-        if (btn == sender) {
-            
-            btn.selected = !btn.selected;
-        }else
-        {
-            btn.selected = NO;
-        }
-        aModel.isUsed = btn.selected;
-    }
-    
+    //使用
     CouponModel *aModel = sender.object;
     
     if (_userStyle == USESTYLE_Use) {
         
+        int count = (int)_coupeArray.count;
+        for (int i = 0; i < count; i ++) {
+            
+            ButtonProperty *btn = (ButtonProperty *)[self viewWithTag:100 + i];
+            CouponModel *aModel = btn.object;
+            
+            if (btn == sender) {
+                
+                btn.selected = !btn.selected;
+            }else
+            {
+                btn.selected = NO;
+            }
+            aModel.isUsed = btn.selected;
+        }
         if (sender.selected == NO) {
             
             if (self.coupeBlock) {
                 self.coupeBlock(nil);
             }
-            return;
         }
-    }
-    
-    if (aModel && [aModel isKindOfClass:[CouponModel class]]) {
         
-        if (self.coupeBlock) {
-            NSDictionary *params = @{@"button":sender,
-                                     @"model":aModel};
-            self.coupeBlock(params);
+    }else if(_userStyle == USESTYLE_Get)
+    {
+        if (aModel && [aModel isKindOfClass:[CouponModel class]]) {
+            
+            if (self.coupeBlock) {
+                NSDictionary *params = @{@"button":sender,
+                                         @"model":aModel};
+                self.coupeBlock(params);
+            }
         }
     }
 }
+
+///**
+// *  获取优惠券
+// *
+// *  @param sender
+// */
+//- (void)clickToGetCoupe:(ButtonProperty *)sender
+//{
+//    int count = (int)_coupeArray.count;
+//    for (int i = 0; i < count; i ++) {
+//        
+//        ButtonProperty *btn = (ButtonProperty *)[self viewWithTag:100 + i];
+//        CouponModel *aModel = btn.object;
+//
+//        if (btn == sender) {
+//            
+//            btn.selected = !btn.selected;
+//        }else
+//        {
+//            btn.selected = NO;
+//        }
+//        aModel.isUsed = btn.selected;
+//    }
+//    
+//    CouponModel *aModel = sender.object;
+//    
+//    if (_userStyle == USESTYLE_Use) {
+//        
+//        if (sender.selected == NO) {
+//            
+//            if (self.coupeBlock) {
+//                self.coupeBlock(nil);
+//            }
+//            return;
+//        }
+//    }
+//    
+//    if (aModel && [aModel isKindOfClass:[CouponModel class]]) {
+//        
+//        if (self.coupeBlock) {
+//            NSDictionary *params = @{@"button":sender,
+//                                     @"model":aModel};
+//            self.coupeBlock(params);
+//        }
+//    }
+//}
 
 - (void)show
 {
