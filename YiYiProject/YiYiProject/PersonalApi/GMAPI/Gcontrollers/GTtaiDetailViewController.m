@@ -1671,17 +1671,18 @@
 
 
 
-- (void)waterDidSelectRowAtIndexPath:(NSInteger)index
+- (void)waterDidSelectRowAtIndexPath:(NSInteger)index collectionViewCell:(PSCollectionViewCell *)cell
 {
+    
+    
     
     TPlatModel *model = _collectionView.dataArray[index];
     
-    GTtaiDetailSamettCell *cell = (GTtaiDetailSamettCell *)[_collectionView.quitView cellForIndex:index];
-//    GTtaiDetailSamettCell *cell = (GTtaiDetailSamettCell*)[self collectionView:_collectionView cellForRowAtIndex:index];
+    GTtaiDetailSamettCell *t_cell = (GTtaiDetailSamettCell*)cell;
     NSDictionary *params = nil;
-    if (cell.like_btn && cell.like_label ) {
-        params = @{@"button":cell.like_btn,
-                                 @"label":cell.like_label,
+    if (t_cell.like_btn && t_cell.like_label ) {
+        params = @{@"button":t_cell.like_btn,
+                                 @"label":t_cell.like_label,
                                  @"model":model};
     }
     
