@@ -429,7 +429,7 @@
     _com_type_array=[NSMutableArray array];
     _com_title_array=[NSMutableArray array];
     
-    self.commentarray=[NSMutableArray arrayWithArray:[headerDic objectForKey:@"aa"]];//advertisements_data
+    self.commentarray=[NSMutableArray arrayWithArray:[headerDic objectForKey:@"advertisements_data"]];//advertisements_data
     
     if (self.commentarray.count>0) {
         NSMutableArray *imgarray=[NSMutableArray array];
