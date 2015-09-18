@@ -88,6 +88,7 @@
     ChouJiangModel *_chouJiangModel;//抽奖
     ChouJiangView *_chouJiangView;//
     
+    
 }
 
 @property (nonatomic ,strong) UIView *topView;
@@ -122,8 +123,7 @@
     self.myTitleLabel.text = @"T台";
     [self createNavigationbarTools];
     
-//    [self getChouJiangState];//获取抽奖接口
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getChouJiangState) name:NOTIFICATION_GETCHOUJIANGSTATE object:nil];
+
     
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH,DEVICE_HEIGHT - 64) showLoadMore:NO];
     _table.refreshDelegate = self;
@@ -183,12 +183,7 @@
     
     [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];//获取网络T台数据
     
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateTTai:) name:NOTIFICATION_LOGIN object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateTTai:) name:NOTIFICATION_LOGOUT object:nil];
-//    
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateTTai:) name:NOTIFICATION_TTAI_PUBLISE_SUCCESS object:nil];
-//    
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiverNotify2:) name:NOTIFICATION_TPLATDETAIL_SHOW object:nil];
+
     
     
     //添加滑动到顶部按钮
@@ -248,7 +243,6 @@
         l1.backgroundColor = RGBCOLOR(220, 221, 223);
         [self.topView addSubview:l1];
         [_g02 removeFromSuperview];
-//        _topScrollView1.backgroundColor = [UIColor purpleColor];
         
        
         UIView *l2 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_topScrollView1.frame)+6, DEVICE_WIDTH, 0.5)];
@@ -288,6 +282,9 @@
         for (UIView *view in _topScrollView.subviews) {
             [view removeFromSuperview];
         }
+        
+        
+        
         [self setTopScrollViewWithDic:result];
         [_topScrollView removeFromSuperview];
         [self.topView addSubview:_topScrollView];
@@ -405,15 +402,13 @@
             [itemArray addObject:item];
         }
         
-//        UIView *vvv = [[UIView alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(_topScrollView.frame), DEVICE_WIDTH-10, 32)];
+
         UIView *vvv = [[UIView alloc]initWithFrame:CGRectMake(5,  (DEVICE_WIDTH*250/750) ,DEVICE_WIDTH-10, 32)];
         [self.topView addSubview:vvv];
         
         _topScrollView1 = [[GcycleScrollView1 alloc] initWithFrame:CGRectMake(5, CGRectGetMaxY(vvv.frame), DEVICE_WIDTH - 10,(int)(DEVICE_WIDTH*120/710)) delegate:self imageItems:itemArray isAuto:YES pageControlNum:0];//0为不显示pagecontrol
         
-//        if (!_topScrollView) {
-//            [_topScrollView1 setFrame:CGRectMake(5, (DEVICE_WIDTH*250/750), DEVICE_WIDTH-10, (int)(DEVICE_WIDTH*120/710))];
-//        }
+
         
         [_topScrollView scrollToIndex:0];
     }
@@ -434,7 +429,7 @@
     _com_type_array=[NSMutableArray array];
     _com_title_array=[NSMutableArray array];
     
-    self.commentarray=[NSMutableArray arrayWithArray:[headerDic objectForKey:@"advertisements_data"]];
+    self.commentarray=[NSMutableArray arrayWithArray:[headerDic objectForKey:@"aa"]];//advertisements_data
     
     if (self.commentarray.count>0) {
         NSMutableArray *imgarray=[NSMutableArray array];
