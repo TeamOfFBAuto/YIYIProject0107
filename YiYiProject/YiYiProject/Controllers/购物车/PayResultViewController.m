@@ -124,7 +124,7 @@
  */
 - (void)clickToRePay:(UIButton *)sender
 {
-    
+    [self leftButtonTap:sender];
 }
 
 /**

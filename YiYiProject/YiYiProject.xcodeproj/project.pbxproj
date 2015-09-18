@@ -569,7 +569,6 @@
 		E3108AFD1B8BCB5000C93A66 /* ios7_goahead4032@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3108AC51B8BCB5000C93A66 /* ios7_goahead4032@2x.png */; };
 		E3108AFE1B8BCB5000C93A66 /* ios7_goback4032@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3108AC61B8BCB5000C93A66 /* ios7_goback4032@2x.png */; };
 		E3108AFF1B8BCB5000C93A66 /* ios7_refresh4139@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3108AC71B8BCB5000C93A66 /* ios7_refresh4139@2x.png */; };
-		E3108B001B8BCB5000C93A66 /* my_shenqing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3108AC81B8BCB5000C93A66 /* my_shenqing@2x.png */; };
 		E3108B011B8BCB5000C93A66 /* my_top_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3108AC91B8BCB5000C93A66 /* my_top_bg@2x.png */; };
 		E3108B021B8BCB5000C93A66 /* mywallet_01@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3108ACA1B8BCB5000C93A66 /* mywallet_01@2x.png */; };
 		E3108B031B8BCB5000C93A66 /* road_select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3108ACB1B8BCB5000C93A66 /* road_select@2x.png */; };
@@ -1539,7 +1538,6 @@
 		E3108AC51B8BCB5000C93A66 /* ios7_goahead4032@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_goahead4032@2x.png"; sourceTree = "<group>"; };
 		E3108AC61B8BCB5000C93A66 /* ios7_goback4032@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_goback4032@2x.png"; sourceTree = "<group>"; };
 		E3108AC71B8BCB5000C93A66 /* ios7_refresh4139@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_refresh4139@2x.png"; sourceTree = "<group>"; };
-		E3108AC81B8BCB5000C93A66 /* my_shenqing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_shenqing@2x.png"; sourceTree = "<group>"; };
 		E3108AC91B8BCB5000C93A66 /* my_top_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_top_bg@2x.png"; sourceTree = "<group>"; };
 		E3108ACA1B8BCB5000C93A66 /* mywallet_01@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mywallet_01@2x.png"; sourceTree = "<group>"; };
 		E3108ACB1B8BCB5000C93A66 /* road_select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "road_select@2x.png"; sourceTree = "<group>"; };
@@ -3744,7 +3742,6 @@
 				E3108AC51B8BCB5000C93A66 /* ios7_goahead4032@2x.png */,
 				E3108AC61B8BCB5000C93A66 /* ios7_goback4032@2x.png */,
 				E3108AC71B8BCB5000C93A66 /* ios7_refresh4139@2x.png */,
-				E3108AC81B8BCB5000C93A66 /* my_shenqing@2x.png */,
 				E3108AC91B8BCB5000C93A66 /* my_top_bg@2x.png */,
 				E3108ACA1B8BCB5000C93A66 /* mywallet_01@2x.png */,
 				E3108ACB1B8BCB5000C93A66 /* road_select@2x.png */,
@@ -4206,7 +4203,7 @@
 		13684A5D1A37583E00A508FB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = lcw;
 				TargetAttributes = {
 					13684A641A37583E00A508FB = {
@@ -4359,7 +4356,6 @@
 				13BD6F061B7AF57D00F39E0A /* Ttaixq_tongkuan@2x.png in Resources */,
 				13D03D491AEDD60F0078AA9E /* placeholder.png in Resources */,
 				13CC038D1B10A0A300A42BC1 /* my collections_bg_bottom@2x.png in Resources */,
-				E3108B001B8BCB5000C93A66 /* my_shenqing@2x.png in Resources */,
 				13D03D401AEDD60F0078AA9E /* EditInfoView.xib in Resources */,
 				E3B7BE061AC9557D00FE8495 /* gfujin_up@2x.png in Resources */,
 				E3108AF21B8BCB5000C93A66 /* gqiandao_up@2x.png in Resources */,
@@ -5055,6 +5051,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -5122,6 +5119,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/YiYiProject/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -5142,6 +5140,7 @@
 					"$(PROJECT_DIR)/YiYiProject/PersonalApi/GMAPI/Gutils/BaiduMap_IOSSDK_v2.6.0_Lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yijiayi.yijiayi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "fdeed618-3d6a-4d7b-831a-c63ae714e049";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
@@ -5157,6 +5156,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/YiYiProject/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -5177,6 +5177,7 @@
 					"$(PROJECT_DIR)/YiYiProject/PersonalApi/GMAPI/Gutils/BaiduMap_IOSSDK_v2.6.0_Lib",
 				);
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yijiayi.yijiayi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "fdeed618-3d6a-4d7b-831a-c63ae714e049";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
@@ -5200,6 +5201,7 @@
 				);
 				INFOPLIST_FILE = YiYiProjectTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yijiayi.yijiayi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8260615f-be50-4052-a674-c6dac68a8528";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YiYiProject.app/YiYiProject";
@@ -5218,6 +5220,7 @@
 				);
 				INFOPLIST_FILE = YiYiProjectTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yijiayi.yijiayi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8260615f-be50-4052-a674-c6dac68a8528";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YiYiProject.app/YiYiProject";

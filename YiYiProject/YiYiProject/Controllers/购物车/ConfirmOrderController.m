@@ -660,7 +660,7 @@
     _price_original = [[UILabel alloc]initWithFrame:CGRectMake(_priceLabel.left, _priceLabel.bottom, _priceLabel.width, _priceLabel.height) title:@"原价" font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"7e7e7e"]];
     [bottom addSubview:_price_original];
     
-    UIButton *sureButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 100, 10, 100, 30) buttonType:UIButtonTypeRoundedRect normalTitle:@"提交订单" selectedTitle:nil target:self action:@selector(clickToConfirmOrder:)];
+    UIButton *sureButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 15 - 100, 10, 100, 30) buttonType:UIButtonTypeRoundedRect normalTitle:@"去付款" selectedTitle:nil target:self action:@selector(clickToConfirmOrder:)];
     [sureButton addCornerRadius:3.f];
     [sureButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [sureButton.titleLabel setFont:[UIFont systemFontOfSize:13]];

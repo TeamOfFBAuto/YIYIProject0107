@@ -91,12 +91,12 @@
         
         if (userStyle == USESTYLE_Get) {
             title = @"领取优惠劵";
-            title_close = @"暂不领取";
+            title_close = @"确定";
             color_close = [UIColor colorWithHexString:@"999999"];
 
         }else if (userStyle == USESTYLE_Use){
             title = @"优惠劵";
-            title_close = @"确认使用";
+            title_close = @"确定";
             color_close = DEFAULT_TEXTCOLOR;
         }
         

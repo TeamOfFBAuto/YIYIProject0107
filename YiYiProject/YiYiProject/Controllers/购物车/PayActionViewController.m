@@ -104,7 +104,9 @@
 
     [_loading show:YES];
     _validateTime = 10;//十次
-    _validateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(networkForPayValidate) userInfo:nil repeats:YES];
+    
+    [self networkForPayValidate];
+    _validateTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(networkForPayValidate) userInfo:nil repeats:YES];
 }
 
 - (void)stopTimer
@@ -389,7 +391,7 @@
     result.sumPrice = self.sumPrice;
     result.isPaySuccess = success;
     result.erroInfo = erroInfo;
-    if (self.lastVc) {
+    if (self.lastVc && success) {
         [self.lastVc.navigationController popViewControllerAnimated:NO];
         [self.lastVc.navigationController pushViewController:result animated:YES];
         return;
