@@ -61,7 +61,8 @@
     int _count;//网络请求完成个数
     
     
-    LTools *tool_detail;
+    LTools *_tool_detail;
+    LTools *_tool_relationShop;
     
     LWaterFlow2 *_collectionView;//瀑布流
     
@@ -81,7 +82,7 @@
     TPlatModel *_ttaiDetailModel;
     
     //关联的商场数据
-    NSArray *_relationStoreArray;//里面装的是GTtaiRelationStoreModel
+    NSMutableArray *_relationStoreArray;//里面装的是GTtaiRelationStoreModel
     NSArray *_relationStoreProductChooseArray;
     
     
@@ -122,7 +123,8 @@
 - (void)dealloc
 {
     NSLog(@"dealloc %@",self);
-    [tool_detail cancelRequest];
+    [_tool_detail cancelRequest];
+    [_tool_relationShop cancelRequest];
     _heartButton = nil;
     _collectButton = nil;
     
@@ -131,7 +133,6 @@
     _collectionView = nil;
      [self removeObserver:self forKeyPath:@"_count"];
     
-//    [self removeObserver:self forKeyPath:NOTIFICATON_UPDATESHOPCAR_NUM];
     
     [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIFICATON_UPDATESHOPCAR_NUM];
     
@@ -547,19 +548,17 @@
 
 //请求T台详情数据
 -(void)prepareNetDataForTtaiDetail{
-    if (tool_detail) {
-        [tool_detail cancelRequest];
+    if (_tool_detail) {
+        [_tool_detail cancelRequest];
     }
     
     NSString *url = [NSString stringWithFormat:@"%@&authcode=%@&tt_id=%@&&page=%d&count=%d",TTAI_DETAIL_V2,[GMAPI getAuthkey],self.tPlat_id,_collectionView.pageNum,L_PAGE_SIZE];
     
-    NSLog(@"T台详情%@",url);
     
-    tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    _tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     
-    [tool_detail requestCompletion:^(NSDictionary *result, NSError *erro) {
+    [_tool_detail requestCompletion:^(NSDictionary *result, NSError *erro) {
         
-        NSLog(@"result %@",result);
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
@@ -584,9 +583,11 @@
             }
             
             _ttaiDetailModel = [[TPlatModel alloc]initWithDictionary:result];
-            [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+            
+            
         }
         
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
         [self createNavigationbarTools];//导航条
         
@@ -595,7 +596,6 @@
         
         NSLog(@"failBlock == %@",failDic[RESULT_INFO]);
         
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
 
         [_collectionView loadFail];
         
@@ -605,19 +605,17 @@
 
 //请求T台详情数据
 -(void)prepareMoreNetDataForTtaiDetail{
-    if (tool_detail) {
-        [tool_detail cancelRequest];
+    if (_tool_detail) {
+        [_tool_detail cancelRequest];
     }
     
     NSString *url = [NSString stringWithFormat:@"%@&authcode=%@&tt_id=%@&&page=%d&count=%d",TTAI_DETAIL_V2,[GMAPI getAuthkey],self.tPlat_id,_collectionView.pageNum,L_PAGE_SIZE];
     
-    NSLog(@"T台详情%@",url);
     
-    tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    _tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     
-    [tool_detail requestCompletion:^(NSDictionary *result, NSError *erro) {
+    [_tool_detail requestCompletion:^(NSDictionary *result, NSError *erro) {
         
-        NSLog(@"result %@",result);
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
@@ -651,17 +649,15 @@
     NSString *latitude = [self.locationDic stringValueForKey:@"lat"];
     
     NSString *url = [NSString stringWithFormat:@"%@&longitude=%@&latitude=%@&tt_id=%@page=%d&count=6",TTAI_STORE,longitude,latitude,self.tPlat_id,_collectionView.pageNum];
-    NSLog(@"T台关联商场%@",url);
 
-    tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    _tool_relationShop = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     
-    [tool_detail requestCompletion:^(NSDictionary *result, NSError *erro) {
+    [_tool_relationShop requestCompletion:^(NSDictionary *result, NSError *erro) {
         
         
         
-        NSLog(@"result %@",result);
         NSArray *list = result[@"list"];
-        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:list.count];
+        _relationStoreArray = [NSMutableArray arrayWithCapacity:1];
         
         
         for (int i = 0;i<list.count;i++) {
@@ -680,19 +676,18 @@
                     
                 }
             }
-            [temp addObject:amodel];
+            [_relationStoreArray addObject:amodel];
             
             
         }
         
-        if (temp.count >= 6) {
+        if (_relationStoreArray.count >= 6) {
             _isHaveMoreStoreData = YES;
         }else{
             _isHaveMoreStoreData = NO;
         }
         
-        _relationStoreArray = temp;
-        
+       
         
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
@@ -838,9 +833,7 @@
 }
 - (void)theLocationDictionary:(NSDictionary *)dic{
     
-    NSLog(@"当前坐标-->%@",dic);
-    NSLog(@"%s",__FUNCTION__);
-    NSLog(@"%@",dic);
+    NSLog(@"----》定位成功");
     self.locationDic = [GMAPI sharedManager].theLocationDic;
     _lat = [self.locationDic stringValueForKey:@"lat"];
     _long = [self.locationDic stringValueForKey:@"long"];
@@ -855,8 +848,8 @@
 
 -(void)theLocationFaild:(NSDictionary *)dic{
     
-    NSLog(@"%s",__FUNCTION__);
-    NSLog(@"%@",dic);
+    NSLog(@"----》定位失败");
+    
     self.locationDic = [GMAPI sharedManager].theLocationDic;
     _lat = [self.locationDic stringValueForKey:@"lat"];
     _long = [self.locationDic stringValueForKey:@"long"];
@@ -1104,6 +1097,7 @@
     NSInteger count1 = 0;
     NSInteger tCount = _relationStoreArray.count;
     
+    NSLog(@"_relationStoreArray.count %ld",(long)tCount);
     
     for (int i = 0; i<tCount; i++) {
         GTtaiRelationStoreModel *model = _relationStoreArray[i];
@@ -1129,9 +1123,9 @@
     height += (_tableFooterView.frame.size.height+5);
     
     NSLog(@"%s",__FUNCTION__);
-    NSLog(@"_noTabHeaderHeight%f",_noTabHeaderHeight);
-    NSLog(@"_tableFooterView_height%f",_tableFooterView.frame.size.height);
-    NSLog(@"计算tableivew高度%f",height);
+    NSLog(@"_noTabHeaderHeight %f",_noTabHeaderHeight);
+    NSLog(@"_tableFooterView_height %f",_tableFooterView.frame.size.height);
+    NSLog(@"计算tableivew高度 %f",height);
     
     
     return height;
@@ -1149,7 +1143,14 @@
     }
     
     NSNumber *num = [change objectForKey:@"new"];
-    if ([num intValue] == 2) {
+    
+    
+    NSLog(@"日日日%d",[num intValue]);
+    
+    if ([num intValue] >= 2 && _relationStoreArray) {
+        
+        
+        NSLog(@"_relationStoreArray.count:  %lu",(unsigned long)_relationStoreArray.count);
         
         [self loadCustomHeaderView];
         
