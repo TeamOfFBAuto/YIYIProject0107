@@ -657,6 +657,7 @@
         
         
         NSArray *list = result[@"list"];
+        
         _relationStoreArray = [NSMutableArray arrayWithCapacity:1];
         
         
@@ -1252,9 +1253,13 @@
     _tabHeaderView.backgroundColor = [UIColor whiteColor];
     
     //锚点图片相关
+    if (!_ttaiDetailModel) {
+        return;
+    }
     CGFloat img_width = [[_ttaiDetailModel.image stringValueForKey:@"width"]floatValue];
     CGFloat img_height  = [[_ttaiDetailModel.image stringValueForKey:@"height"]floatValue];
     UIImageView *bigTtaiView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH/img_width*img_height)];
+    
     bigTtaiView.userInteractionEnabled = YES;
     [bigTtaiView l_setImageWithURL:[NSURL URLWithString:[_ttaiDetailModel.image stringValueForKey:@"url"]] placeholderImage:DEFAULT_YIJIAYI];
     
