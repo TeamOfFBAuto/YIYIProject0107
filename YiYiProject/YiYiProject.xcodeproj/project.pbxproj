@@ -139,6 +139,7 @@
 		137B6FFB1A6B995D007035DE /* dz_tianjia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 137B6FF81A6B995D007035DE /* dz_tianjia@2x.png */; };
 		137C39131A714ABA00CE3971 /* MailInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 137C39121A714ABA00CE3971 /* MailInfoModel.m */; };
 		137E0AC11A4C559500B59F64 /* LShareSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 137E0AC01A4C559500B59F64 /* LShareSheetView.m */; };
+		137F852F1BAFB36D00FD44B2 /* zhifuchulizhong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 137F852E1BAFB36D00FD44B2 /* zhifuchulizhong@2x.png */; settings = {ASSET_TAGS = (); }; };
 		137FC2A01A4DADB80039E3FF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 137FC29F1A4DADB80039E3FF /* AudioToolbox.framework */; };
 		137FC2A21A4DADFE0039E3FF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 137FC2A11A4DADFE0039E3FF /* AVFoundation.framework */; };
 		137FC2A41A4DAE070039E3FF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 137FC2A31A4DAE070039E3FF /* CFNetwork.framework */; };
@@ -916,6 +917,7 @@
 		137C39121A714ABA00CE3971 /* MailInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MailInfoModel.m; sourceTree = "<group>"; };
 		137E0ABF1A4C559500B59F64 /* LShareSheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LShareSheetView.h; sourceTree = "<group>"; };
 		137E0AC01A4C559500B59F64 /* LShareSheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LShareSheetView.m; sourceTree = "<group>"; };
+		137F852E1BAFB36D00FD44B2 /* zhifuchulizhong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zhifuchulizhong@2x.png"; sourceTree = "<group>"; };
 		137FC29F1A4DADB80039E3FF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		137FC2A11A4DADFE0039E3FF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		137FC2A31A4DAE070039E3FF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -2035,6 +2037,7 @@
 		130E5CD21B9C354E00614343 /* 购买支付其他 */ = {
 			isa = PBXGroup;
 			children = (
+				137F852E1BAFB36D00FD44B2 /* zhifuchulizhong@2x.png */,
 				13E18C921BA7FE9A00C43522 /* order_chat@2x.png */,
 				13E18C931BA7FE9A00C43522 /* order_phone@2x.png */,
 				13CE05E61BA6AA29003D2AEC /* my_weixin@2x.png */,
@@ -4355,6 +4358,7 @@
 				134BBFBE1B2939270047E0D9 /* danpin_price_b@2x.png in Resources */,
 				13BD6F061B7AF57D00F39E0A /* Ttaixq_tongkuan@2x.png in Resources */,
 				13D03D491AEDD60F0078AA9E /* placeholder.png in Resources */,
+				137F852F1BAFB36D00FD44B2 /* zhifuchulizhong@2x.png in Resources */,
 				13CC038D1B10A0A300A42BC1 /* my collections_bg_bottom@2x.png in Resources */,
 				13D03D401AEDD60F0078AA9E /* EditInfoView.xib in Resources */,
 				E3B7BE061AC9557D00FE8495 /* gfujin_up@2x.png in Resources */,

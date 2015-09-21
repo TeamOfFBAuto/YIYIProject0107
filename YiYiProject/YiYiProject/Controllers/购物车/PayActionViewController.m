@@ -32,7 +32,7 @@
     
     self.myTitle = @"收银台";
     self.rightString = @"查看订单";
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     [self createViews];
     
@@ -51,26 +51,6 @@
     self.navigationController.navigationBarHidden = NO;
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    //在navigationController中移除 确认订单viewController
-    
-    //确认订单之后到支付页面,这时候不能再返回到确认订单页面
-    
-//    NSArray *vcArray = self.navigationController.viewControllers;
-//    
-//    for (UIViewController *viewController in vcArray) {
-//        
-//        if ([viewController isKindOfClass:NSClassFromString(@"ConfirmOrderController")]) {
-//            
-//            [viewController removeFromParentViewController];
-//        }
-//    }
-    
-}
-
 #pragma - mark 通知处理
 
 //微信支付通知
@@ -87,7 +67,7 @@
         
     }else
     {
-        [self payResultSuccess:NO erroInfo:erroInfo];
+        [self payResultSuccess:PAY_RESULT_TYPE_Fail  erroInfo:erroInfo];
     }
 }
 
@@ -121,13 +101,6 @@
 
 - (void)networkForPayValidate
 {
-    if (_validateTime == 0) {
-        
-        [self stopTimer];
-        
-        return;
-    }
-    
     NSString *authkey = [GMAPI getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"order_id":self.orderId};
@@ -136,15 +109,38 @@
     LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
     [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
         
-        [weakSelf stopTimer];
+        // 0 未支付 1 已支付 2 正在支付
+        
+        // 0和1的情况下,服务端已经收到支付宝异步通知
         int pay = [result[@"pay"]intValue];
+        
         if (pay == 1) {
-
-            [weakSelf payResultSuccess:YES erroInfo:nil];
-        }else
+            
+            [weakSelf stopTimer];
+            
+            [weakSelf payResultSuccess:PAY_RESULT_TYPE_Success erroInfo:@"支付成功"];
+            
+        }else if (pay == 0)
         {
-            [weakSelf payResultSuccess:NO erroInfo:result[RESULT_INFO]];
+            [weakSelf stopTimer];
+
+            [weakSelf payResultSuccess:PAY_RESULT_TYPE_Fail erroInfo:@"支付失败"];
+            
+        }else{
+            
+             //pay == 2 正在支付中,或者其他未有状态
+            
+            NSLog(@"正在支付中");
+            
+            if (_validateTime == 0) {
+                
+                [weakSelf stopTimer];
+                
+                [weakSelf payResultSuccess:PAY_RESULT_TYPE_Waiting erroInfo:@"支付结果处理中"];
+            }
         }
+        
+        _validateTime --;
         
     } failBlock:^(NSDictionary *result, NSError *erro) {
         _validateTime --;
@@ -221,7 +217,7 @@
             NSLog(@"reslut = %@",resultDic);
             
             int resultStatus = [resultDic[@"resultStatus"]intValue];
-            if (resultStatus == 9000) {
+            if (resultStatus == 9000 || resultStatus == 8000) {
                 
                 //成功
                 /**
@@ -236,7 +232,7 @@
             {
                 NSLog(@"支付失败");
                 
-                [weakSelf payResultSuccess:NO erroInfo:@"中途取消支付或者网络连接错误"];
+                [weakSelf payResultSuccess:PAY_RESULT_TYPE_Fail erroInfo:@"中途取消支付或者网络连接错误"];
 //                8000
 //                正在处理中
 //                4000
@@ -376,7 +372,7 @@
 /**
  *  支付成功
  */
-- (void)payResultSuccess:(BOOL)success
+- (void)payResultSuccess:(PAY_RESULT_TYPE)resultType
                 erroInfo:(NSString *)erroInfo
 {
     //更新购物车
@@ -389,9 +385,9 @@
     result.orderId = self.orderId;
     result.orderNum = self.orderNum;
     result.sumPrice = self.sumPrice;
-    result.isPaySuccess = success;
+    result.payResultType = resultType;
     result.erroInfo = erroInfo;
-    if (self.lastVc && success) {
+    if (self.lastVc && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
         [self.lastVc.navigationController popViewControllerAnimated:NO];
         [self.lastVc.navigationController pushViewController:result animated:YES];
         return;
@@ -430,12 +426,6 @@
  */
 - (void)clickToPay:(UIButton *)sender
 {
-    
-//    [self payResultSuccess:NO erroInfo:@"支付失败错误信息"];
-////    [self isPayValidate];
-//    return;
-    
-    
     if (aliButton.selected) {
         
         NSLog(@"支付宝支付");
@@ -446,6 +436,7 @@
         NSLog(@"微信支付");
         
         [self getOrderSignWithType:@"weixin"];
+
     }
 }
 

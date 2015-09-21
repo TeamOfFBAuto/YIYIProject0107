@@ -59,9 +59,6 @@
     CGFloat _sumPrice_pay;//实际支付的价格
 }
 
-@property(nonatomic,strong)CustomInputView * input_view;
-
-
 @end
 
 @implementation ConfirmOrderController
@@ -69,14 +66,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-//    self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBarHidden = NO;
-    
-//    [_input_view addKeyBordNotification];
-    
-//    self.myTitle = @"确认订单";
-//    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -258,34 +248,36 @@
 /**
  *  切换购物地址时 更新邮费
  */
-- (void)updateExpressFeeWithAddressId:(NSString *)addressId
+- (void)updateExpressFeeWithProviceId:(NSString *)privinceId
+                               cityId:(NSString *)cityId
 {
     NSString *authkey = [GMAPI getAuthkey];
-    
-    float weight = 0;//总重
-    
+    NSString *province_id = privinceId;
+    NSString *city_id = cityId;
+    NSString *total_price = NSStringFromFloat(_sumPrice_pay);
     NSDictionary *params = @{@"authcode":authkey,
-                             @"address_id":addressId};
+                             @"province_id":province_id,
+                             @"city_id":city_id,
+                             @"total_price":total_price};
     
     __weak typeof(_table)weakTable = _table;
     __weak typeof(self)weakSelf = self;
     
-//    LTools *tool = [LTools alloc]initWithUrl:<#(NSString *)#> isPost:<#(BOOL)#> postData:<#(NSData *)#>
-    
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:ORDER_GET_EXPRESS_FEE parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        
-//        NSLog(@"更新邮费%@ %@",result[RESULT_INFO],result);
-//        float fee = [result[@"fee"]floatValue];
-//        _expressFee = fee;
-//        [weakSelf updateExpressFeeAndSumPrice:fee];
-//        [weakTable reloadData];
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"更新邮费 失败 %@",result[RESULT_INFO]);
-//        
-//    }];
+    NSString *url = [LTools url:ORDER_GET_EXPRESS_FEE withParams:params];
+    LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+        
+        NSLog(@"更新邮费%@ %@",result[RESULT_INFO],result);
+        float fee = [result[@"fee"]floatValue];
+        _expressFee = fee;
+        [weakSelf updateSumPrice];
+        [weakTable reloadData];
+        
+    } failBlock:^(NSDictionary *result, NSError *erro) {
+        
+        NSLog(@"更新邮费 失败 %@",result[RESULT_INFO]);
 
+    }];
 }
 
 /**
@@ -558,7 +550,7 @@
     address.selectAddressBlock = ^(AddressModel *aModel){
         _selectAddressId = aModel.address_id;
         [wealSelf updateAddressInfoWithModel:aModel];//更新收货地址显示
-        [wealSelf updateExpressFeeWithAddressId:aModel.address_id];//更新邮费
+        [wealSelf updateExpressFeeWithProviceId:aModel.pro_id cityId:aModel.city_id];//更新邮费
     };
     
     [self.navigationController pushViewController:address animated:YES];
@@ -604,38 +596,6 @@
 
 #pragma mark - 创建视图
 
-- (void)createInputView
-{
-    __weak typeof(self)weakSelf = self;
-    
-    _input_view = [[CustomInputView alloc] initWithFrame:CGRectMake(0,DEVICE_HEIGHT,DEVICE_WIDTH,44)];
-    
-    _input_view.userInteractionEnabled = NO;
-    
-    [_input_view loadAllViewWithPinglunCount:@"0" WithType:0 WithPushBlock:^(int type){
-        
-        if (type == 0)
-        {
-            NSLog(@"跳到评论");
-            
-        }else
-        {
-            NSLog(@"分类按钮");
-        }
-        
-    } WithSendBlock:^(NSString *content, BOOL isForward) {
-        
-        NSLog(@"发表评论");
-        
-        _firstTf.text = content;
-        
-    }];
-    
-    [_input_view.send_button setTitle:@"确定" forState:UIControlStateNormal];
-
-    [self.view addSubview:_input_view];
-}
-
 /**
  *  底部工具条
  */
@@ -678,7 +638,7 @@
         sumPrice_ori += [aMode.original_price floatValue] * [aMode.product_num intValue];
     }
     
-    NSString *price_ori = [NSString stringWithFormat:@"￥%.2f",sumPrice_ori];
+    NSString *price_ori = [NSString stringWithFormat:@"￥%.2f(不包含运费)",sumPrice_ori];
     [_price_original setAttributedText:[LTools attributedUnderlineString:price_ori]];
 
     //判断是否有收单减优惠劵
@@ -698,7 +658,7 @@
         
         minus_first = [_couponModel_first.newer_money floatValue];
     }
-    _sumPrice_pay = sumPrice - minus_first;//记录实际付款价格
+    _sumPrice_pay = sumPrice - minus_first + _expressFee;//记录实际付款价格
 }
 
 /**
@@ -733,7 +693,7 @@
         other = [NSString stringWithFormat:@"(首单立减￥%@)",_couponModel_first.newer_money];
     }
     
-    _priceLabel.text = [NSString stringWithFormat:@"￥%.2f%@",_priceSum - sum_minus,other];
+    _priceLabel.text = [NSString stringWithFormat:@"￥%.2f%@",_priceSum - sum_minus + _expressFee,other];
 
     CGFloat minus_first = 0.f;
     if (_couponModel_first) {
@@ -741,7 +701,7 @@
         minus_first = [_couponModel_first.newer_money floatValue];
     }
     
-    _sumPrice_pay = _priceSum - sum_minus - minus_first;//实际付款价格
+    _sumPrice_pay = _priceSum - sum_minus - minus_first + _expressFee;//实际付款价格
 }
 
 - (void)tableViewFooter

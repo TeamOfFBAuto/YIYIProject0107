@@ -329,6 +329,14 @@ typedef enum{
     ORDERTYPE_TuiHuan //退换
 }ORDERTYPE;
 
+typedef enum {
+    
+    PAY_RESULT_TYPE_Success = 1,//成功
+    PAY_RESULT_TYPE_Waiting = 2,//处理中
+    PAY_RESULT_TYPE_Fail = 3 //失败
+    
+}PAY_RESULT_TYPE;//支付结果
+
 //单品分类
 #define PRODUCT_FENLEI  @[@"全部",@"上衣",@"裤子",@"裙子",@"内衣",@"配饰",@"其他"]
 
@@ -836,7 +844,6 @@ typedef enum{
 #define ORDER_GET_DEFAULT_ADDRESS @"http://www119.alayy.com/index.php?d=api&c=order&m=get_default_address"
 
 //46、获取运费
-
 #define ORDER_GET_EXPRESS_FEE @"http://www119.alayy.com/index.php?d=api&c=order&m=get_express_fee"
 
 //48、获取支付宝签名或者微信生成预订单

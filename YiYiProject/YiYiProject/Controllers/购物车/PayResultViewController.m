@@ -24,20 +24,34 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    if (self.isPaySuccess) {
+    if (self.payResultType == PAY_RESULT_TYPE_Success || self.payResultType == PAY_RESULT_TYPE_Waiting) {
         
         //成功
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake((DEVICE_WIDTH - 141) / 2.f, 50, 141, 24)];
-        imageView.image = [UIImage imageNamed:@"zhifuchenggong"];
         [self.view addSubview:imageView];
-        imageView.centerX = DEVICE_WIDTH / 2.f;
         
         UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(0, imageView.bottom + 28, DEVICE_WIDTH, 14) title:nil font:13 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR];
         [self.view addSubview:label1];
         NSString *price = [NSString stringWithFormat:@"%.2f",self.sumPrice];
-        NSString *text = [NSString stringWithFormat:@"您成功付款%@元",price];
+        NSString *text = @"";
+        
+        if (_payResultType == PAY_RESULT_TYPE_Success) {
+            
+            imageView.image = [UIImage imageNamed:@"zhifuchenggong"];
+            text = [NSString stringWithFormat:@"您成功付款%@元",price];
+
+        }else
+        {
+            imageView.image = [UIImage imageNamed:@"zhifuchulizhong"];
+            imageView.width = 211;
+            imageView.height = 27;
+            text = [NSString stringWithFormat:@"付款金额%@元",price];
+        }
         NSAttributedString *string = [LTools attributedString:text keyword:price color:DEFAULT_TEXTCOLOR];
         [label1 setAttributedText:string];
+        imageView.centerX = DEVICE_WIDTH / 2.f;
+
+        
         
         text = [NSString stringWithFormat:@"订单编号:%@",self.orderNum];
         UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(0, label1.bottom + 7, DEVICE_WIDTH, 14) title:text font:13 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"959595"]];
@@ -60,7 +74,8 @@
         [btn2 setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
         [btn2.titleLabel setFont:[UIFont systemFontOfSize:14]];
         [btn2 setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
-    }else
+        
+    }else if(_payResultType == PAY_RESULT_TYPE_Fail)
     {
         //失败
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake((DEVICE_WIDTH - 141) / 2.f, 50, 141, 24)];
