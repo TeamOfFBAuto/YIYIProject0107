@@ -292,6 +292,19 @@
 {
     
     
+    //判断是否登录
+    if ([LTools cacheBoolForKey:LOGIN_SERVER_STATE] == NO) {
+        
+        LoginViewController *login = [[LoginViewController alloc]init];
+        
+        UINavigationController *unVc = [[UINavigationController alloc]initWithRootViewController:login];
+        
+        [self presentViewController:unVc animated:YES completion:nil];
+        
+        return;
+    }
+    
+    
     _allProductArray = [NSMutableArray arrayWithCapacity:1];
     
     for (GTtaiRelationStoreModel *model  in _relationStoreArray) {
@@ -322,6 +335,21 @@
  */
 - (void)clickToBuy
 {
+    
+    
+    //判断是否登录
+    if ([LTools cacheBoolForKey:LOGIN_SERVER_STATE] == NO) {
+        
+        LoginViewController *login = [[LoginViewController alloc]init];
+        
+        UINavigationController *unVc = [[UINavigationController alloc]initWithRootViewController:login];
+        
+        [self presentViewController:unVc animated:YES completion:nil];
+        
+        return;
+    }
+    
+    
     _allProductArray = [NSMutableArray arrayWithCapacity:1];
     
     for (GTtaiRelationStoreModel *model  in _relationStoreArray) {
@@ -622,7 +650,7 @@
     NSString *longitude = [self.locationDic stringValueForKey:@"long"];
     NSString *latitude = [self.locationDic stringValueForKey:@"lat"];
     
-    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@&longitude=%@&latitude=%@&tt_id=%@page=%d&count=6",TTAI_STORE,[GMAPI getAuthkey],longitude,latitude,self.tPlat_id,_collectionView.pageNum];
+    NSString *url = [NSString stringWithFormat:@"%@&longitude=%@&latitude=%@&tt_id=%@page=%d&count=6",TTAI_STORE,longitude,latitude,self.tPlat_id,_collectionView.pageNum];
     NSLog(@"T台关联商场%@",url);
 
     tool_detail = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
@@ -673,7 +701,6 @@
         
         NSLog(@"failBlock == %@",failDic[RESULT_INFO]);
         
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
 
         [_collectionView loadFail];
         
@@ -1071,6 +1098,8 @@
 //计算缩放tableview的高度
 -(CGFloat)jisuanTabHeight{
     
+   
+    
     CGFloat height = 0;
     NSInteger count1 = 0;
     NSInteger tCount = _relationStoreArray.count;
@@ -1098,6 +1127,12 @@
     }
 
     height += (_tableFooterView.frame.size.height+5);
+    
+    NSLog(@"%s",__FUNCTION__);
+    NSLog(@"_noTabHeaderHeight%f",_noTabHeaderHeight);
+    NSLog(@"_tableFooterView_height%f",_tableFooterView.frame.size.height);
+    NSLog(@"计算tableivew高度%f",height);
+    
     
     return height;
 }
@@ -1446,6 +1481,7 @@
     
     [view2 setHeight:CGRectGetMaxY(fenLine44.frame)];
     
+    
     height +=view2.frame.size.height;
     
     _noTabHeaderHeight = height;
@@ -1523,7 +1559,8 @@
     
     CGFloat jjj = [self jisuanTabHeight];
     
-    height +=jjj;
+//    height +=jjj;
+    height = jjj+ _noTabHeaderHeight;
     
     
     //header上的可缩放tableview
@@ -1547,6 +1584,20 @@
 -(void)lingquyouhuiquan{
     NSLog(@"%s",__FUNCTION__);
 
+    
+    //判断是否登录
+    if ([LTools cacheBoolForKey:LOGIN_SERVER_STATE] == NO) {
+        
+        LoginViewController *login = [[LoginViewController alloc]init];
+        
+        UINavigationController *unVc = [[UINavigationController alloc]initWithRootViewController:login];
+        
+        [self presentViewController:unVc animated:YES completion:nil];
+        
+        return;
+    }
+    
+    
     GgetStoreYouhuiquanViewController *cc = [[GgetStoreYouhuiquanViewController alloc]init];
     cc.tPlat_id = self.tPlat_id;
     cc.locationDic = self.locationDic;
@@ -2043,7 +2094,6 @@
     
     
     [UIView animateWithDuration:0.0 animations:^{
-//        [_tabHeaderTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
         [_tabHeaderTableView reloadData];
         CGRect r = _tabHeaderTableView.frame;
         r.size.height = _tabHeaderTableView.contentSize.height;
