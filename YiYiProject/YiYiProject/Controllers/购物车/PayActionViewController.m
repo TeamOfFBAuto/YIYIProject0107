@@ -31,8 +31,7 @@
     // Do any additional setup after loading the view.
     
     self.myTitle = @"收银台";
-    self.rightString = @"查看订单";
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
     [self createViews];
     

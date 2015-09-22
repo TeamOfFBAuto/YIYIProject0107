@@ -136,6 +136,7 @@
         if (arr) {
             for (NSDictionary *aDic in arr) {
                 ShopModel *aModel = [[ShopModel alloc]initWithDictionary:aDic];
+                aModel.note = aModel.order_note;
                 
                 CGFloat sum = 0.f;//计算单品总价
                 NSInteger p_sum = 0;//单品的个数

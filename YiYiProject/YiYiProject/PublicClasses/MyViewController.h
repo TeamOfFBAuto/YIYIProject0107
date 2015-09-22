@@ -25,7 +25,7 @@ typedef enum
     MyViewControllerRightbuttonTypeText=2,
     MyViewControllerRightbuttonTypePerson=3,
     MyViewControllerRightbuttonTypeDelete=4,
-    MyViewControllerRightbuttonTypeNull=5,
+    MyViewControllerRightbuttonTypeNull = 5,
     MyViewControllerRightbuttonTypeOther
 }MyViewControllerRightbuttonType;
 

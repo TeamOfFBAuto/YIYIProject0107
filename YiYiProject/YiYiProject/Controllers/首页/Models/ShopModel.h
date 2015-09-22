@@ -25,6 +25,7 @@
 
 //@property(nonatomic,retain)NSString *productPrice;//记录单品单价
 @property(nonatomic,retain)NSString *note;//备注
+@property(nonatomic,retain)NSString *order_note;//备注
 
 @property(nonatomic,retain)id couponModel;//使用的优惠券
 

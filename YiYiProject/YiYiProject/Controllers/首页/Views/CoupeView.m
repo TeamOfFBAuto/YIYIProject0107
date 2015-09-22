@@ -235,7 +235,6 @@
     _coupeBlock = coupeBlock;
 }
 
-
 /**
  *  获取优惠券
  *
