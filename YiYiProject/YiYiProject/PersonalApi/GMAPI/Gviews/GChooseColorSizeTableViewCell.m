@@ -12,6 +12,7 @@
 #import "GChooseColorAndSizeViewController.h"
 
 
+
 @implementation GChooseColorSizeTableViewCell
 {
     UILabel *_numLabel;
@@ -342,7 +343,7 @@
         [sender setImage:[UIImage imageNamed:@"shoppingcart_reduce_r.png"] forState:UIControlStateNormal];
     }
     
-    
+    [self.delegate jisuanPrice];
     
 }
 
@@ -360,7 +361,7 @@
     }
     
     
-    
+    [self.delegate jisuanPrice];
     
 }
 

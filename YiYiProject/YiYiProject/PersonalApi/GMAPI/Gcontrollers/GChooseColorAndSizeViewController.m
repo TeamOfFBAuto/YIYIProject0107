@@ -338,10 +338,10 @@
     for (ProductModel *model in self.productModelArray) {
         
         if (model.isChoose) {
-            CGFloat p = [model.product_price floatValue];
+            CGFloat p = [model.product_price floatValue]*model.tnum;
             t_price += p;
             
-            CGFloat o_p = [model.original_price floatValue];
+            CGFloat o_p = [model.original_price floatValue]*model.tnum;
             o_price += o_p;
         }
         

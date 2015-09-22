@@ -5051,8 +5051,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -5073,7 +5073,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "fdeed618-3d6a-4d7b-831a-c63ae714e049";
+				PROVISIONING_PROFILE = "e618f4c1-6692-49eb-a6bc-ba0bb5f73aef";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -5095,8 +5095,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -5109,7 +5109,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "fdeed618-3d6a-4d7b-831a-c63ae714e049";
+				PROVISIONING_PROFILE = "e618f4c1-6692-49eb-a6bc-ba0bb5f73aef";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -5121,8 +5121,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5146,7 +5146,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yijiayi.yijiayi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "fdeed618-3d6a-4d7b-831a-c63ae714e049";
+				PROVISIONING_PROFILE = "e618f4c1-6692-49eb-a6bc-ba0bb5f73aef";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 				VALID_ARCHS = "arm64 armv7s armv7";
 			};
@@ -5158,8 +5158,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5183,7 +5183,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yijiayi.yijiayi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "fdeed618-3d6a-4d7b-831a-c63ae714e049";
+				PROVISIONING_PROFILE = "e618f4c1-6692-49eb-a6bc-ba0bb5f73aef";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 				VALID_ARCHS = "arm64 armv7s armv7";
 			};
@@ -5193,8 +5193,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -5207,7 +5207,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yijiayi.yijiayi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8260615f-be50-4052-a674-c6dac68a8528";
+				PROVISIONING_PROFILE = "e618f4c1-6692-49eb-a6bc-ba0bb5f73aef";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YiYiProject.app/YiYiProject";
 			};
 			name = Debug;
@@ -5216,8 +5216,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -5226,7 +5226,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yijiayi.yijiayi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8260615f-be50-4052-a674-c6dac68a8528";
+				PROVISIONING_PROFILE = "e618f4c1-6692-49eb-a6bc-ba0bb5f73aef";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YiYiProject.app/YiYiProject";
 			};
 			name = Release;

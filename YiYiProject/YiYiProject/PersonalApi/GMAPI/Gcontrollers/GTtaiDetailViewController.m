@@ -1253,12 +1253,24 @@
     _tabHeaderView.backgroundColor = [UIColor whiteColor];
     
     //锚点图片相关
+    
+    
     if (!_ttaiDetailModel) {
         return;
     }
-    CGFloat img_width = [[_ttaiDetailModel.image stringValueForKey:@"width"]floatValue];
-    CGFloat img_height  = [[_ttaiDetailModel.image stringValueForKey:@"height"]floatValue];
-    UIImageView *bigTtaiView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH/img_width*img_height)];
+    CGFloat img_width = [[_ttaiDetailModel.image objectForKey:@"width"]floatValue];
+    CGFloat img_height  = [[_ttaiDetailModel.image objectForKey:@"height"]floatValue];
+    
+    CGFloat w_h = 0;
+    if (img_height == 0 || img_width == 0) {
+        w_h = 0;
+    }else{
+        w_h = DEVICE_WIDTH/img_width*img_height;
+    }
+    
+    
+    
+    UIImageView *bigTtaiView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, w_h)];
     
     bigTtaiView.userInteractionEnabled = YES;
     [bigTtaiView l_setImageWithURL:[NSURL URLWithString:[_ttaiDetailModel.image stringValueForKey:@"url"]] placeholderImage:DEFAULT_YIJIAYI];
