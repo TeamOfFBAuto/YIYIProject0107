@@ -263,10 +263,22 @@
             }
             aModel.isUsed = btn.selected;
         }
-        if (sender.selected == NO) {
+        
+        if (sender.selected == NO) { //取消选择优惠劵
             
             if (self.coupeBlock) {
                 self.coupeBlock(nil);
+            }
+            return;
+        }
+        
+        //更新选择优惠劵
+        if (aModel && [aModel isKindOfClass:[CouponModel class]]) {
+            
+            if (self.coupeBlock) {
+                NSDictionary *params = @{@"button":sender,
+                                         @"model":aModel};
+                self.coupeBlock(params);
             }
         }
         
@@ -282,52 +294,6 @@
         }
     }
 }
-
-///**
-// *  获取优惠券
-// *
-// *  @param sender
-// */
-//- (void)clickToGetCoupe:(ButtonProperty *)sender
-//{
-//    int count = (int)_coupeArray.count;
-//    for (int i = 0; i < count; i ++) {
-//        
-//        ButtonProperty *btn = (ButtonProperty *)[self viewWithTag:100 + i];
-//        CouponModel *aModel = btn.object;
-//
-//        if (btn == sender) {
-//            
-//            btn.selected = !btn.selected;
-//        }else
-//        {
-//            btn.selected = NO;
-//        }
-//        aModel.isUsed = btn.selected;
-//    }
-//    
-//    CouponModel *aModel = sender.object;
-//    
-//    if (_userStyle == USESTYLE_Use) {
-//        
-//        if (sender.selected == NO) {
-//            
-//            if (self.coupeBlock) {
-//                self.coupeBlock(nil);
-//            }
-//            return;
-//        }
-//    }
-//    
-//    if (aModel && [aModel isKindOfClass:[CouponModel class]]) {
-//        
-//        if (self.coupeBlock) {
-//            NSDictionary *params = @{@"button":sender,
-//                                     @"model":aModel};
-//            self.coupeBlock(params);
-//        }
-//    }
-//}
 
 - (void)show
 {

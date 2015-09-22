@@ -298,7 +298,7 @@
         
         OrderModel *aModel = _orderModel;
         TuiKuanViewController *tuiKuan = [[TuiKuanViewController alloc]init];
-        tuiKuan.tuiKuanPrice = [aModel.real_product_total_price floatValue];
+        tuiKuan.tuiKuanPrice = [aModel.total_fee floatValue];
         tuiKuan.orderId = aModel.order_id;
         tuiKuan.lastVc = self;
         [self.navigationController pushViewController:tuiKuan animated:YES];

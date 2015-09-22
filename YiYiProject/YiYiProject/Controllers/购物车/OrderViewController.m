@@ -344,7 +344,7 @@
         kadding = kPadding_Refund;
         OrderModel *aModel = [[self refreshTableForIndex:1].dataArray objectAtIndex:index - kadding];
         TuiKuanViewController *tuiKuan = [[TuiKuanViewController alloc]init];
-        tuiKuan.tuiKuanPrice = [aModel.real_product_total_price floatValue];
+        tuiKuan.tuiKuanPrice = [aModel.total_fee floatValue];
         tuiKuan.orderId = aModel.order_id;
         [self.navigationController pushViewController:tuiKuan animated:YES];
         
