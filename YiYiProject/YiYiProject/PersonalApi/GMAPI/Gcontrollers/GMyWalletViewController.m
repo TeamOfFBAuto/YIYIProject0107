@@ -125,7 +125,7 @@
 }
 
 -(void)getYouhuiquan{
-    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@",MYYOUHUIQUAN_LIST,[GMAPI getAuthkey]];
+    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@&page=1&per_page=100",MYYOUHUIQUAN_LIST,[GMAPI getAuthkey]];
     
     NSLog(@"优惠券 url%@",url);
     
